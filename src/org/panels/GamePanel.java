@@ -6,24 +6,25 @@ package org.panels;
  * It will be put onto the frame once the MainMenu panel is closed
  */
 
-import org.DataRetriever;
-import org.Startup;
-import org.players.Player;
-import org.players.hero.Hero;
-
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
+
+import org.DataRetriever;
+import org.Startup;
+import org.enemies.Enemy;
+import org.players.Player;
+import org.players.hero.Hero;
 
 public class GamePanel extends JPanel
 {
@@ -35,6 +36,7 @@ public class GamePanel extends JPanel
 	static int hScreenY = (int)(screenY / 2);
 
 	private Player p1;	//List of players, not single object for future implementation of multiplayer
+	private ArrayList<Enemy> allEnemies;
 
     public GamePanel() //Constructor
     {
@@ -46,6 +48,7 @@ public class GamePanel extends JPanel
     	this.setBackground(Color.gray);
 
     	p1 = new Hero(hScreenX, hScreenY, 100, 2, 2);
+    	allEnemies = new ArrayList<Enemy>();
     }
 
     @Override
@@ -92,7 +95,11 @@ public class GamePanel extends JPanel
     	}
     }
 
+    public void addEnemy(Enemy e) {allEnemies.add(e);}
+    public void removeEnemy(Enemy e) {allEnemies.remove(e);}
+    
     public Player getPlayer() {return p1;}
+    public ArrayList<Enemy> getAllEnemies() {return allEnemies;}
 
 
     //Handler class which contains all the logic implemented by the listener.

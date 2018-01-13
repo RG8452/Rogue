@@ -8,15 +8,17 @@ package org.enemies;
 
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Image;
 
 public abstract class Enemy 
 {
-	protected int maxHealth, health, curAnimation, elapsedAnimationFrames;	//Basic stats for health and animation
+	protected int maxHealth, health, curAnimation, elapsedAnimationFrames, eWidth, eHeight;	//Basic stats for health and animation
 	protected double x, y, xSpeed, ySpeed;	//Position stored as double but drawn as int to maintain absolute accuracty
 	protected boolean canFly, facingRight;	//Booleans for direction facing as well as flight
 	protected String status = "Idling";		//String to represent status of enemy, will be "Idling", "Moving", "Damaged", "Attacking?"
 	protected Image img;					//Image to be drawn by each class
+	protected Rectangle eHurtbox;			//Rectangle for checking damage to enemy sprite
 	private static int framesPerAnimation = 4;	//Frames that elapse between each change in animation
 	
     protected void act()
@@ -45,6 +47,7 @@ public abstract class Enemy
 	public int getCurAnimation() {return curAnimation;}
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
+	public Rectangle getHurtbox() {return eHurtbox;}
 	
 	//Setter methods
 	public void setX(double nX) {x = nX;}

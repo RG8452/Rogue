@@ -4,14 +4,14 @@ package org.players.hero;
  * This is the class for the Hero player. It will extend Player and have all drawing and attacks necessary for the Hero.
  */
 
-import org.players.Player;
-
 import java.awt.Graphics2D;
-
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import org.players.Player;
 
 public class Hero extends Player
 {
@@ -22,10 +22,17 @@ public class Hero extends Player
 		health = maxHP;
 		xSpeed = xS; ySpeed = yS;
 		curAnimation = 0; elapsedFrames = 0;
+		pWidth = 10; pHeight = 27;
+		pHurtbox = new Rectangle((int)x, (int)y, pWidth, pHeight);
     }    	
-    	
+    
+    /*
+     * This method chekcs the player's current status and direction
+     * Depending on the results, it fetched the proper image to draw onto the JPanel
+     * Each png is found within the subdirectories of the class
+     */
     @Override
-	public void drawPlayer(Graphics2D g2d)	//Overridden draw player, which will eventually fetch images based on curanimation
+	public void drawPlayer(Graphics2D g2d)	
 	{
 		if(facingRight)
 		{

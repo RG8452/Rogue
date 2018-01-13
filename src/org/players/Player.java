@@ -7,21 +7,22 @@ package org.players;
  * NOTE: Later versions to include base stats like base damage, armor, jump velocity?, range [in hitbox]?, crit chance
  */
 
-import org.DataRetriever;
-
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.DataRetriever;
+
 public abstract class Player
 {
-	protected int health, level, maxHealth, curAnimation, elapsedFrames;
+	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight; //Basic stats
 	protected double x, y, xSpeed, ySpeed;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected String status = "Idling"; 	//String to store player's status: Jumping, Moving, Idling
 	protected boolean facingRight = true;	//Boolean for direction facing
-	protected BufferedImage img = null;
+	protected BufferedImage img = null;		//Buffered image drawn in animation
+	protected Rectangle pHurtbox;			//Player's damage area or hurbox
 	private static int framesPerAnimationCycle = 4;//Frames it takes for the animation drawn to change
 
 	public void act()	//Reads through the set of all keys and the player moves accordingly
@@ -85,6 +86,7 @@ public abstract class Player
 	public int getCurAnimation() {return curAnimation;}
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
+	public Rectangle getHurtbox() {return pHurtbox;}
 	
 	//Setter methods
 	public void setX(double nX) {x = nX;}
