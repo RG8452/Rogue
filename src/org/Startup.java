@@ -4,6 +4,8 @@ package org;
  * File to execute
  * Just creates the frame and initializes
  *
+ * Edit test
+ *
  * Consider making a Hitbox class for use when attacking
  * Would generate Rectangles, have coords & sizes, checking/hitting methods, fields (e.g. frames to last), setter methods to change size
  */
