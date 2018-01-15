@@ -6,6 +6,7 @@ package org.players.hero;
  */
 
 import java.awt.Graphics2D;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +24,10 @@ public class Hero extends Player
 		health = maxHP;
 		xSpeed = xS; ySpeed = yS;
 		curAnimation = 0; elapsedFrames = 0;
-		pWidth = 10; pHeight = 27;
-		pHurtbox = new Rectangle((int)x, (int)y, pWidth, pHeight);
+		pWidth = 28; pHeight = 56;
+		xOffset = 13; yOffset =  5;
+		pHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, pWidth, pHeight);
+		jumpDelta = 15;
 		
 		try	//This little chunk reads in every animation image and stores them into the arrays
 		{
@@ -66,6 +69,7 @@ public class Hero extends Player
     		if(status == STATUS.JUMPING)
     		{
     			//Set image to jumping right hero
+    			img = rAnims[8];	//TEMP PLACEHOLDER
     		}
     		
     		else if(status == STATUS.IDLING)
@@ -93,9 +97,15 @@ public class Hero extends Player
     		else if(status == STATUS.MOVING) img = lAnims[curAnimation];
     	}
 
-		//Consider moving the player down here, also increasing their ySpeed
 		g2d.drawImage(img, (int)x, (int)y, null);
+		drawHurtbox(g2d);
 	}
+    
+    private void drawHurtbox(Graphics2D g2d)
+    {
+    	g2d.setColor(Color.red);
+    	g2d.drawRect((int)pHurtbox.getX(), (int)pHurtbox.getY(), (int)pHurtbox.getWidth(), (int)pHurtbox.getHeight());
+    }
 }
 
 /*

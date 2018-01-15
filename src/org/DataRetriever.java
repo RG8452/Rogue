@@ -16,6 +16,7 @@ public class DataRetriever
 	private static final Set<Integer> allKeys = new TreeSet<Integer>();
 	private static int frameRate = 60;
 	private static int frame = 0;
+	private static double gravityConstant = 1.125;
 
 	//Individual functions based on key
 	private static int right = KeyEvent.VK_RIGHT;
@@ -99,4 +100,7 @@ public class DataRetriever
 	public static int getFrame() {return frame;}
 	public static void incrementFrame() {frame++;}
 	public static void setFrame(int q) {frame = q;}
+	
+	//Misc
+	public static double getGravityConstant() {return gravityConstant;}
 }

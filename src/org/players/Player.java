@@ -17,8 +17,8 @@ import org.DataRetriever;
 
 public abstract class Player
 {
-	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight; //Basic stats
-	protected double x, y, xSpeed, ySpeed;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
+	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; //Basic stats
+	protected double x, y, xSpeed, ySpeed, jumpDelta;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected boolean facingRight = true;	//Boolean for direction facing
 	protected BufferedImage img = null;		//Buffered image drawn in animation
 	protected BufferedImage[] lAnims = new BufferedImage[10];	//Array of all animations
@@ -67,8 +67,17 @@ public abstract class Player
 			else {elapsedFrames = 0; curAnimation = 0; status = STATUS.IDLING;}
 		}
 		
+		if(readKeys.contains(DataRetriever.getJump()) && onGround()) ySpeed -= jumpDelta;
+		
 		//If not touching the ground, status must be in mid-air so no animation is chosen
 		if(!onGround()) status = STATUS.JUMPING;
+		
+		y += ySpeed;
+		if(!onGround()) ySpeed += DataRetriever.getGravityConstant();
+		else ySpeed = DataRetriever.getGravityConstant();
+		
+		if(onGround()) moveToGround();
+		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 	}
 
 	//Method to be overridden that draws each player by importing that file
@@ -77,7 +86,14 @@ public abstract class Player
 	//Checks if the player is on the ground
 	public boolean onGround()
 	{
-		return true;
+		return ((int)y + pHeight >= 800);
+	}
+	
+	//Move the player to be exactly on the ground if they're below the ground
+	public void moveToGround()
+	{
+		while(onGround()) y -= .25;
+		y += .25;
 	}
 	
 	//All getters

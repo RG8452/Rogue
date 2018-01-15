@@ -47,7 +47,7 @@ public class GamePanel extends JPanel
     	this.setFocusable(true);		//Allows focus (necessary)
     	this.setBackground(Color.gray);
 
-    	p1 = new Hero(hScreenX, hScreenY, 100, 2, 2);
+    	p1 = new Hero(hScreenX, hScreenY, 100, 3.5, 3.5);
     	allEnemies = new ArrayList<Enemy>();
     }
 
