@@ -24,8 +24,8 @@ public class Hero extends Player
 		health = maxHP;
 		xSpeed = xS; ySpeed = yS;
 		curAnimation = 0; elapsedFrames = 0;
-		pWidth = 24; pHeight = 52;
-		xOffset = 20; yOffset =  8;
+		pWidth = 24; pHeight = 54;
+		xOffset = 20; yOffset =  6;
 		pHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, pWidth, pHeight);
 		jumpDelta = 15;
 		
