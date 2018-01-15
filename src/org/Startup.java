@@ -9,18 +9,22 @@ import javax.swing.JFrame;
 
 public class Startup 
 {
-	private static GUI go;
+	private static GUI go;		//Frame that the whole game uses
+	private static Runner r;	//Runnable that the main thread employs
 	
     public static void main(String[] args) 
     {  	
         go = new GUI();
         go.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		go.setExtendedState(JFrame.MAXIMIZED_BOTH);		//Method to make auto-full screen
-		
-        go.setVisible(true);
+			
+        go.setVisible(true);		//Basic frame stuff
         go.init();
+        r = new Runner();	
     }
     
-    //Getter method for the JFrame itself
+    //Getters and setters
     public static GUI getGUI() {return go;}
+    public static Runner getRunner() {return r;}
+    public static void setRunner(Runner yeet) {r = yeet;}
 }

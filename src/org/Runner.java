@@ -3,13 +3,19 @@ package org;
  * RG
  * This is the class which will make user inputs actually apply to characters and regulate frames
  * It implements Runnable to help prevent thread pooling and make the frame rate actually do stuff.
+ * Instantiated in the Startup class, one object is used to thread all games each time the player starts.
  */
 
-import org.Startup;
+import java.awt.Color;
+
 import org.panels.GamePanel;
+import org.panels.PausePanel;
 
 public class Runner implements Runnable
 {
+	private static int pauseFrame; //Frame in which the pause key is first pressed to force a delay
+	private boolean paused, stopped = false;	//Game status
+	public static GamePanel tempPanel;	//Temporary panel used when swapping stuff
 	private static int frameDelay = (int)(1000/DataRetriever.getFrameRate());	//This retrieves, in milliseconds, the time to wait between frames
 	
 	@Override
@@ -25,9 +31,9 @@ public class Runner implements Runnable
 		catch(Exception e) {}
 	}	
 	
-	public static void runGame() throws Exception
+	public void runGame() throws Exception
 	{
-		while(true)
+		while(!stopped)
 		{
 			play();		//Handles all processing
 			DataRetriever.incrementFrame();	//Count frames for universal access to passage of time
@@ -42,8 +48,34 @@ public class Runner implements Runnable
 		}
 	}
 
-	public static void play()	//Method that will eventually handle all processing for enemies and players
+	public void play()	//Method that will eventually handle all processing for enemies and players
 	{
-		((GamePanel)(Startup.getGUI().getPanel())).getPlayer().act();
+		if(DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
+		{
+			if(!paused && DataRetriever.getFrame() > pauseFrame + 10)
+			{
+				paused = true;
+				tempPanel = (GamePanel)Startup.getGUI().getPanel();
+				Startup.getGUI().swapPanels(new PausePanel());
+				pauseFrame = DataRetriever.getFrame();
+			}
+			else if(paused && DataRetriever.getFrame() > pauseFrame + 10 && Startup.getGUI().getPanel() instanceof PausePanel)
+			{
+				paused = false;
+				pauseFrame = DataRetriever.getFrame();
+				PausePanel.fadedGray = new Color(40, 40, 40, 1);
+				Startup.getGUI().swapPanels(tempPanel); 
+			}
+		}
+		
+		if(!paused)
+			((GamePanel)(Startup.getGUI().getPanel())).getPlayer().act();
+	}
+	
+	public void stop() 	//Method called if game is stopped, i.e. user returns to main menu
+	{
+		this.stopped = true;		//Stops running the while loop
+		DataRetriever.setFrame(0);	//Resets frame count
+		tempPanel = null;			//Resets object pointer
 	}
 }

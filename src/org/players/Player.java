@@ -3,6 +3,7 @@ package org.players;
  * RG
  * Abstract class that each player will extend
  * Will have the ground rules and fields that each object will need
+ * Most of the variable names are either self-explanatory or just basic coordinate and stats
  *
  * NOTE: Later versions to include base stats like base damage, armor, jump velocity?, range [in hitbox]?, crit chance
  */
@@ -25,8 +26,8 @@ public abstract class Player
 	protected BufferedImage[] rAnims = new BufferedImage[10];
 	protected Rectangle pHurtbox;			//Player's damage area or hurbox
 	private static int framesPerAnimationCycle = 4;//Frames it takes for the animation drawn to change
-	protected enum STATUS{IDLING, MOVING, JUMPING};
-	protected STATUS status;
+	protected enum STATUS{IDLING, MOVING, JUMPING};//Enum used to store all possible outputs for the player's stauts
+	protected STATUS status;			//Variable used for current status
 
 	public void act()	//Reads through the set of all keys and the player moves accordingly
 	{
@@ -83,7 +84,7 @@ public abstract class Player
 	//Method to be overridden that draws each player by importing that file
 	public abstract void drawPlayer(Graphics2D g2d);
 
-	//Checks if the player is on the ground
+	//Checks if the player is on the ground (Currently arbitrated to y == 800)
 	public boolean onGround()
 	{
 		return ((int)y + pHeight >= 800);
@@ -111,6 +112,7 @@ public abstract class Player
 	public void setX(double nX) {x = nX;}
 	public void setY(double nY) {y = nY;}
 	public void setHealth(int nH) {health = nH;}
+	public void setMaxHealth(int nMH) {maxHealth = nMH;}
 	public void setXSpeed(double nXS) {xSpeed = nXS;}
 	public void setYSpeed(double nYS) {ySpeed = nYS;}
 }

@@ -6,19 +6,15 @@ package org.panels;
  */
 
 import org.Button;
-import org.Runner;
 import org.Startup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -43,8 +39,8 @@ public class MainMenu extends JPanel
     	this.setBackground(Color.BLACK);
 
     	buttons = new ArrayList<Button>();		//Instantiate list of buttons
-    	this.addButton(new Button(hScreenX - 200, hScreenY - 100, 400, 200, "Play", Color.blue, Color.yellow));	//Add play button
-    	this.addButton(new Button(screenX - 200, 100, 100, 100, "Options", Color.gray, Color.white, 7) {
+    	addButton(new Button(hScreenX - 200, hScreenY - 100, 400, 200, "Play", Color.blue, Color.yellow));	//Add play button
+    	addButton(new Button(screenX - 200, 100, 100, 100, "Options", Color.gray, Color.white, 7) {
     		@Override
     		public void drawButton(Graphics g)	//Overridden drawButton which draws the button with a gear on it
     		{
@@ -95,7 +91,7 @@ public class MainMenu extends JPanel
     	});			//Add options button
     }
 
-    public void addButton(Button b)	//Basic method for adding button to the list, but available publicly
+    private void addButton(Button b)	//Basic method for adding button to the list, but available publicly
     {
     	buttons.add(b);
     }
@@ -138,16 +134,16 @@ public class MainMenu extends JPanel
 							//This next stuff has to do with thread pooling. Essentially, hitting "Play" calls up a new thread which begins to run through actual gameplay.
 							try
 							{
-								Thread t = new Thread(new Runner());
-								t.start();
-								return;
+								Thread t = new Thread(Startup.getRunner());	//Creates thread
+								t.start();		//Begins thread
+								return;			//Stops running menu methods
 							}
 							catch(Exception except)
 							{
 								break;
 							}
 						case "Options":
-							Startup.getGUI().swapPanels(new OptionsPanel());
+							Startup.getGUI().swapPanels(new OptionsPanel(new MainMenu()));
 							break;
 						default:
 							System.out.println("ERROR IN MAIN MENU");

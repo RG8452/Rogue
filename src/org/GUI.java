@@ -18,7 +18,7 @@ import java.awt.Dimension;
 public class GUI extends JFrame 
 {
 	private JPanel myPanel;		//Panel on which the game is won
-	private boolean firstStart = true;
+	private boolean firstStart = true;	//Random variable which just exists to perfect variables
 	private Dimension dim;		//Dimension of the JFrame
 	
     public GUI()		
@@ -26,14 +26,14 @@ public class GUI extends JFrame
     	super("Title");		//Super constructor call to JFrame, creates a frame with window title "Title"
     }
     
-    public void init()
+    public void init()	//Initializes various variables and paints all necessary functions.
     {
     	dim = this.getContentPane().getSize();	//Stores size of the usable Panel as a Dimension
     	myPanel = new MainMenu();			//Instantiates the first panel as the Main Menu
     	add(myPanel, BorderLayout.CENTER);	//Puts the panel onto the frame
     	setFocusTraversalKeysEnabled(true);	//I still don't know
-    	myPanel.revalidate();
-    	myPanel.repaint();
+    	myPanel.revalidate();				//Validates the added panel
+    	myPanel.repaint();					//Paints everything to see
     }
     
     public void swapPanels(JPanel j)	//Swaps current Panel with arg j
@@ -49,7 +49,6 @@ public class GUI extends JFrame
     		((GamePanel)(myPanel)).refreshVars();
     		firstStart = false;
     	}    	
-    	
     	myPanel.repaint();				//Repaint the panel to see the changes
     }
     

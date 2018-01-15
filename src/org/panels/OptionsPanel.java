@@ -3,6 +3,7 @@ package org.panels;
  * RG
  * This panel will be used for the Options menu and opens when the gear on the MainMenu is clicked
  * It will be the location where keys can be reset and volume and such can eventually be adjusted
+ * Has lots of buttons which are just arbitrated to arraylist indices
  */
 
 import org.Startup;
@@ -25,19 +26,22 @@ import java.awt.event.MouseListener;
 public class OptionsPanel extends JPanel 
 {
 	private ArrayList<Button> buttons;	//List of buttons
+	private JPanel previousPanel;		//Previously accessed panel
 	public int focusedButton = -1;		//Currently focused button, based on position in list (-1 is no focus)
 	
-    public OptionsPanel() 	//Constructor which adds listeners and buttons
+	//Constructor which takes an argument for JPanel to return to upon hitting "Back"
+    public OptionsPanel(JPanel prevPanel) 	
     {
-    	OptionsHandler opts = new OptionsHandler();
+    	OptionsHandler opts = new OptionsHandler();	//Basic handling stuff
     	this.addKeyListener(opts);
     	this.addMouseListener(opts);
     	
     	this.setFocusable(true);
     	this.setBackground(Color.black);
+    	previousPanel = prevPanel;
     	
     	buttons = new ArrayList<Button>();	//Instantiate list
-    	this.addButton(new Button(MainMenu.screenX - 200, 100, 100, 100, "Back", Color.red, Color.white, 7)	//Back button
+    	addButton(new Button(MainMenu.screenX - 200, 100, 100, 100, "Back", Color.red, Color.white, 7)	//Back button
     	{
     		@Override
     		public void drawButton(Graphics g)	//Override to redraw the button with a different appearance
@@ -52,22 +56,22 @@ public class OptionsPanel extends JPanel
     			g.drawLine(this.getX() + (int)(this.getWidth() * .2), this.getY() + 75, this.getX() + (int)(this.getWidth() * .55), this.getY() + 90);
     			g.setColor(Color.white);
     		}
-    	});
+    	});	//Adds "Back" button
     	
     	//Add a button per control in the game
-    	this.addButton(new Button(50, 350, 250, 40, "Right", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 410, 250, 40, "Left", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 470, 250, 40, "Up", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 530, 250, 40, "Down", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 590, 250, 40, "Jump", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 650, 250, 40, "Skill One", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 710, 250, 40, "Skill Two", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 770, 250, 40, "Skill Three", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 830, 250, 40, "Skill Four", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 890, 250, 40, "Interact", Color.gray, Color.white, 5));
-    	this.addButton(new Button(50, 950, 250, 40, "Pause", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 350, 250, 40, "Right", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 410, 250, 40, "Left", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 470, 250, 40, "Up", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 530, 250, 40, "Down", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 590, 250, 40, "Jump", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 650, 250, 40, "Skill One", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 710, 250, 40, "Skill Two", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 770, 250, 40, "Skill Three", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 830, 250, 40, "Skill Four", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 890, 250, 40, "Interact", Color.gray, Color.white, 5));
+    	addButton(new Button(50, 950, 250, 40, "Pause", Color.gray, Color.white, 5));
     	
-    	this.addButton(new Button(350, 370, 200, 60, "Reset", Color.red, Color.white, 5));		//Reset button
+    	addButton(new Button(350, 370, 200, 60, "Reset", Color.red, Color.white, 5));		//Reset button
     }
     
     @Override
@@ -75,6 +79,7 @@ public class OptionsPanel extends JPanel
     {
     	super.paintComponent(g);
     	
+    	//Basic text drawing
     	g.setFont(new Font("SANS_SERIF", Font.PLAIN, 100));
     	g.setColor(Color.white);
     	g.drawString("Options", 50, 150);
@@ -128,12 +133,12 @@ public class OptionsPanel extends JPanel
 		//keyListener methods
 		public void keyPressed(KeyEvent e) 		//Swaps controls if a button is highlighted and a key is pressed
 		{
-			if(focusedButton != -1)
+			if(focusedButton != -1)	//If you've highlighted something and you type a key
 			{
-				ArrayList<Integer> keee = DataRetriever.getControlKeys();
-				if(keee.contains(e.getKeyCode()))
+				ArrayList<Integer> keee = DataRetriever.getControlKeys();	//Get all control keys
+				if(keee.contains(e.getKeyCode()))	//If you've already bound the new key
 				{
-					switch(keee.indexOf(e.getKeyCode()))
+					switch(keee.indexOf(e.getKeyCode()))	//Finds binding of the new key and sets it to null
 					{
 						case 0:
 							DataRetriever.setRight(-1);	break;
@@ -198,7 +203,7 @@ public class OptionsPanel extends JPanel
 				}
 				
 				buttons.get(focusedButton).setCol(Color.gray);		//When a control has been swapped, the button is unfocused
-				focusedButton = -1;
+				focusedButton = -1;			//Unfocus
 				
 				Startup.getGUI().getPanel().repaint();
 			}
@@ -219,14 +224,14 @@ public class OptionsPanel extends JPanel
 				{
 					if(n == 0)	//If the first key is pressed
 					{
-						boolean mapped = true;
+						boolean mapped = true;	//Boolean for checking if all keys are mapped
 						for(int q: DataRetriever.getControlKeys())	//Check if any keys are unbound
 						{
 							if(q == -1) mapped = false;
 						}
 						if(mapped)	//If all keys are bound then leave this menu
 						{
-							Startup.getGUI().swapPanels(new MainMenu());
+							Startup.getGUI().swapPanels(previousPanel);
 							return;
 						}
 						else		//If any key is unbound
@@ -250,7 +255,6 @@ public class OptionsPanel extends JPanel
 						buttons.get(focusedButton).setCol(Color.orange);
 					butt.setCol(Color.red);
 					focusedButton = n;
-
 				}
 			}
 			
@@ -267,7 +271,7 @@ public class OptionsPanel extends JPanel
 	}
 }
 
-//DEPRECATED DEBUG CODE
+//DEPRECATED DEBUG CODE FOR CHECKING BUTTON PRESSES
 					//This switch will loop through all possible names and give each button a different function, found in the mouseClicked loop
 /*					switch(butt.getName())
 					{
