@@ -24,8 +24,8 @@ public class Hero extends Player
 		health = maxHP;
 		xSpeed = xS; ySpeed = yS;
 		curAnimation = 0; elapsedFrames = 0;
-		pWidth = 28; pHeight = 56;
-		xOffset = 13; yOffset =  5;
+		pWidth = 24; pHeight = 52;
+		xOffset = 20; yOffset =  8;
 		pHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, pWidth, pHeight);
 		jumpDelta = 15;
 		
@@ -57,7 +57,7 @@ public class Hero extends Player
     }    	
     
     /*
-     * This method chekcs the player's current status and direction
+     * This method checks the player's current status and direction
      * Depending on the results, it fetched the proper image to draw onto the JPanel
      * Each png is found within the subdirectories of the class
      */
