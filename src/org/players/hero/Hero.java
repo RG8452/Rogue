@@ -2,6 +2,7 @@ package org.players.hero;
 /**
  * RG
  * This is the class for the Hero player. It will extend Player and have all drawing and attacks necessary for the Hero.
+ * Consider reading in every single image into an array and changing reference instead of continually reading
  */
 
 import java.awt.Graphics2D;
@@ -24,6 +25,32 @@ public class Hero extends Player
 		curAnimation = 0; elapsedFrames = 0;
 		pWidth = 10; pHeight = 27;
 		pHurtbox = new Rectangle((int)x, (int)y, pWidth, pHeight);
+		
+		try	//This little chunk reads in every animation image and stores them into the arrays
+		{
+			rAnims[0] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight1.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight2.png")); 
+			rAnims[2] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight3.png")); 
+			rAnims[3] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight4.png")); 
+			rAnims[4] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight5.png")); 
+			rAnims[5] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight6.png")); 
+			rAnims[6] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight7.png")); 
+			rAnims[7] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroMoveRight8.png")); 
+			rAnims[8] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroIdleRight1.png")); 
+			rAnims[9] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/RightFacing/HeroIdleRight2.png")); 
+			
+			lAnims[0] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft1.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft2.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft3.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft4.png"));
+			lAnims[4] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft5.png"));
+			lAnims[5] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft6.png"));
+			lAnims[6] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft7.png"));
+			lAnims[7] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroMoveLeft8.png"));
+			lAnims[8] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroIdleLeft1.png"));
+			lAnims[9] = ImageIO.read(new File("src/org/players/hero/PNGAnimations/LeftFacing/HeroIdleLeft2.png"));
+		}
+		catch(IOException e) {System.out.println("IMAGE READING ERROR: " + e);}
     }    	
     
     /*
@@ -34,11 +61,51 @@ public class Hero extends Player
     @Override
 	public void drawPlayer(Graphics2D g2d)	
 	{
-		if(facingRight)
+    	if(facingRight)
+    	{
+    		if(status == STATUS.JUMPING)
+    		{
+    			//Set image to jumping right hero
+    		}
+    		
+    		else if(status == STATUS.IDLING)
+    		{
+    			if(curAnimation < 4) img = rAnims[8];
+    			else img = rAnims [9];
+    		}
+    		
+    		else if(status == STATUS.MOVING) img = rAnims[curAnimation];
+    	}
+    	
+    	else
+    	{
+    		if(status == STATUS.JUMPING)
+    		{
+    			//Set image to jumping right hero
+    		}
+    		
+    		else if(status == STATUS.IDLING)
+    		{
+    			if(curAnimation < 4) img = lAnims[8];
+    			else img = lAnims [9];
+    		}
+    		
+    		else if(status == STATUS.MOVING) img = lAnims[curAnimation];
+    	}
+
+		//Consider moving the player down here, also increasing their ySpeed
+		g2d.drawImage(img, (int)x, (int)y, null);
+	}
+}
+
+/*
+@deprecated
+
+if(facingRight)
 		{
 			if(status.equals("Jumping"))
 			{
-				//Set image to jumping right hero
+				//Set image to jumping right hero, increase ySpeed by whatever gravity ends up being
 			}
 			
 			else if(status.equals("Idling"))
@@ -218,7 +285,5 @@ public class Hero extends Player
 				}
 			}
 		}
-		
-		g2d.drawImage(img, (int)x, (int)y, null);
-	}
-}
+
+*/

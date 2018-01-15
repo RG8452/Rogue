@@ -19,11 +19,14 @@ public abstract class Player
 {
 	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight; //Basic stats
 	protected double x, y, xSpeed, ySpeed;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
-	protected String status = "Idling"; 	//String to store player's status: Jumping, Moving, Idling
 	protected boolean facingRight = true;	//Boolean for direction facing
 	protected BufferedImage img = null;		//Buffered image drawn in animation
+	protected BufferedImage[] lAnims = new BufferedImage[10];	//Array of all animations
+	protected BufferedImage[] rAnims = new BufferedImage[10];
 	protected Rectangle pHurtbox;			//Player's damage area or hurbox
 	private static int framesPerAnimationCycle = 4;//Frames it takes for the animation drawn to change
+	protected enum STATUS{IDLING, MOVING, JUMPING};
+	protected STATUS status;
 
 	public void act()	//Reads through the set of all keys and the player moves accordingly
 	{
@@ -33,8 +36,8 @@ public abstract class Player
 		if(readKeys.size() == 0 && onGround())
 		{
 			//This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
-			if(status.equals("Idling")) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
-			else {elapsedFrames = 0; curAnimation = 0; status = "Idling";}
+			if(status == STATUS.IDLING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
+			else {elapsedFrames = 0; curAnimation = 0; status = STATUS.IDLING;}
 			
 			return;	//return because you don't need to do anything else if the set is empty
 		}
@@ -44,8 +47,8 @@ public abstract class Player
 		{	
 			x += xSpeed;
 			
-			if(facingRight && status.equals("Moving")) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
-			else {elapsedFrames = 0; curAnimation = 0; facingRight = true; status = "Moving";}
+			if(facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
+			else {elapsedFrames = 0; curAnimation = 0; facingRight = true; status = STATUS.MOVING;}
 		}
 		
 		//If left and !right, then must be walking left
@@ -53,19 +56,19 @@ public abstract class Player
 		{	
 			x -= xSpeed;
 			
-			if(!facingRight && status.equals("Moving")) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
-			else{elapsedFrames = 0; curAnimation = 0; facingRight = false; status = "Moving";}
+			if(!facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
+			else{elapsedFrames = 0; curAnimation = 0; facingRight = false; status = STATUS.MOVING;}
 		}
 		
 		//If right and left, set the player to idle
 		else if(readKeys.contains(DataRetriever.getRight()) && readKeys.contains(DataRetriever.getLeft()))
 		{
-			if(status.equals("Idling")) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
-			else {elapsedFrames = 0; curAnimation = 0; status = "Idling";}
+			if(status == STATUS.IDLING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
+			else {elapsedFrames = 0; curAnimation = 0; status = STATUS.IDLING;}
 		}
 		
 		//If not touching the ground, status must be in mid-air so no animation is chosen
-		if(!onGround()) status = "Jumping";
+		if(!onGround()) status = STATUS.JUMPING;
 	}
 
 	//Method to be overridden that draws each player by importing that file
