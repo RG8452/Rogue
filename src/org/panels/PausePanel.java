@@ -85,7 +85,7 @@ public class PausePanel extends JPanel
     		}
     	});			//Add options button
 		
-		addButton(new Button(MainMenu.hScreenX - 100, 1050, 200, 75, "Menu", Color.black, Color.white, 4));	//MainMenu button
+		addButton(new Button(MainMenu.hScreenX - 100, MainMenu.screenY - 300, 200, 75, "Menu", Color.black, Color.white, 4));	//MainMenu button
 	}
 	
 	private void addButton(Button b)	//Basic method for adding button to the list, but available publicly

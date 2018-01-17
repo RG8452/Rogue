@@ -103,6 +103,7 @@ public abstract class Player
 	//All getters
 	public double getX() {return x;}
 	public double getY() {return y;}
+	public int getXOffset() {return xOffset;}
 	public int getHealth() {return health;}
 	public int getLevel() {return level;}
 	public int getMaxHealth() {return maxHealth;}
@@ -110,6 +111,8 @@ public abstract class Player
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
 	public Rectangle getHurtbox() {return pHurtbox;}
+	public int getWidth() {return pWidth;}
+	public int getHeight() {return pHeight;}
 	
 	//Setter methods
 	public void setX(double nX) {x = nX;}

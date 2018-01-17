@@ -9,6 +9,7 @@ package org;
 import java.awt.Color;
 
 import org.enemies.Enemy;
+import org.enemies.giantbat.GiantBat;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
 
@@ -24,6 +25,7 @@ public class Runner implements Runnable
 	{
 		Startup.getGUI().swapPanels(new GamePanel());	//Firstly, substitute panels
 		Startup.getGUI().getPanel().repaint();
+		((GamePanel)Startup.getGUI().getPanel()).addEnemy(new GiantBat(300, 200, 1));
 		
 		try
 		{

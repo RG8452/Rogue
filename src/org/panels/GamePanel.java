@@ -50,7 +50,6 @@ public class GamePanel extends JPanel
 
     	p1 = new Hero(hScreenX, hScreenY, 100);
     	allEnemies = new ArrayList<Enemy>();
-    	addEnemy(new GiantBat(1700, 200, 1));
     }
 
     @Override
