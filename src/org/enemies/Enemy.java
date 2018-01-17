@@ -5,23 +5,26 @@ package org.enemies;
  * Will lay the ground rules and basic methods that all enemy objects will use
  */
 
-
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public abstract class Enemy 
 {
-	protected int maxHealth, health, curAnimation, elapsedAnimationFrames, eWidth, eHeight;	//Basic stats for health and animation
+	protected int maxHealth, health, curAnimation, elapsedFrames, eWidth, eHeight, xOffset, yOffset, level;	//Basic stats for health and animation
 	protected double x, y, xSpeed, ySpeed;	//Position stored as double but drawn as int to maintain absolute accuracty
 	protected boolean canFly, facingRight;	//Booleans for direction facing as well as flight
-	protected String status = "Idling";		//String to represent status of enemy, will be "Idling", "Moving", "Damaged", "Attacking?"
-	protected Image img;					//Image to be drawn by each class
+	protected BufferedImage img;					//Image to be drawn by each class
+	protected BufferedImage[] rAnims;		//Arrays for left and right images
+	protected BufferedImage[] lAnims;
 	protected Rectangle eHurtbox;			//Rectangle for checking damage to enemy sprite
-	private static int framesPerAnimation = 4;	//Frames that elapse between each change in animation
+	protected static int framesPerAnimationCycle = 4;	//Frames that elapse between each change in animation
+	protected enum STATUS{IDLING, MOVING, JUMPING, ATTACKING};//Enum used to store all possible outputs for the enemy's stauts
+	protected STATUS status;			//Variable used for current status
 	
-    protected void act()
+	protected double pX, pY;			//Player coords for reference when pathing
+	
+    public void act()
     {
     	//Methods for making the enemy act
     }
@@ -37,7 +40,7 @@ public abstract class Enemy
     }
     
     //Method for drawing the enemy, to be overridden for each class to import jpgs
-    protected abstract void drawEnemy(Graphics2D g2d);	
+    public abstract void drawEnemy(Graphics2D g2d);	
     
     //Getter methods
     public double getX() {return x;}

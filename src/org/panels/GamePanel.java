@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import org.DataRetriever;
 import org.Startup;
 import org.enemies.Enemy;
+import org.enemies.giantbat.GiantBat;
 import org.players.Player;
 import org.players.hero.Hero;
 
@@ -47,8 +48,9 @@ public class GamePanel extends JPanel
     	this.setFocusable(true);		//Allows focus (necessary)
     	this.setBackground(Color.gray);
 
-    	p1 = new Hero(hScreenX, hScreenY, 100, 3.5, 3.5);
+    	p1 = new Hero(hScreenX, hScreenY, 100);
     	allEnemies = new ArrayList<Enemy>();
+    	addEnemy(new GiantBat(1700, 200, 1));
     }
 
     @Override
@@ -66,8 +68,9 @@ public class GamePanel extends JPanel
     	g2d.drawString(String.valueOf(DataRetriever.getFrame()), 50, 50);
 
     	p1.drawPlayer(g2d);
+    	for(Enemy nya: allEnemies) nya.drawEnemy(g2d);
     }
-
+    
     public void refreshVars()	//Method called only once to reset variables to have exact panel size
     {
     	screenSize = Startup.getGUI().getContentPane().getSize();
@@ -100,7 +103,6 @@ public class GamePanel extends JPanel
     
     public Player getPlayer() {return p1;}
     public ArrayList<Enemy> getAllEnemies() {return allEnemies;}
-
 
     //Handler class which contains all the logic implemented by the listener.
     private class GameHandler implements KeyListener,

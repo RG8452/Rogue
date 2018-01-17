@@ -8,6 +8,7 @@ package org;
 
 import java.awt.Color;
 
+import org.enemies.Enemy;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
 
@@ -69,7 +70,13 @@ public class Runner implements Runnable
 		}
 		
 		if(!paused)
+		{
 			((GamePanel)(Startup.getGUI().getPanel())).getPlayer().act();
+			for(Enemy e: ((GamePanel)(Startup.getGUI().getPanel())).getAllEnemies())
+			{
+				e.act();
+			}
+		}
 	}
 	
 	public void stop() 	//Method called if game is stopped, i.e. user returns to main menu

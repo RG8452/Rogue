@@ -22,11 +22,11 @@ public abstract class Player
 	protected double x, y, xSpeed, ySpeed, jumpDelta;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected boolean facingRight = true;	//Boolean for direction facing
 	protected BufferedImage img = null;		//Buffered image drawn in animation
-	protected BufferedImage[] lAnims = new BufferedImage[10];	//Array of all animations
-	protected BufferedImage[] rAnims = new BufferedImage[10];
+	protected BufferedImage[] lAnims;	//Array of all animations
+	protected BufferedImage[] rAnims;
 	protected Rectangle pHurtbox;			//Player's damage area or hurbox
 	private static int framesPerAnimationCycle = 4;//Frames it takes for the animation drawn to change
-	protected enum STATUS{IDLING, MOVING, JUMPING};//Enum used to store all possible outputs for the player's stauts
+	protected enum STATUS{IDLING, MOVING, JUMPING, CROUCHED};//Enum used to store all possible outputs for the player's stauts
 	protected STATUS status;			//Variable used for current status
 
 	public void act()	//Reads through the set of all keys and the player moves accordingly
@@ -43,8 +43,10 @@ public abstract class Player
 			return;	//return because you don't need to do anything else if the set is empty
 		}
 		
+		else if(readKeys.contains(DataRetriever.getDown()) && onGround()) {status = STATUS.CROUCHED;}
+		
 		//If right and !left, then must be walking right
-		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()))
+		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
 		{	
 			x += xSpeed;
 			
@@ -53,7 +55,7 @@ public abstract class Player
 		}
 		
 		//If left and !right, then must be walking left
-		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()))
+		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CROUCHED))
 		{	
 			x -= xSpeed;
 			
@@ -68,6 +70,7 @@ public abstract class Player
 			else {elapsedFrames = 0; curAnimation = 0; status = STATUS.IDLING;}
 		}
 		
+		//If the player jumps, add a ton to their y velocity
 		if(readKeys.contains(DataRetriever.getJump()) && onGround()) ySpeed -= jumpDelta;
 		
 		//If not touching the ground, status must be in mid-air so no animation is chosen
