@@ -19,7 +19,7 @@ import org.DataRetriever;
 public abstract class Player
 {
 	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; //Basic stats
-	protected double x, y, xSpeed, ySpeed, jumpDelta;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
+	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected boolean facingRight = true;	//Boolean for direction facing
 	protected BufferedImage img = null;		//Buffered image drawn in animation
 	protected BufferedImage[] lAnims;	//Array of all animations
@@ -48,6 +48,7 @@ public abstract class Player
 		//If right and !left, then must be walking right
 		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
 		{	
+			worldX += xSpeed;
 			x += xSpeed;
 			
 			if(facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
@@ -57,6 +58,7 @@ public abstract class Player
 		//If left and !right, then must be walking left
 		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CROUCHED))
 		{	
+			worldX += ySpeed;
 			x -= xSpeed;
 			
 			if(!facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
@@ -76,6 +78,7 @@ public abstract class Player
 		//If not touching the ground, status must be in mid-air so no animation is chosen
 		if(!onGround()) status = STATUS.JUMPING;
 		
+		worldY += ySpeed;
 		y += ySpeed;
 		if(!onGround()) ySpeed += DataRetriever.getGravityConstant();
 		else ySpeed = DataRetriever.getGravityConstant();
@@ -103,6 +106,8 @@ public abstract class Player
 	//All getters
 	public double getX() {return x;}
 	public double getY() {return y;}
+	public double getWorldX() {return worldX;}
+	public double getWorldY() {return worldY;}
 	public int getXOffset() {return xOffset;}
 	public int getHealth() {return health;}
 	public int getLevel() {return level;}
@@ -117,6 +122,8 @@ public abstract class Player
 	//Setter methods
 	public void setX(double nX) {x = nX;}
 	public void setY(double nY) {y = nY;}
+	public void setWorldX(double nWX) {worldX = nWX;}
+	public void setWorldY(double nWY) {worldY = nWY;}
 	public void setHealth(int nH) {health = nH;}
 	public void setMaxHealth(int nMH) {maxHealth = nMH;}
 	public void setXSpeed(double nXS) {xSpeed = nXS;}

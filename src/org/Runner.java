@@ -24,8 +24,8 @@ public class Runner implements Runnable
 	public void run() //Overridden "Run" for the Thread to execute
 	{
 		Startup.getGUI().swapPanels(new GamePanel());	//Firstly, substitute panels
-		Startup.getGUI().getPanel().repaint();
 		((GamePanel)Startup.getGUI().getPanel()).addEnemy(new GiantBat(300, 200, 1));
+		Startup.getGUI().getPanel().repaint();
 		
 		try
 		{
@@ -55,14 +55,14 @@ public class Runner implements Runnable
 	{
 		if(DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
 		{
-			if(!paused && DataRetriever.getFrame() > pauseFrame + 10)
+			if(!paused && DataRetriever.getFrame() > pauseFrame + 20)
 			{
 				paused = true;
 				tempPanel = (GamePanel)Startup.getGUI().getPanel();
 				Startup.getGUI().swapPanels(new PausePanel());
 				pauseFrame = DataRetriever.getFrame();
 			}
-			else if(paused && DataRetriever.getFrame() > pauseFrame + 10 && Startup.getGUI().getPanel() instanceof PausePanel)
+			else if(paused && DataRetriever.getFrame() > pauseFrame + 20 && Startup.getGUI().getPanel() instanceof PausePanel)
 			{
 				paused = false;
 				pauseFrame = DataRetriever.getFrame();
@@ -86,5 +86,7 @@ public class Runner implements Runnable
 		this.stopped = true;		//Stops running the while loop
 		DataRetriever.setFrame(0);	//Resets frame count
 		tempPanel = null;			//Resets object pointer
+		paused = false;				//Unpause
+		pauseFrame = 0;				//Reset pause frame
 	}
 }
