@@ -4,11 +4,14 @@ package org;
  * Equivalent of a Struct, serves solely to store data for retrieval
  */
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import java.awt.event.KeyEvent;
+import org.enemies.Enemy;
+import org.players.Player;
+import org.world.World;
 
 public class DataRetriever
 {
@@ -17,6 +20,9 @@ public class DataRetriever
 	private static int frameRate = 60;
 	private static int frame = 0;
 	private static double gravityConstant = 1.125;
+	private static Player p;
+	private static ArrayList<Enemy> allEnemies = new ArrayList<>();
+	private static World gameWorld;
 
 	//Individual functions based on key
 	private static int right = KeyEvent.VK_RIGHT;
@@ -103,4 +109,12 @@ public class DataRetriever
 	
 	//Misc
 	public static double getGravityConstant() {return gravityConstant;}
+	public static Player getPlayer() {return p;}
+	public static ArrayList<Enemy> getAllEnemies() {return allEnemies;}
+	public static World getWorld() {return gameWorld;}
+	
+	public static void setPlayer(Player nyanko) {p = nyanko;}
+	public static void addEnemy(Enemy e) {allEnemies.add(e);}
+	public static void removeEnemy(Enemy e) {allEnemies.remove(e);}
+	public static void setWorld(World w) {gameWorld = w;}
 }

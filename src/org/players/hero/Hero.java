@@ -14,22 +14,32 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.DataRetriever;
+import org.panels.GamePanel;
 import org.players.Player;
 
 public class Hero extends Player
 {
     public Hero(double h, double k, int maxHP)	//Constructor to set important variables
 	{
-		x = h; y = k;
+    	worldX = h; worldY = k;
 		maxHealth = maxHP;
 		health = maxHP;
 		xSpeed = 3.5; ySpeed = 3.5;
 		curAnimation = 0; elapsedFrames = 0;
 		pWidth = 24; pHeight = 54;
 		xOffset = 20; yOffset =  6;
+		
+		if(worldX < GamePanel.screenX / 2) {x = worldX;}
+		else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.screenX/2) x = GamePanel.screenX/2 + (GamePanel.screenX/2 - (DataRetriever.getWorld().getWidth() - worldX));
+		else x = GamePanel.screenX/2;
+		
+		y = k;
+			
 		pHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, pWidth, pHeight);
 		jumpDelta = 15;
 		rAnims = new BufferedImage[13]; lAnims = new BufferedImage[13];
+		worldX = (int)(x + xOffset + pWidth/2); worldY = (int)(y + yOffset + pHeight);
 		
 		try	//This little chunk reads in every animation image and stores them into the arrays
 		{

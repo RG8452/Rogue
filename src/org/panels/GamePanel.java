@@ -8,7 +8,6 @@ package org.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -16,16 +15,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import org.DataRetriever;
 import org.Startup;
 import org.enemies.Enemy;
-import org.enemies.giantbat.GiantBat;
-import org.players.Player;
-import org.players.hero.Hero;
 
 public class GamePanel extends JPanel
 {
@@ -36,9 +31,6 @@ public class GamePanel extends JPanel
 	public static int screenY = (int)(screenSize.getHeight());
 	public static int hScreenY = (int)(screenY / 2);
 
-	private Player p1;	//List of players, not single object for future implementation of multiplayer
-	private ArrayList<Enemy> allEnemies;
-
     public GamePanel() //Constructor
     {
     	GameHandler handled = new GameHandler();	//Panel basics: create handler, add listeners with handler object
@@ -47,9 +39,6 @@ public class GamePanel extends JPanel
 
     	this.setFocusable(true);		//Allows focus (necessary)
     	this.setBackground(Color.gray);
-
-    	p1 = new Hero(hScreenX, hScreenY, 100);
-    	allEnemies = new ArrayList<Enemy>();
     }
 
     @Override
@@ -58,16 +47,13 @@ public class GamePanel extends JPanel
     	super.paintComponent(g);		//First call the super method
   		Graphics2D g2d = (Graphics2D) g;
 
-    	g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));	//Set new Font
-    	g2d.setColor(Color.red);			//Here, you would begin drawing things as they appear in the game itself
-    	g2d.drawString("GAME", 1050, 800);
-
+  		DataRetriever.getWorld().drawVisibleWorld(g2d);
     	drawRulerBoard(g2d);
     	g2d.setColor(Color.green);
     	g2d.drawString(String.valueOf(DataRetriever.getFrame()), 50, 50);
 
-    	p1.drawPlayer(g2d);
-    	for(Enemy nya: allEnemies) nya.drawEnemy(g2d);
+    	DataRetriever.getPlayer().drawPlayer(g2d);
+    	for(Enemy nya: DataRetriever.getAllEnemies()) nya.drawEnemy(g2d);
     }
     
     public void refreshVars()	//Method called only once to reset variables to have exact panel size
@@ -96,12 +82,6 @@ public class GamePanel extends JPanel
     		g.drawLine(racismIsntFunny, 0, racismIsntFunny, screenY);
     	}
     }
-
-    public void addEnemy(Enemy e) {allEnemies.add(e);}
-    public void removeEnemy(Enemy e) {allEnemies.remove(e);}
-    
-    public Player getPlayer() {return p1;}
-    public ArrayList<Enemy> getAllEnemies() {return allEnemies;}
 
     //Handler class which contains all the logic implemented by the listener.
     private class GameHandler implements KeyListener,

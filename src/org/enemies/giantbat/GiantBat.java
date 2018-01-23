@@ -41,7 +41,7 @@ public class GiantBat extends Enemy
 		elapsedFrames = 0; curAnimation = 0;	//Set animation values
 		eWidth = 64; eHeight = 52; xOffset = 0; yOffset = 10;	//Establish Rectangle info
 		eHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, 64, 52);	//Instantiate hurtbox
-		facingRight = (x < ((GamePanel)Startup.getGUI().getPanel()).getPlayer().getX());			//Determine orientation
+		facingRight = (x < DataRetriever.getPlayer().getX());			//Determine orientation
 		
 		try	//Read in all images for animation
 		{
@@ -69,9 +69,9 @@ public class GiantBat extends Enemy
 	@Override
 	public void act()
 	{
-		pX = ((GamePanel)Startup.getGUI().getPanel()).getPlayer().getX();	//Retrieve neat player coords
-		pY = ((GamePanel)Startup.getGUI().getPanel()).getPlayer().getY();
-		double pXMid = pX + ((GamePanel)Startup.getGUI().getPanel()).getPlayer().getWidth()/2 + ((GamePanel)Startup.getGUI().getPanel()).getPlayer().getXOffset();
+		pX = DataRetriever.getPlayer().getX();	//Retrieve neat player coords
+		pY = DataRetriever.getPlayer().getY();
+		double pXMid = pX + DataRetriever.getPlayer().getWidth()/2 + DataRetriever.getPlayer().getXOffset();
 		
 		if(status == STATUS.PATHING)
 		{

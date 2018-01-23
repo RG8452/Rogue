@@ -12,6 +12,8 @@ import org.enemies.Enemy;
 import org.enemies.giantbat.GiantBat;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
+import org.players.hero.Hero;
+import org.world.dwarvencaverns.DwarvenCaverns;
 
 public class Runner implements Runnable
 {
@@ -19,13 +21,17 @@ public class Runner implements Runnable
 	private boolean paused, stopped = false;	//Game status
 	public static GamePanel tempPanel;	//Temporary panel used when swapping stuff
 	private static int frameDelay = (int)(1000/DataRetriever.getFrameRate());	//This retrieves, in milliseconds, the time to wait between frames
+	public static GamePanel accessPanel;
 	
 	@Override
 	public void run() //Overridden "Run" for the Thread to execute
 	{
+		DataRetriever.setWorld(new DwarvenCaverns());
+		DataRetriever.setPlayer(new Hero(1500, GamePanel.hScreenY, 100));
+		DataRetriever.addEnemy(new GiantBat(300, 200, 1));
 		Startup.getGUI().swapPanels(new GamePanel());	//Firstly, substitute panels
-		((GamePanel)Startup.getGUI().getPanel()).addEnemy(new GiantBat(300, 200, 1));
-		Startup.getGUI().getPanel().repaint();
+		accessPanel = ((GamePanel)Startup.getGUI().getPanel());
+		accessPanel.repaint();
 		
 		try
 		{
@@ -47,7 +53,7 @@ public class Runner implements Runnable
 			}
 			catch(Exception e) {System.out.println(e);}
 			
-			Startup.getGUI().getPanel().repaint();
+			accessPanel.repaint();
 		}
 	}
 
@@ -73,8 +79,8 @@ public class Runner implements Runnable
 		
 		if(!paused)
 		{
-			((GamePanel)(Startup.getGUI().getPanel())).getPlayer().act();
-			for(Enemy e: ((GamePanel)(Startup.getGUI().getPanel())).getAllEnemies())
+			DataRetriever.getPlayer().act();
+			for(Enemy e: DataRetriever.getAllEnemies())
 			{
 				e.act();
 			}

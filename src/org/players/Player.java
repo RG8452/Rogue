@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.DataRetriever;
+import org.panels.GamePanel;
 
 public abstract class Player
 {
@@ -49,7 +50,8 @@ public abstract class Player
 		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
 		{	
 			worldX += xSpeed;
-			x += xSpeed;
+			if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.screenX/2) x = GamePanel.screenX/2 + (GamePanel.screenX/2 - (DataRetriever.getWorld().getWidth() - worldX));
+			else if(worldX < GamePanel.screenX/2) x = worldX;
 			
 			if(facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else {elapsedFrames = 0; curAnimation = 0; facingRight = true; status = STATUS.MOVING;}
@@ -58,8 +60,9 @@ public abstract class Player
 		//If left and !right, then must be walking left
 		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CROUCHED))
 		{	
-			worldX += ySpeed;
-			x -= xSpeed;
+			worldX -= xSpeed;
+			if(worldX < GamePanel.screenX/2) x = worldX;
+			else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.screenX/2) x = GamePanel.screenX/2 + (GamePanel.screenX/2 - (DataRetriever.getWorld().getWidth() - worldX));
 			
 			if(!facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else{elapsedFrames = 0; curAnimation = 0; facingRight = false; status = STATUS.MOVING;}
