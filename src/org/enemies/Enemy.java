@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 public abstract class Enemy 
 {
-	protected int maxHealth, health, curAnimation, elapsedFrames, eWidth, eHeight, xOffset, yOffset, level;	//Basic stats for health and animation
+	protected int maxHealth, health, curAnimation, elapsedFrames, lastAttackFrame, eWidth, eHeight, xOffset, yOffset, level;	//Basic stats for health and animation
 	protected double x, y, xSpeed, ySpeed;	//Position stored as double but drawn as int to maintain absolute accuracty
 	protected boolean canFly, facingRight;	//Booleans for direction facing as well as flight
 	protected BufferedImage img;					//Image to be drawn by each class
@@ -48,6 +48,7 @@ public abstract class Enemy
 	public int getHealth() {return health;}
 	public int getMaxHealth() {return maxHealth;}
 	public int getCurAnimation() {return curAnimation;}
+	public int getLastAttackFrame() {return lastAttackFrame;}
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
 	public Rectangle getHurtbox() {return eHurtbox;}
@@ -58,4 +59,5 @@ public abstract class Enemy
 	public void setHealth(int nH) {health = nH;}
 	public void setXSpeed(double nXS) {xSpeed = nXS;}
 	public void setYSpeed(double nYS) {ySpeed = nYS;}
+	public void delayLAF() {lastAttackFrame++;}
 }

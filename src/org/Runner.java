@@ -85,12 +85,19 @@ public class Runner implements Runnable
 				e.act();
 			}
 		}
+		else
+		{
+			for(Enemy e: DataRetriever.getAllEnemies())
+			{
+				e.delayLAF();
+			}
+		}
 	}
 	
 	public void stop() 	//Method called if game is stopped, i.e. user returns to main menu
 	{
 		this.stopped = true;		//Stops running the while loop
-		DataRetriever.setFrame(0);	//Resets frame count
+		DataRetriever.reset();		//Resets data
 		tempPanel = null;			//Resets object pointer
 		paused = false;				//Unpause
 		pauseFrame = 0;				//Reset pause frame

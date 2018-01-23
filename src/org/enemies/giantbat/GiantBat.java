@@ -20,7 +20,6 @@ import org.panels.GamePanel;
 
 public class GiantBat extends Enemy
 {
-	private int lastAttackFrame;		//Frame that the last attack was finished
 	private int framesPerAttack = 180;	//Frames between each attack
 	private int distFromCenter = 176;	//Distance the bat flies away over the player's center
 	private int distAboveCenter = 132;	//Distance over the player's head the bird flies
@@ -159,4 +158,7 @@ public class GiantBat extends Enemy
     	g2d.setColor(Color.red);
     	g2d.drawRect((int)eHurtbox.getX(), (int)eHurtbox.getY(), (int)eHurtbox.getWidth(), (int)eHurtbox.getHeight());
     }
+	
+	public void setLAF(int i) {lastAttackFrame = i;}
+	public int getLAF() {return lastAttackFrame;}
 }

@@ -117,4 +117,13 @@ public class DataRetriever
 	public static void addEnemy(Enemy e) {allEnemies.add(e);}
 	public static void removeEnemy(Enemy e) {allEnemies.remove(e);}
 	public static void setWorld(World w) {gameWorld = w;}
+	
+	public static void reset()
+	{
+		allKeys.clear();
+		frame = 0;
+		p = null;
+		allEnemies.clear();
+		gameWorld = null;
+	}
 }
