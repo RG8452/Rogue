@@ -101,7 +101,7 @@ public abstract class Player
 	}
 	
 	//All getters
-	public double getX() {return x;}
+	public double getX() {return x;} 
 	public double getY() {return y;}
 	public int getXOffset() {return xOffset;}
 	public int getHealth() {return health;}

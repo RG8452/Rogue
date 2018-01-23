@@ -31,10 +31,10 @@ public class GamePanel extends JPanel
 {
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-	static int screenX = (int)(screenSize.getWidth()); //Get useful screen info
-	static int hScreenX = (int)(screenX / 2);
-	static int screenY = (int)(screenSize.getHeight());
-	static int hScreenY = (int)(screenY / 2);
+	public static int screenX = (int)(screenSize.getWidth()); //Get useful screen info
+	public static int hScreenX = (int)(screenX / 2);
+	public static int screenY = (int)(screenSize.getHeight());
+	public static int hScreenY = (int)(screenY / 2);
 
 	private Player p1;	//List of players, not single object for future implementation of multiplayer
 	private ArrayList<Enemy> allEnemies;

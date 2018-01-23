@@ -1,4 +1,4 @@
-package org;
+package org.world;
 /*
  * This is the class for a data type known as a QuadTree
  * This class will be use to store and check collisions in the maps
