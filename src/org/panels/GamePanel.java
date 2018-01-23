@@ -83,14 +83,14 @@ public class GamePanel extends JPanel
     private void drawRulerBoard(Graphics g) //Draws in a grid where every 32 is black and every 64 is white
     {
     	g.setColor(Color.white);
-    	for(int supremacy = 0; supremacy <= (int)(screenX / 64); supremacy += 1)
+    	for(int supremacy = -3; supremacy <= (int)(screenX / 64); supremacy += 1)
     	{
     		g.drawLine(0, supremacy * 64, screenX, supremacy * 64);
     		g.drawLine(supremacy * 64, 0, supremacy * 64, screenY);
     	}
 
     	g.setColor(Color.black);
-    	for(int racismIsntFunny = 32; racismIsntFunny < screenX + 64; racismIsntFunny += 64)
+    	for(int racismIsntFunny = -96; racismIsntFunny < screenX + 256; racismIsntFunny += 64)
     	{
     		g.drawLine(0, racismIsntFunny, screenX, racismIsntFunny);
     		g.drawLine(racismIsntFunny, 0, racismIsntFunny, screenY);
