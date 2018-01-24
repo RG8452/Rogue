@@ -59,13 +59,15 @@ public abstract class World
 			{
 				if(r.getY() + r.getHeight() > p.getWorldY() - GamePanel.hScreenY && r.getY() < p.getWorldY() + GamePanel.hScreenY)
 				{
-					if(p.getWorldX() < GamePanel.hScreenX) {tX = r.getX();}
+					tX = r.getX() - dX; tY = r.getY() - dY;
+/*					if(p.getWorldX() < GamePanel.hScreenX) {tX = r.getX();}
 					else if(p.getWorldX() > fullMap.getWidth() - GamePanel.hScreenX) {tX = r.getX() - fullMap.getWidth() - GamePanel.screenX;}
 					else {tX = GamePanel.hScreenX + (r.getX() - p.getWorldX());}
 					
 					if(p.getWorldY() < GamePanel.hScreenY) {tY = r.getY();}
 					else if(p.getWorldY() > fullMap.getHeight() - GamePanel.hScreenY) {tY = r.getY() - fullMap.getHeight() - GamePanel.hScreenY;}
 					else {tY = GamePanel.hScreenY + (r.getY() - p.getWorldY());}
+					*/
 					
 					g2d.fillRect((int)tX, (int)tY, (int)r.getWidth(), (int)r.getHeight());
 				}
