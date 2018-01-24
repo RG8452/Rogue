@@ -24,7 +24,7 @@ public abstract class Player
 {
 	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; //Basic stats
 	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta;	//X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
-	protected boolean facingRight = true;	//Boolean for direction facing
+	protected boolean facingRight = true, onGround = false;	//Boolean for direction facing and ground checking
 	protected BufferedImage img = null;		//Buffered image drawn in animation
 	protected BufferedImage[] lAnims;	//Array of all animations
 	protected BufferedImage[] rAnims;
@@ -38,7 +38,7 @@ public abstract class Player
 		Set<Integer> readKeys = (TreeSet<Integer>)(DataRetriever.getAllKeys());
 		
 		//If standing on the ground, the player must be Idling
-		if(readKeys.size() == 0 && onGround())
+		if(readKeys.size() == 0 && onGround)
 		{
 			//This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
 			if(status == STATUS.IDLING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
@@ -47,7 +47,7 @@ public abstract class Player
 			return;	//return because you don't need to do anything else if the set is empty
 		}
 		
-		else if(readKeys.contains(DataRetriever.getDown()) && onGround()) {status = STATUS.CROUCHED;}
+		else if(readKeys.contains(DataRetriever.getDown()) && onGround) {status = STATUS.CROUCHED;}
 		
 		//If right and !left, then must be walking right
 		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
@@ -65,7 +65,7 @@ public abstract class Player
 		{	
 			worldX -= xSpeed;
 			if(worldX < GamePanel.hScreenX) x = worldX;
-			else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
+			else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = worldX - World.getDrawX();
 			
 			if(!facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else{elapsedFrames = 0; curAnimation = 0; facingRight = false; status = STATUS.MOVING;}
@@ -79,10 +79,10 @@ public abstract class Player
 		}
 		
 		//If the player jumps, add a ton to their y velocity
-		if(readKeys.contains(DataRetriever.getJump()) && onGround()) ySpeed -= jumpDelta;
+		if(readKeys.contains(DataRetriever.getJump()) && onGround) ySpeed -= jumpDelta;
 		
 		//If not touching the ground, status must be in mid-air so no animation is chosen
-		if(!onGround()) status = STATUS.JUMPING;
+		if(!onGround) status = STATUS.JUMPING;
 		
 		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
@@ -92,26 +92,50 @@ public abstract class Player
 			{
 				worldX = facingRight ? worldX - 1 : worldX + 1;
 				if(worldX < GamePanel.hScreenX) x = worldX;
-				else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
+				else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = worldX - World.getDrawX();
 				else x = GamePanel.hScreenX;
 				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);	
 			}
 		}
 		
 		worldY += ySpeed;
-		y += ySpeed;
-		if(!onGround()) ySpeed += DataRetriever.getGravityConstant();
+
+		if(worldY < GamePanel.hScreenY) y = worldY;
+		else if(worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = worldY - World.getDrawY();
+		else y = worldY + pHeight;
+		
+		onGround = false;
+		
+		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+		{
+			Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
+			while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
+			{
+				worldY = ySpeed > 0 ? worldY - 1 : worldY + 1;
+				if(worldY < GamePanel.hScreenY) y = worldY;
+				else if(worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = worldY - World.getDrawY();
+				else y = GamePanel.hScreenY;
+				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+				if(ySpeed > 0) onGround = true;
+			}
+		}
+		
+		if(onGround) {ySpeed = DataRetriever.getGravityConstant();}
+		else {ySpeed += DataRetriever.getGravityConstant();}
+		
+/*		if(!onGround()) ySpeed += DataRetriever.getGravityConstant();
 		else ySpeed = DataRetriever.getGravityConstant();
 		
 		if(onGround()) moveToGround();
-		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);*/
 	}
 
 	//Method to be overridden that draws each player by importing that file
 	public abstract void drawPlayer(Graphics2D g2d);
 
 	//Checks if the player is on the ground (Currently arbitrated to y == 800)
-	public boolean onGround()
+/*	public boolean onGround()
 	{
 		return ((int)y + pHeight >= 800);
 	}
@@ -121,7 +145,7 @@ public abstract class Player
 	{
 		while(onGround()) y -= .25;
 		y += .25;
-	}
+	}*/
 	
 	//All getters
 	public double getX() {return x;} 
