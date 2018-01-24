@@ -10,6 +10,7 @@ package org.players;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.TreeSet;
 
 import org.DataRetriever;
 import org.panels.GamePanel;
+import org.world.World;
 
 public abstract class Player
 {
@@ -82,15 +84,17 @@ public abstract class Player
 		//If not touching the ground, status must be in mid-air so no animation is chosen
 		if(!onGround()) status = STATUS.JUMPING;
 		
+		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
 		{ 
-			while(pHurtbox.intersects(r)) 
+			Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
+			while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
 			{
 				worldX = facingRight ? worldX - 1 : worldX + 1;
 				if(worldX < GamePanel.hScreenX) x = worldX;
 				else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
 				else x = GamePanel.hScreenX;
-				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);	
 			}
 		}
 		

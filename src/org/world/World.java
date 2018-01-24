@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import org.DataRetriever;
 import org.panels.GamePanel;
-import org.players.Player;
 
 public abstract class World
 {
@@ -23,6 +22,7 @@ public abstract class World
 	protected BufferedImage background, midground, foreground;	//images to be drawn
 	protected QuadTree worldCollision;	//QTree for collision
 	protected static int block = 32; 	//Number of pixels in a block
+	protected static double drawX, drawY;		//Corner where screen drawing begins
 	
 	//Draws the portion of the World that is visible based on the player's world coords
 	//The player is assumed to be perfectly center except when the screen can no longer scroll
@@ -31,7 +31,6 @@ public abstract class World
 		int sX = GamePanel.screenX; int sY = GamePanel.screenY;		//Screen dimensions
 		double pWX = DataRetriever.getPlayer().getWorldX();	//Player coords
 		double pWY = DataRetriever.getPlayer().getWorldY();
-		int drawX, drawY = 0;
 		
 		if(sX/2 > pWX) {drawX = 0;}		//If past the left edge, then start at 0
 		else if(fullMap.getWidth() - pWX < sX/2) {drawX = (int)(fullMap.getWidth() - sX);}	//If past the right edge, start at max right
@@ -41,33 +40,24 @@ public abstract class World
 		else if(fullMap.getHeight() - pWY < sY/2) drawY = (int)(fullMap.getHeight() - sY);
 		else drawY = (int)(pWY - sY/2);
 		
-		g2d.drawImage(background, 0, 0, sX, sY, drawX, drawY, sX + drawX, sY + drawY, null);	//Draws all three images successively
-		g2d.drawImage(midground, 0, 0, sX, sY, drawX, drawY, sX + drawX, sY + drawY, null);
-		g2d.drawImage(foreground, 0, 0, sX, sY, drawX, drawY, sX + drawX, sY + drawY, null);
+		g2d.drawImage(background, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);	//Draws all three images successively
+		g2d.drawImage(midground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
+		g2d.drawImage(foreground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
 		
-		drawHitboxes(g2d, drawX, drawY);
+		drawHitboxes(g2d);
 	}
 	
-	public void drawHitboxes(Graphics2D g2d, int dX, int dY)
+	public void drawHitboxes(Graphics2D g2d)
 	{
 		double tX, tY;
 		g2d.setColor(Color.magenta);
-		Player p = DataRetriever.getPlayer();
 		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), fullMap))
 		{
-			if(r.getX() + r.getWidth() > p.getWorldX() - GamePanel.hScreenX && r.getX() < p.getWorldX() + GamePanel.hScreenX)
+			if(r.getX() + r.getWidth() > drawX && r.getX() < drawX + GamePanel.screenX)
 			{
-				if(r.getY() + r.getHeight() > p.getWorldY() - GamePanel.hScreenY && r.getY() < p.getWorldY() + GamePanel.hScreenY)
+				if(r.getY() + r.getHeight() > drawY && r.getY() < drawY + GamePanel.screenY)
 				{
-					tX = r.getX() - dX; tY = r.getY() - dY;
-/*					if(p.getWorldX() < GamePanel.hScreenX) {tX = r.getX();}
-					else if(p.getWorldX() > fullMap.getWidth() - GamePanel.hScreenX) {tX = r.getX() - fullMap.getWidth() - GamePanel.screenX;}
-					else {tX = GamePanel.hScreenX + (r.getX() - p.getWorldX());}
-					
-					if(p.getWorldY() < GamePanel.hScreenY) {tY = r.getY();}
-					else if(p.getWorldY() > fullMap.getHeight() - GamePanel.hScreenY) {tY = r.getY() - fullMap.getHeight() - GamePanel.hScreenY;}
-					else {tY = GamePanel.hScreenY + (r.getY() - p.getWorldY());}
-					*/
+					tX = r.getX() - drawX; tY = r.getY() - drawY;
 					
 					g2d.fillRect((int)tX, (int)tY, (int)r.getWidth(), (int)r.getHeight());
 				}
@@ -76,6 +66,9 @@ public abstract class World
 	}
 	
 	public QuadTree getCollisionTree() {return worldCollision;}
+	public Rectangle getFullMap() {return fullMap;}
 	public int getWidth() {return (int)fullMap.getWidth();}
 	public int getHeight() {return (int)fullMap.getHeight();}
+	public static double getDrawX() {return drawX;}
+	public static double getDrawY() {return drawY;}
 }
