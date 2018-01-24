@@ -123,29 +123,10 @@ public abstract class Player
 		
 		if(onGround) {ySpeed = DataRetriever.getGravityConstant();}
 		else {ySpeed += DataRetriever.getGravityConstant();}
-		
-/*		if(!onGround()) ySpeed += DataRetriever.getGravityConstant();
-		else ySpeed = DataRetriever.getGravityConstant();
-		
-		if(onGround()) moveToGround();
-		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);*/
 	}
 
 	//Method to be overridden that draws each player by importing that file
 	public abstract void drawPlayer(Graphics2D g2d);
-
-	//Checks if the player is on the ground (Currently arbitrated to y == 800)
-/*	public boolean onGround()
-	{
-		return ((int)y + pHeight >= 800);
-	}
-	
-	//Move the player to be exactly on the ground if they're below the ground
-	public void moveToGround()
-	{
-		while(onGround()) y -= .25;
-		y += .25;
-	}*/
 	
 	//All getters
 	public double getX() {return x;} 
