@@ -7,12 +7,15 @@ package org.world;
  * The worlds also will contain a final QuadTree of Rectangles that will be used for collision 
  */
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import org.DataRetriever;
 import org.panels.GamePanel;
+import org.players.Player;
 
 public abstract class World
 {
@@ -41,6 +44,33 @@ public abstract class World
 		g2d.drawImage(background, 0, 0, sX, sY, drawX, drawY, sX + drawX, sY + drawY, null);	//Draws all three images successively
 		g2d.drawImage(midground, 0, 0, sX, sY, drawX, drawY, sX + drawX, sY + drawY, null);
 		g2d.drawImage(foreground, 0, 0, sX, sY, drawX, drawY, sX + drawX, sY + drawY, null);
+		
+		drawHitboxes(g2d, drawX, drawY);
+	}
+	
+	public void drawHitboxes(Graphics2D g2d, int dX, int dY)
+	{
+		double tX, tY;
+		g2d.setColor(Color.magenta);
+		Player p = DataRetriever.getPlayer();
+		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), fullMap))
+		{
+			if(r.getX() + r.getWidth() > p.getWorldX() - GamePanel.hScreenX && r.getX() < p.getWorldX() + GamePanel.hScreenX)
+			{
+				if(r.getY() + r.getHeight() > p.getWorldY() - GamePanel.hScreenY && r.getY() < p.getWorldY() + GamePanel.hScreenY)
+				{
+					if(p.getWorldX() < GamePanel.hScreenX) {tX = r.getX();}
+					else if(p.getWorldX() > fullMap.getWidth() - GamePanel.hScreenX) {tX = r.getX() - fullMap.getWidth() - GamePanel.screenX;}
+					else {tX = GamePanel.hScreenX + (r.getX() - p.getWorldX());}
+					
+					if(p.getWorldY() < GamePanel.hScreenY) {tY = r.getY();}
+					else if(p.getWorldY() > fullMap.getHeight() - GamePanel.hScreenY) {tY = r.getY() - fullMap.getHeight() - GamePanel.hScreenY;}
+					else {tY = GamePanel.hScreenY + (r.getY() - p.getWorldY());}
+					
+					g2d.fillRect((int)tX, (int)tY, (int)r.getWidth(), (int)r.getHeight());
+				}
+			}
+		}
 	}
 	
 	public QuadTree getCollisionTree() {return worldCollision;}

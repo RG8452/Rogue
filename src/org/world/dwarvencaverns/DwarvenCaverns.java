@@ -28,5 +28,10 @@ public class DwarvenCaverns extends World
 		
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight);	//Instantiate various objects
 		worldCollision = new QuadTree(0, fullMap);
+		
+		worldCollision.insert(new Rectangle(0, 0, worldWidth, block));
+		worldCollision.insert(new Rectangle(0, 0, block, worldHeight));
+		worldCollision.insert(new Rectangle(worldWidth - block, 0, block, worldHeight));
+		worldCollision.insert(new Rectangle(0, worldHeight - block, worldWidth, block));
 	}
 }

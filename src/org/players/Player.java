@@ -11,6 +11,7 @@ package org.players;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -50,8 +51,8 @@ public abstract class Player
 		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
 		{	
 			worldX += xSpeed;
-			if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.screenX/2) x = GamePanel.screenX/2 + (GamePanel.screenX/2 - (DataRetriever.getWorld().getWidth() - worldX));
-			else if(worldX < GamePanel.screenX/2) x = worldX;
+			if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
+			else if(worldX < GamePanel.hScreenX) x = worldX;
 			
 			if(facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else {elapsedFrames = 0; curAnimation = 0; facingRight = true; status = STATUS.MOVING;}
@@ -61,8 +62,8 @@ public abstract class Player
 		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CROUCHED))
 		{	
 			worldX -= xSpeed;
-			if(worldX < GamePanel.screenX/2) x = worldX;
-			else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.screenX/2) x = GamePanel.screenX/2 + (GamePanel.screenX/2 - (DataRetriever.getWorld().getWidth() - worldX));
+			if(worldX < GamePanel.hScreenX) x = worldX;
+			else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
 			
 			if(!facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else{elapsedFrames = 0; curAnimation = 0; facingRight = false; status = STATUS.MOVING;}
@@ -80,6 +81,18 @@ public abstract class Player
 		
 		//If not touching the ground, status must be in mid-air so no animation is chosen
 		if(!onGround()) status = STATUS.JUMPING;
+		
+		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+		{ 
+			while(pHurtbox.intersects(r)) 
+			{
+				worldX = facingRight ? worldX - 1 : worldX + 1;
+				if(worldX < GamePanel.hScreenX) x = worldX;
+				else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
+				else x = GamePanel.hScreenX;
+				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+			}
+		}
 		
 		worldY += ySpeed;
 		y += ySpeed;

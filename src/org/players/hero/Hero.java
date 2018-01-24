@@ -25,7 +25,7 @@ public class Hero extends Player
     	worldX = h; worldY = k;
 		maxHealth = maxHP;
 		health = maxHP;
-		xSpeed = 3.5; ySpeed = 3.5;
+		xSpeed = 7; ySpeed = 3.5;
 		curAnimation = 0; elapsedFrames = 0;
 		pWidth = 24; pHeight = 54;
 		xOffset = 20; yOffset =  6;
