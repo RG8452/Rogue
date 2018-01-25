@@ -29,16 +29,7 @@ public abstract class World
 	public void drawVisibleWorld(Graphics2D g2d)
 	{
 		int sX = GamePanel.screenX; int sY = GamePanel.screenY;		//Screen dimensions
-		double pWX = DataRetriever.getPlayer().getWorldX();	//Player coords
-		double pWY = DataRetriever.getPlayer().getWorldY();
-		
-		if(sX/2 > pWX) {drawX = 0;}		//If past the left edge, then start at 0
-		else if(fullMap.getWidth() - pWX < sX/2) {drawX = (int)(fullMap.getWidth() - sX);}	//If past the right edge, start at max right
-		else {drawX = (int)(pWX - sX/2);}		//Otherwise, center the player
-		
-		if(sY/2 > pWY) drawY = 0;		//Same as X methods but for the Y values
-		else if(fullMap.getHeight() - pWY < sY/2) drawY = (int)(fullMap.getHeight() - sY);
-		else drawY = (int)(pWY - sY/2);
+		setDrawX(); setDrawY();
 		
 		g2d.drawImage(background, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);	//Draws all three images successively
 		g2d.drawImage(midground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
@@ -51,11 +42,11 @@ public abstract class World
 	{
 		double tX, tY;
 		g2d.setColor(Color.magenta);
-		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), fullMap))
+		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getHurtbox()))
 		{
-			if(r.getX() + r.getWidth() > drawX && r.getX() < drawX + GamePanel.screenX)
+			if(r.getX() + r.getWidth() > drawX || r.getX() < drawX + GamePanel.screenX)
 			{
-				if(r.getY() + r.getHeight() > drawY && r.getY() < drawY + GamePanel.screenY)
+				if(r.getY() + r.getHeight() > drawY || r.getY() < drawY + GamePanel.screenY)
 				{
 					tX = r.getX() - drawX; tY = r.getY() - drawY;
 					
@@ -69,6 +60,27 @@ public abstract class World
 	public Rectangle getFullMap() {return fullMap;}
 	public int getWidth() {return (int)fullMap.getWidth();}
 	public int getHeight() {return (int)fullMap.getHeight();}
+	public void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x,y,w,h));}
+	public void QTAddB(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(block * x, block * y, block * w, block * h));}
+	
 	public static double getDrawX() {return drawX;}
 	public static double getDrawY() {return drawY;}
+	
+	public static void setDrawX() 
+	{
+		int sX = GamePanel.screenX;
+		double pWX = DataRetriever.getPlayer().getWorldX();
+		if(sX/2 > pWX) {drawX = 0;}		//If past the left edge, then start at 0
+		else if(DataRetriever.getWorld().getFullMap().getWidth() - pWX < sX/2) {drawX = (int)(DataRetriever.getWorld().getFullMap().getWidth() - sX);}	//If past the right edge, start at max right
+		else {drawX = (int)(pWX - sX/2);}		//Otherwise, center the player
+	}
+	
+	public static void setDrawY() 
+	{
+		int sY = GamePanel.screenY;
+		double pWY = DataRetriever.getPlayer().getWorldY();
+		if(sY/2 > pWY) drawY = 0;		//Same as X methods but for the Y values
+		else if(DataRetriever.getWorld().getFullMap().getHeight() - pWY < sY/2) drawY = (int)(DataRetriever.getWorld().getFullMap().getHeight() - sY);
+		else drawY = (int)(pWY - sY/2);
+	}
 }

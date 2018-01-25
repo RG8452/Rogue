@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.DataRetriever;
-import org.panels.GamePanel;
 import org.world.World;
 
 public abstract class Player
@@ -30,6 +29,7 @@ public abstract class Player
 	protected BufferedImage[] rAnims;
 	protected Rectangle pHurtbox;			//Player's damage area or hurbox
 	private static int framesPerAnimationCycle = 4;//Frames it takes for the animation drawn to change
+	private static double flySpeed = 8.5;
 	protected enum STATUS{IDLING, MOVING, JUMPING, CROUCHED};//Enum used to store all possible outputs for the player's stauts
 	protected STATUS status;			//Variable used for current status
 
@@ -53,8 +53,7 @@ public abstract class Player
 		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
 		{	
 			worldX += xSpeed;
-			if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.hScreenX + (GamePanel.hScreenX - (DataRetriever.getWorld().getWidth() - worldX));
-			else if(worldX < GamePanel.hScreenX) x = worldX;
+			x = worldX - World.getDrawX();
 			
 			if(facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else {elapsedFrames = 0; curAnimation = 0; facingRight = true; status = STATUS.MOVING;}
@@ -64,8 +63,7 @@ public abstract class Player
 		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CROUCHED))
 		{	
 			worldX -= xSpeed;
-			if(worldX < GamePanel.hScreenX) x = worldX;
-			else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = worldX - World.getDrawX();
+			x = worldX - World.getDrawX();
 			
 			if(!facingRight && status == STATUS.MOVING) {elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimationCycle);}
 			else{elapsedFrames = 0; curAnimation = 0; facingRight = false; status = STATUS.MOVING;}
@@ -84,47 +82,95 @@ public abstract class Player
 		//If not touching the ground, status must be in mid-air so no animation is chosen
 		if(!onGround) status = STATUS.JUMPING;
 		
+		//Reset Hurtbox and then check for collisions with any nearby rect; if colliding, force out of the block
 		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+		World.setDrawX(); World.setDrawY();
 		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
 		{ 
 			Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
 			while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
 			{
 				worldX = facingRight ? worldX - 1 : worldX + 1;
-				if(worldX < GamePanel.hScreenX) x = worldX;
-				else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = worldX - World.getDrawX();
-				else x = GamePanel.hScreenX;
+				x = worldX - World.getDrawX();
 				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);	
 			}
 		}
 		
-		worldY += ySpeed;
+		worldY += ySpeed;	//Change y vars
 
-		if(worldY < GamePanel.hScreenY) y = worldY;
-		else if(worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = worldY - World.getDrawY();
-		else y = worldY + pHeight;
-		
+		//Adjust screen pos based on world pos
+		y = worldY - World.getDrawY();		
 		onGround = false;
 		
+		//Just like the x, this checks y collisions and stops the player from getting through hitboxes
 		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+		World.setDrawX(); World.setDrawY();
 		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
 		{
 			Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
 			while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
 			{
 				worldY = ySpeed > 0 ? worldY - 1 : worldY + 1;
-				if(worldY < GamePanel.hScreenY) y = worldY;
-				else if(worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = worldY - World.getDrawY();
-				else y = GamePanel.hScreenY;
+				y = worldY - World.getDrawY();
 				pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 				if(ySpeed > 0) onGround = true;
+				else ySpeed = DataRetriever.getGravityConstant();
 			}
 		}
 		
-		if(onGround) {ySpeed = DataRetriever.getGravityConstant();}
-		else {ySpeed += DataRetriever.getGravityConstant();}
+		if(onGround) {ySpeed = DataRetriever.getGravityConstant();}	//If on ground, reset falling speed
+		else {ySpeed += DataRetriever.getGravityConstant();}		//If in air, fall faster
 	}
 
+	//Method called in run() if devMode is true; allows the user to fly, while the noclip variable does exactly as it sounds
+	public void devAct(boolean noclip)
+	{
+		Set<Integer> readKeys = (TreeSet<Integer>)(DataRetriever.getAllKeys());
+		
+		if(readKeys.size() == 0) return;
+		if(readKeys.contains(DataRetriever.getRight())) {worldX += flySpeed; facingRight = true;}
+		else if(readKeys.contains(DataRetriever.getLeft())) {worldX -= flySpeed; facingRight = false;}
+		
+		x = worldX - World.getDrawX();
+		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+		World.setDrawX(); World.setDrawY();
+		if(!noclip)
+		{
+			for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+			{ 
+				Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
+				while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
+				{
+					worldX = facingRight ? worldX - 1 : worldX + 1;
+					x = worldX - World.getDrawX();
+					pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+				}
+			}
+		}
+		
+		if(readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getJump())) worldY -= flySpeed;
+		else if(readKeys.contains(DataRetriever.getDown())) worldY += flySpeed;
+		
+		y = worldY - World.getDrawY();
+		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+		World.setDrawX(); World.setDrawY();
+		if(!noclip)
+		{
+			for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+			{
+				Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
+				while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
+				{
+					worldY = readKeys.contains(DataRetriever.getDown()) ? worldY - 1 : worldY + 1;
+					y = worldY - World.getDrawY();
+					pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
+				}
+			}
+		}
+		
+		status = STATUS.JUMPING; 
+	}
+	
 	//Method to be overridden that draws each player by importing that file
 	public abstract void drawPlayer(Graphics2D g2d);
 	
