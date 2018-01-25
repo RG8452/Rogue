@@ -42,7 +42,7 @@ public abstract class World
 	{
 		double tX, tY;
 		g2d.setColor(Color.magenta);
-		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getHurtbox()))
+		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getWorldbox()))
 		{
 			if(r.getX() + r.getWidth() > drawX || r.getX() < drawX + GamePanel.screenX)
 			{

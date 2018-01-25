@@ -19,6 +19,7 @@ package org.world;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QuadTree
@@ -112,6 +113,44 @@ public class QuadTree
 	}
 	
 	/*
+	 * 
+	 */
+	private int[] getAllIndices(Rectangle pRect)
+	{
+		double verticalMidpoint = bounds.getX() + (bounds.getWidth() / 2);
+		double horizontalMidpoint = bounds.getY() + (bounds.getHeight() / 2);
+		
+		//Object can completely fit within the top quadrants
+		boolean topQuadrant = (pRect.getY() < horizontalMidpoint && pRect.getY() + pRect.getHeight() < horizontalMidpoint);
+		// Object can completely fit within the bottom quadrants
+		boolean bottomQuadrant = (pRect.getY() > horizontalMidpoint);
+		
+		//Object can completely fit within the left quadrants
+		if(pRect.getX() < verticalMidpoint && pRect.getX() + pRect.getWidth() < verticalMidpoint)
+		{
+			if(topQuadrant) return new int[] {1};	
+			else if(bottomQuadrant) return new int[] {2};
+			else return new int[] {1,2};
+		}
+		
+		//Object can fit completely within the right quadrants
+		else if(pRect.getX() > verticalMidpoint)
+		{
+			if(topQuadrant) return new int[] {0};
+			else if(bottomQuadrant) return new int[] {3};
+			else return new int[] {0,3};
+		}
+		
+		//If object can't fit in either horizontal side
+		else
+		{
+			if(topQuadrant) return new int[] {0,1};
+			else if(bottomQuadrant) return new int[] {2,3};
+			else return new int[] {0,1,2,3};
+		}
+	}
+	
+	/*
 	 * Insert the object into the quadtree.
 	 * If the node exceeds the capacity, it will split and add all objects to their corresponding nodes
 	 */
@@ -137,20 +176,44 @@ public class QuadTree
 			while(i < objects.size())
 			{
 				int index = getIndex(objects.get(i));
-				if(index != -1) nodes[index].insert(objects.remove(i));
+				if(index != -1) {nodes[index].insert(objects.remove(i));}
 				else i++;
 			}
 		}
 	}
 	
-	//Return all objects that could collide with the given object
+/*	//Return all objects that could collide with the given object
 	public List<Rectangle> retrieve(List<Rectangle> returnObjects, Rectangle pRect)
 	{
 		int index = getIndex(pRect);
 		if(index != -1 && nodes[0] != null) nodes[index].retrieve(returnObjects, pRect);
 		
+		System.out.println("LEVEL:  " + level + "\t\tINDEX: " + index);
 		returnObjects.addAll(objects);
 		
 		return returnObjects;
+	}*/
+	
+	//Return all objects using getAllIndices to to force child nodes to be included
+	public List<Rectangle> retrieve(List<Rectangle> returnObjects, Rectangle pRect)
+	{
+		int[] indices = getAllIndices(pRect);
+		for(int i: indices)
+		{
+			if(nodes[0] != null) nodes[i].retrieve(returnObjects, pRect);
+		}
+		
+//		printLevelInfo(indices, pRect);
+		returnObjects.addAll(objects);
+		
+		return returnObjects;
+	}
+	
+	private void printLevelInfo(int[] indices, Rectangle pRect)
+	{
+		System.out.print("LEVEL: " + level + " OBS: " + objects.size());
+		System.out.print("\tBOUNDS: x - " + (int)bounds.getX() + " y - " + (int)bounds.getY() + " w - " + (int)bounds.getWidth() + " h - " + (int)bounds.getHeight());
+		System.out.print("\tPLYER: x - " + (int)pRect.getX() + " y - " + (int)pRect.getY() + " w - " + (int)pRect.getWidth() + " h - " + (int)pRect.getHeight());
+		System.out.print("\tINDICES: " + Arrays.toString(indices) + "\n");
 	}
 }

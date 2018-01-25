@@ -85,7 +85,7 @@ public abstract class Player
 		//Reset Hurtbox and then check for collisions with any nearby rect; if colliding, force out of the block
 		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 		World.setDrawX(); World.setDrawY();
-		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{ 
 			Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
 			while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
@@ -105,7 +105,7 @@ public abstract class Player
 		//Just like the x, this checks y collisions and stops the player from getting through hitboxes
 		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 		World.setDrawX(); World.setDrawY();
-		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+		for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
 			while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
@@ -131,18 +131,18 @@ public abstract class Player
 		if(readKeys.contains(DataRetriever.getRight())) {worldX += flySpeed; facingRight = true;}
 		else if(readKeys.contains(DataRetriever.getLeft())) {worldX -= flySpeed; facingRight = false;}
 		
-		x = worldX - World.getDrawX();
+		x = worldX - World.getDrawX() - pWidth/2;
 		pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 		World.setDrawX(); World.setDrawY();
 		if(!noclip)
 		{
-			for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+			for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{ 
-				Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
+				Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));;
 				while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
 				{
-					worldX = facingRight ? worldX - 1 : worldX + 1;
-					x = worldX - World.getDrawX();
+					worldX = facingRight ? worldX - .75 : worldX + .75;
+					x = worldX - World.getDrawX() - pWidth/2;
 					pHurtbox.setLocation((int)x + xOffset, (int)y + yOffset);
 				}
 			}
@@ -156,7 +156,7 @@ public abstract class Player
 		World.setDrawX(); World.setDrawY();
 		if(!noclip)
 		{
-			for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), pHurtbox))
+			for(Rectangle r: DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{
 				Rectangle2D r2d = (Rectangle2D)(new Rectangle((int)(r.getX() - World.getDrawX()), (int)(r.getY() - World.getDrawY()), (int)r.getWidth(), (int)r.getHeight()));
 				while(pHurtbox.intersects(r2d)) //pHurtbox.intersects(r)
@@ -187,6 +187,7 @@ public abstract class Player
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
 	public Rectangle getHurtbox() {return pHurtbox;}
+	public Rectangle getWorldbox() {return new Rectangle((int)(pHurtbox.getX() + World.getDrawX()), (int)(pHurtbox.getY() + World.getDrawY()), (int)pHurtbox.getWidth(), (int)pHurtbox.getHeight());}
 	public int getWidth() {return pWidth;}
 	public int getHeight() {return pHeight;}
 	
