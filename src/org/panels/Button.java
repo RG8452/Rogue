@@ -1,4 +1,4 @@
-package org;
+package org.panels;
 /**
  * RG
  * This is a basic class which will just allow the user to put sections of responsivity on a panel

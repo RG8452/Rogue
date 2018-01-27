@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -46,9 +47,9 @@ public class GamePanel extends JPanel
     {
     	super.paintComponent(g);		//First call the super method
   		Graphics2D g2d = (Graphics2D) g;
-
+  		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   		DataRetriever.getWorld().drawVisibleWorld(g2d);
-    	drawRulerBoard(g2d);
+//    	drawRulerBoard(g2d);
     	g2d.setColor(Color.green);
     	g2d.drawString(String.valueOf(DataRetriever.getFrame()), 50, 50);
 

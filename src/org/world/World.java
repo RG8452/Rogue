@@ -35,7 +35,7 @@ public abstract class World
 		g2d.drawImage(midground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
 		g2d.drawImage(foreground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
 		
-		drawHitboxes(g2d);
+//		drawHitboxes(g2d);
 	}
 	
 	public void drawHitboxes(Graphics2D g2d)

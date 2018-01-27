@@ -5,7 +5,6 @@ package org.panels;
  * Only needs a mouseListener, will have buttons to do all the functionality
  */
 
-import org.Button;
 import org.Startup;
 
 import java.util.ArrayList;

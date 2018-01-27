@@ -18,7 +18,7 @@ import org.world.dwarvencaverns.DwarvenCaverns;
 public class Runner implements Runnable
 {
 	private static int pauseFrame; //Frame in which the pause key is first pressed to force a delay
-	private boolean paused, stopped, devMode = true, noclip;	//Game status
+	private boolean paused, stopped, devMode = false, noclip;	//Game status
 	public static GamePanel tempPanel;	//Temporary panel used when swapping stuff
 	private static int frameDelay = (int)(1000/DataRetriever.getFrameRate());	//This retrieves, in milliseconds, the time to wait between frames
 	public static GamePanel accessPanel;

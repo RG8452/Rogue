@@ -37,7 +37,7 @@ public class Hero extends Player
 		y = k;
 			
 		pHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, pWidth, pHeight);
-		jumpDelta = 45;
+		jumpDelta = 16;
 		rAnims = new BufferedImage[13]; lAnims = new BufferedImage[13];
 		worldX = (int)(x + xOffset + pWidth/2); worldY = (int)(y + yOffset + pHeight);
 		

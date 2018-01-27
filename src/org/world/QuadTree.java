@@ -182,18 +182,6 @@ public class QuadTree
 		}
 	}
 	
-/*	//Return all objects that could collide with the given object
-	public List<Rectangle> retrieve(List<Rectangle> returnObjects, Rectangle pRect)
-	{
-		int index = getIndex(pRect);
-		if(index != -1 && nodes[0] != null) nodes[index].retrieve(returnObjects, pRect);
-		
-		System.out.println("LEVEL:  " + level + "\t\tINDEX: " + index);
-		returnObjects.addAll(objects);
-		
-		return returnObjects;
-	}*/
-	
 	//Return all objects using getAllIndices to to force child nodes to be included
 	public List<Rectangle> retrieve(List<Rectangle> returnObjects, Rectangle pRect)
 	{
