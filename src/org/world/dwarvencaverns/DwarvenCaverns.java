@@ -1,20 +1,27 @@
 package org.world.dwarvencaverns;
 /*
+ * RG
  * World class for the dwarven caverns stage
+ * Block, interactable, and image composition done in construction
  */
 
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import org.world.QuadTree;
 import org.world.World;
+import org.world.interactable.Interactable;
+import org.world.interactable.Ladder;
+import org.world.interactable.ManCannon;
 
 public class DwarvenCaverns extends World
 {
-	//Note: 192 x 54
+	//Note: 192 x 54 blocks in total
+	//Spawn should be set as TL of pHitbox is 184, 33
 	private final int worldWidth = 6144, worldHeight = 1728;	//Data for exact size of the world
 	
 	public DwarvenCaverns()
@@ -24,12 +31,14 @@ public class DwarvenCaverns extends World
 			background = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsBackGround.png"));
 			midground = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsMidGround.png"));
 			foreground = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsForeGround.png"));
-			
+			obs = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsObjects.png"));
 		}
 		catch(IOException e) {System.out.println("IMAGE READING ERROR (DCaverns): " + e);}
 		
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight);	//Instantiate various objects
 		worldCollision = new QuadTree(0, fullMap);
+		stuff = new ArrayList<Interactable>();
+		spawnX = 184 * block; spawnY = 33 * block;
 		
 		//OUTER WALLS
 		QTAdd(0, 0, worldWidth, block);
@@ -65,8 +74,6 @@ public class DwarvenCaverns extends World
 		QTAddB(7, 4, 42, 1);
 		QTAddB(65, 29, 36, 1);
 		QTAddB(23, 24, 74, 1);
-		
-		//Bottom up
 		QTAddB(1, 49, 34, 1);
 		QTAddB(34, 48, 5, 1);
 		QTAddB(38, 47, 10, 1);
@@ -101,7 +108,7 @@ public class DwarvenCaverns extends World
 		QTAddB(91, 37, 2, 7);
 		QTAddB(91, 44, 11, 1);
 		QTAddB(91, 45, 6, 1);
-		QTAddB(91, 46, 3, 1);
+		QTAddB(91, 46, 4, 1);
 		QTAddB(91, 47, 2, 2);
 		QTAddB(95, 41, 5, 1);
 		QTAddB(98, 40, 3, 1);
@@ -198,5 +205,22 @@ public class DwarvenCaverns extends World
 		
 		QTAddB(99, 4, 42, 1);
 		QTAddB(100, 5, 40, 5);	//GIRTH BOII
+		
+		stuff.add(new Ladder(59, 49, 4));
+		stuff.add(new Ladder(84, 45, 5));
+		stuff.add(new Ladder(104, 39, 6));
+		stuff.add(new Ladder(113, 46, 6));
+		stuff.add(new Ladder(132, 39, 8));
+		stuff.add(new Ladder(150, 48, 5));
+		stuff.add(new Ladder(182, 42, 6));
+		
+		stuff.add(new ManCannon(63, 35, 6));
+		stuff.add(new ManCannon(21, 29, 5));
+		stuff.add(new ManCannon(81, 24, 5));
+		stuff.add(new ManCannon(8, 16, 4));
+		stuff.add(new ManCannon(7, 12, 5));
+		stuff.add(new ManCannon(5, 8, 4));
+		stuff.add(new ManCannon(97, 8, 4));
+		stuff.add(new ManCannon(155, 30, 8));
 	}
 }

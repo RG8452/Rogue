@@ -1,5 +1,6 @@
 package org.world;
 /*
+ * RG
  * This is the class for a data type known as a QuadTree
  * This class will be use to store and check collisions in the maps
  * Source: https://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374

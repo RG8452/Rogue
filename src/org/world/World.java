@@ -15,14 +15,16 @@ import java.util.ArrayList;
 
 import org.DataRetriever;
 import org.panels.GamePanel;
+import org.world.interactable.Interactable;
 
 public abstract class World
 {
 	protected Rectangle fullMap;		//Rectangle for the full map, used for making the QTree
-	protected BufferedImage background, midground, foreground;	//images to be drawn
+	protected BufferedImage background, midground, foreground, obs;	//images to be drawn
 	protected QuadTree worldCollision;	//QTree for collision
+	protected ArrayList<Interactable> stuff;		//Interactable list
 	protected static int block = 32; 	//Number of pixels in a block
-	protected static double drawX, drawY;		//Corner where screen drawing begins
+	protected static double drawX, drawY, spawnX, spawnY;		//Corner where screen drawing begins & player spawn
 	
 	//Draws the portion of the World that is visible based on the player's world coords
 	//The player is assumed to be perfectly center except when the screen can no longer scroll
@@ -34,6 +36,10 @@ public abstract class World
 		g2d.drawImage(background, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);	//Draws all three images successively
 		g2d.drawImage(midground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
 		g2d.drawImage(foreground, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
+		g2d.drawImage(obs, 0, 0, sX, sY, (int)drawX, (int)drawY, sX + (int)drawX, sY + (int)drawY, null);
+		
+		for(Interactable moistBiscuits: stuff)
+			moistBiscuits.draw(g2d);
 		
 //		drawHitboxes(g2d);
 	}
@@ -62,9 +68,13 @@ public abstract class World
 	public int getHeight() {return (int)fullMap.getHeight();}
 	public void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x,y,w,h));}
 	public void QTAddB(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(block * x, block * y, block * w, block * h));}
+	public static void setDrawX(double dX) {drawX = dX;}
+	public static void setDrawY(double dY) {drawY = dY;}
 	
 	public static double getDrawX() {return drawX;}
 	public static double getDrawY() {return drawY;}
+	public double getSpawnX() {return spawnX;}
+	public double getSpawnY() {return spawnY;}
 	
 	public static void setDrawX() 
 	{

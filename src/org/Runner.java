@@ -4,6 +4,8 @@ package org;
  * This is the class which will make user inputs actually apply to characters and regulate frames
  * It implements Runnable to help prevent thread pooling and make the frame rate actually do stuff.
  * Instantiated in the Startup class, one object is used to thread all games each time the player starts.
+ * 
+ * TODO: Later include a boolean for drawing hitboxes and rulerboard? ALso make a developer's console option
  */
 
 import java.awt.Color;
@@ -13,6 +15,7 @@ import org.enemies.giantbat.GiantBat;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
 import org.players.hero.Hero;
+import org.world.World;
 import org.world.dwarvencaverns.DwarvenCaverns;
 
 public class Runner implements Runnable
@@ -27,7 +30,8 @@ public class Runner implements Runnable
 	public void run() //Overridden "Run" for the Thread to execute
 	{
 		DataRetriever.setWorld(new DwarvenCaverns());
-		DataRetriever.setPlayer(new Hero(1500, GamePanel.hScreenY, 100));
+		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY(), 100));
+		World.setDrawX(); World.setDrawY();
 		DataRetriever.addEnemy(new GiantBat(300, 200, 1));
 		Startup.getGUI().swapPanels(new GamePanel());	//Firstly, substitute panels
 		accessPanel = ((GamePanel)Startup.getGUI().getPanel());

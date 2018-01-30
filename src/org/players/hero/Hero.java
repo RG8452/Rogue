@@ -30,16 +30,17 @@ public class Hero extends Player
 		pWidth = 24; pHeight = 54;
 		xOffset = 20; yOffset =  6;
 		
-		if(worldX < GamePanel.screenX / 2) {x = worldX;}
-		else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.screenX/2) x = GamePanel.screenX/2 + (GamePanel.screenX/2 - (DataRetriever.getWorld().getWidth() - worldX));
-		else x = GamePanel.screenX/2;
+		if(worldX < GamePanel.hScreenX) {x = worldX;}
+		else if(worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
+		else x = GamePanel.hScreenX;
 		
-		y = k;
+		if(worldY < GamePanel.hScreenY) {y = worldY;}
+		else if(worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
+		else y = GamePanel.hScreenY - pHeight/2;
 			
 		pHurtbox = new Rectangle((int)x + xOffset, (int)y + yOffset, pWidth, pHeight);
 		jumpDelta = 16;
-		rAnims = new BufferedImage[13]; lAnims = new BufferedImage[13];
-		worldX = (int)(x + xOffset + pWidth/2); worldY = (int)(y + yOffset + pHeight);
+		rAnims = new BufferedImage[12]; lAnims = new BufferedImage[12]; nAnims = new BufferedImage[2];
 		
 		try	//This little chunk reads in every animation image and stores them into the arrays
 		{
@@ -53,9 +54,8 @@ public class Hero extends Player
 			rAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight8.png")); 
 			rAnims[8] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroIdleRight1.png")); 
 			rAnims[9] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroIdleRight2.png"));
-			rAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroCrouchRight.png"));
-			rAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroJumpRight1.png"));
-			rAnims[12] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroJumpRight2.png"));			
+			rAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroJumpRight1.png"));
+			rAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroJumpRight2.png"));			
 			
 			lAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft1.png"));
 			lAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft2.png"));
@@ -67,11 +67,15 @@ public class Hero extends Player
 			lAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft8.png"));
 			lAnims[8] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroIdleLeft1.png"));
 			lAnims[9] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroIdleLeft2.png"));
-			lAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroCrouchLeft.png"));
-			lAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroJumpLeft1.png"));
-			lAnims[12] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroJumpLeft2.png"));
+			lAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroJumpLeft1.png"));
+			lAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroJumpLeft2.png"));
+			
+			nAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/HeroLadder1.png"));
+			nAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/HeroLadder2.png"));
 		}
 		catch(IOException e) {System.out.println("IMAGE READING ERROR (Hero): " + e);}
+		
+		status = STATUS.IDLING;
     }    	
     
     /*
@@ -82,12 +86,17 @@ public class Hero extends Player
     @Override
 	public void drawPlayer(Graphics2D g2d)	
 	{
-    	if(facingRight)
+    	if(status == STATUS.CLIMBING)
+    	{
+    		
+    	}
+    	
+    	else if(facingRight)
     	{
     		if(status == STATUS.JUMPING)
     		{
-    			if(ySpeed < 0) img = rAnims[11];
-    			else img = rAnims[12];
+    			if(ySpeed < 0) img = rAnims[10];
+    			else img = rAnims[11];
     		}
     		
     		else if(status == STATUS.IDLING)
@@ -97,16 +106,14 @@ public class Hero extends Player
     		}
     		
     		else if(status == STATUS.MOVING) img = rAnims[curAnimation];
-    		
-    		else if(status == STATUS.CROUCHED) img = rAnims[10];
     	}
     	
     	else
     	{
     		if(status == STATUS.JUMPING)
     		{
-    			if(ySpeed < 0) img = lAnims[11];
-    			else img = lAnims[12];
+    			if(ySpeed < 0) img = lAnims[10];
+    			else img = lAnims[11];
     		}
     		
     		else if(status == STATUS.IDLING)
@@ -116,8 +123,6 @@ public class Hero extends Player
     		}
     		
     		else if(status == STATUS.MOVING) img = lAnims[curAnimation];
-    		
-    		else if(status == STATUS.CROUCHED) img = lAnims[10];
     	}
 
 		g2d.drawImage(img, (int)x, (int)y, null);

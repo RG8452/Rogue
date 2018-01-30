@@ -18,7 +18,7 @@ import java.util.TreeSet;
 
 import org.DataRetriever;
 import org.world.World;
-
+//TODO: MAKE INTERACTION WITH LADDERS AND MANCANNONS
 public abstract class Player
 {
 	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; //Basic stats
@@ -27,10 +27,11 @@ public abstract class Player
 	protected BufferedImage img = null;		//Buffered image drawn in animation
 	protected BufferedImage[] lAnims;	//Array of all animations
 	protected BufferedImage[] rAnims;
+	protected BufferedImage[] nAnims;
 	protected Rectangle pHurtbox;			//Player's damage area or hurbox
 	private static int framesPerAnimationCycle = 4;//Frames it takes for the animation drawn to change
 	private static double flySpeed = 8.5;
-	protected enum STATUS{IDLING, MOVING, JUMPING, CROUCHED};//Enum used to store all possible outputs for the player's stauts
+	protected enum STATUS{IDLING, MOVING, JUMPING, CLIMBING};//Enum used to store all possible outputs for the player's stauts
 	protected STATUS status;			//Variable used for current status
 
 	public void act()	//Reads through the set of all keys and the player moves accordingly
@@ -48,10 +49,8 @@ public abstract class Player
 			return;	//Return because you're done
 		}
 		
-		else if(readKeys.contains(DataRetriever.getDown()) && onGround) {status = STATUS.CROUCHED;}
-		
 		//If right and !left, then must be walking right
-		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CROUCHED))
+		else if(readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CLIMBING))
 		{	
 			worldX += xSpeed;
 			x = worldX - World.getDrawX();
@@ -61,7 +60,7 @@ public abstract class Player
 		}
 		
 		//If left and !right, then must be walking left
-		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CROUCHED))
+		else if(readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CLIMBING))
 		{	
 			worldX -= xSpeed;
 			x = worldX - World.getDrawX();
