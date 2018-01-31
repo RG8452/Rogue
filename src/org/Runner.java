@@ -13,6 +13,7 @@ import java.awt.Color;
 import org.enemies.Enemy;
 import org.enemies.giantbat.GiantBat;
 import org.panels.GamePanel;
+import org.panels.OptionsPanel;
 import org.panels.PausePanel;
 import org.players.hero.Hero;
 import org.world.World;
@@ -50,6 +51,7 @@ public class Runner implements Runnable
 		{
 			play();		//Handles all processing
 			DataRetriever.incrementFrame();	//Count frames for universal access to passage of time
+			System.out.println(DataRetriever.getFrame());
 			
 			try		//Delay
 			{
@@ -57,7 +59,9 @@ public class Runner implements Runnable
 			}
 			catch(Exception e) {System.out.println(e);}
 			
-			accessPanel.repaint();
+			if(Startup.getGUI().getPanel() instanceof GamePanel) accessPanel.repaint();
+			else if(Startup.getGUI().getPanel() instanceof OptionsPanel) System.out.println("HELP");
+			else Startup.getGUI().getPanel().repaint();
 		}
 	}
 
@@ -72,12 +76,13 @@ public class Runner implements Runnable
 				Startup.getGUI().swapPanels(new PausePanel());
 				pauseFrame = DataRetriever.getFrame();
 			}
-			else if(paused && DataRetriever.getFrame() > pauseFrame + 20 && Startup.getGUI().getPanel() instanceof PausePanel)
+			else if(paused && DataRetriever.getFrame() > pauseFrame + 20)
 			{
 				paused = false;
 				pauseFrame = DataRetriever.getFrame();
 				PausePanel.fadedGray = new Color(40, 40, 40, 1);
-				Startup.getGUI().swapPanels(tempPanel); 
+				Startup.getGUI().swapPanels(tempPanel);
+				DataRetriever.getAllKeys().clear();
 			}
 		}
 		
@@ -97,6 +102,7 @@ public class Runner implements Runnable
 			{
 				e.delayLAF();
 			}
+			Startup.getGUI().getPanel().repaint();
 		}
 	}
 	

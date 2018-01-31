@@ -64,6 +64,7 @@ public abstract class World
 	
 	public QuadTree getCollisionTree() {return worldCollision;}
 	public Rectangle getFullMap() {return fullMap;}
+	public ArrayList<Interactable> getInteractables() {return stuff;}
 	public int getWidth() {return (int)fullMap.getWidth();}
 	public int getHeight() {return (int)fullMap.getHeight();}
 	public void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x,y,w,h));}

@@ -114,7 +114,7 @@ public class PausePanel extends JPanel
 		g2d.setFont(new Font("TimesNewRoman", Font.PLAIN, 30));	//Draws text on buttons
 		buttons.get(1).drawMessage(g2d, "Main Menu");
 		
-		fadedGray = new Color(40, 40, 40, (fadedGray.getAlpha() < 150) ? fadedGray.getAlpha() + 2 : 150);	//Creates fade
+		fadedGray = new Color(40, 40, 40, (fadedGray.getAlpha() < 150) ? fadedGray.getAlpha() + 4 : 150);	//Creates fade
 	}
 	
 	//Private class used to handle input and listening
@@ -150,7 +150,7 @@ public class PausePanel extends JPanel
 					switch(butt.getName())
 					{
 						case "Options":
-							Startup.getGUI().swapPanels(new OptionsPanel(new PausePanel()));
+							Startup.getGUI().swapPanels(new OptionsPanel(Startup.getGUI().getPanel()));
 							break;
 						case "Menu":
 							Startup.getRunner().stop();

@@ -88,7 +88,7 @@ public class Hero extends Player
 	{
     	if(status == STATUS.CLIMBING)
     	{
-    		
+    		img = curAnimation < 2 ? nAnims[0] : nAnims[1];
     	}
     	
     	else if(facingRight)

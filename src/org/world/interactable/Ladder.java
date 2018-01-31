@@ -14,7 +14,7 @@ public class Ladder extends Interactable
 {
 	public Ladder(int x, int y, int height)
 	{
-		box = new Rectangle(block*x, block*(y-1), block*(height+1), block);
+		box = new Rectangle((int)(block * (x+.25)), block * y -1, (int)(block/2), block * height + 1);
 	}
 	
 	@Override

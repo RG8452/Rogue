@@ -23,4 +23,13 @@ public abstract class Interactable
 	public int getY() {return (int)box.getY();}
 	public int getWidth() {return (int)box.getWidth();}
 	public int getHeight() {return (int)box.getHeight();}
+	
+	@Override
+	public String toString()
+	{
+		String output = "";
+		output += "X: " + getX() + "\tY: " + getY();
+		output += "W: " + getWidth() + "\tH: " + getHeight();
+		return output;
+	}
 }

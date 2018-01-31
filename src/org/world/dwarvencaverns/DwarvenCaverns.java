@@ -206,7 +206,7 @@ public class DwarvenCaverns extends World
 		QTAddB(99, 4, 42, 1);
 		QTAddB(100, 5, 40, 5);	//GIRTH BOII
 		
-		stuff.add(new Ladder(59, 49, 4));
+		stuff.add(new Ladder(56, 49, 4));
 		stuff.add(new Ladder(84, 45, 5));
 		stuff.add(new Ladder(104, 39, 6));
 		stuff.add(new Ladder(113, 46, 6));
