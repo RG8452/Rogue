@@ -5,6 +5,7 @@ package org.enemies;
  * Will lay the ground rules and basic methods that all enemy objects will use
  */
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -41,6 +42,13 @@ public abstract class Enemy
     
     //Method for drawing the enemy, to be overridden for each class to import jpgs
     public abstract void drawEnemy(Graphics2D g2d);	
+    
+    //Draws in the enemy hitbox
+    protected void drawHurtbox(Graphics2D g2d)	//Draws the hurtbox where the enemy would be vulnerable
+    {
+    	g2d.setColor(new Color(255, 0, 0, 100));
+    	g2d.fillRect((int)eHurtbox.getX(), (int)eHurtbox.getY(), (int)eHurtbox.getWidth(), (int)eHurtbox.getHeight());
+    }
     
     //Getter methods
     public double getX() {return x;}

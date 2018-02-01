@@ -5,7 +5,6 @@ package org.players.hero;
  * Consider reading in every single image into an array and changing reference instead of continually reading
  */
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.DataRetriever;
+import org.Startup;
 import org.panels.GamePanel;
 import org.players.Player;
 
@@ -126,12 +126,7 @@ public class Hero extends Player
     	}
 
 		g2d.drawImage(img, (int)x, (int)y, null);
-		drawHurtbox(g2d);
+		if(Startup.getRunner().hitboxesEnabled())
+			drawHurtbox(g2d);
 	}
-    
-    private void drawHurtbox(Graphics2D g2d)
-    {
-    	g2d.setColor(Color.red);
-    	g2d.drawRect((int)pHurtbox.getX(), (int)pHurtbox.getY(), (int)pHurtbox.getWidth(), (int)pHurtbox.getHeight());
-    }
 }

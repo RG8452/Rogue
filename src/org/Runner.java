@@ -13,7 +13,6 @@ import java.awt.Color;
 import org.enemies.Enemy;
 import org.enemies.giantbat.GiantBat;
 import org.panels.GamePanel;
-import org.panels.OptionsPanel;
 import org.panels.PausePanel;
 import org.players.hero.Hero;
 import org.world.World;
@@ -22,7 +21,7 @@ import org.world.dwarvencaverns.DwarvenCaverns;
 public class Runner implements Runnable
 {
 	private static int pauseFrame; //Frame in which the pause key is first pressed to force a delay
-	private boolean paused, stopped, devMode = false, noclip;	//Game status
+	private boolean paused, stopped, devMode = false, noclip, hitboxes = true, worldboxes = true;	//Game status
 	public static GamePanel tempPanel;	//Temporary panel used when swapping stuff
 	private static int frameDelay = (int)(1000/DataRetriever.getFrameRate());	//This retrieves, in milliseconds, the time to wait between frames
 	public static GamePanel accessPanel;
@@ -51,7 +50,6 @@ public class Runner implements Runnable
 		{
 			play();		//Handles all processing
 			DataRetriever.incrementFrame();	//Count frames for universal access to passage of time
-			System.out.println(DataRetriever.getFrame());
 			
 			try		//Delay
 			{
@@ -60,7 +58,6 @@ public class Runner implements Runnable
 			catch(Exception e) {System.out.println(e);}
 			
 			if(Startup.getGUI().getPanel() instanceof GamePanel) accessPanel.repaint();
-			else if(Startup.getGUI().getPanel() instanceof OptionsPanel) System.out.println("HELP");
 			else Startup.getGUI().getPanel().repaint();
 		}
 	}
@@ -114,4 +111,7 @@ public class Runner implements Runnable
 		paused = false;				//Unpause
 		pauseFrame = 0;				//Reset pause frame
 	}
+	
+	public boolean hitboxesEnabled() {return hitboxes;}
+	public boolean worldboxesEnabled() {return worldboxes;}
 }

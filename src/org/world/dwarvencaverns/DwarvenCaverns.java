@@ -28,10 +28,10 @@ public class DwarvenCaverns extends World
 	{
 		try		//Reads in available images
 		{
-			background = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsBackGround.png"));
-			midground = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsMidGround.png"));
-			foreground = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsForeGround.png"));
-			obs = ImageIO.read(new File("src/org/world/dwarvencaverns/CavernsObjects.png"));
+			background = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsBackGround.png"));
+			midground = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsMidGround.png"));
+			foreground = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsForeGround.png"));
+			obs = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsObjects.png"));
 		}
 		catch(IOException e) {System.out.println("IMAGE READING ERROR (DCaverns): " + e);}
 		
@@ -214,13 +214,13 @@ public class DwarvenCaverns extends World
 		stuff.add(new Ladder(150, 48, 5));
 		stuff.add(new Ladder(182, 42, 6));
 		
-		stuff.add(new ManCannon(63, 35, 6));
-		stuff.add(new ManCannon(21, 29, 5));
-		stuff.add(new ManCannon(81, 24, 5));
-		stuff.add(new ManCannon(8, 16, 4));
-		stuff.add(new ManCannon(7, 12, 5));
-		stuff.add(new ManCannon(5, 8, 4));
-		stuff.add(new ManCannon(97, 8, 4));
-		stuff.add(new ManCannon(155, 30, 8));
+		stuff.add(new ManCannon(63, 33, 6, this));
+		stuff.add(new ManCannon(21, 27, 5, this));
+		stuff.add(new ManCannon(81, 22, 5, this));
+		stuff.add(new ManCannon(8, 14, 4, this));
+		stuff.add(new ManCannon(7, 10, 5, this));
+		stuff.add(new ManCannon(5, 6, 4, this));
+		stuff.add(new ManCannon(97, 6, 4, this));
+		stuff.add(new ManCannon(155, 28, 8, this));
 	}
 }

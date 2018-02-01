@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import org.DataRetriever;
+import org.Startup;
 import org.panels.GamePanel;
 import org.world.interactable.Interactable;
 
@@ -41,13 +42,14 @@ public abstract class World
 		for(Interactable moistBiscuits: stuff)
 			moistBiscuits.draw(g2d);
 		
-//		drawHitboxes(g2d);
+		if(Startup.getRunner().worldboxesEnabled())
+			drawHitboxes(g2d);
 	}
 	
 	public void drawHitboxes(Graphics2D g2d)
 	{
 		double tX, tY;
-		g2d.setColor(Color.magenta);
+		g2d.setColor(new Color(255, 0, 255, 80));
 		for(Rectangle r: worldCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getWorldbox()))
 		{
 			if(r.getX() + r.getWidth() > drawX || r.getX() < drawX + GamePanel.screenX)

@@ -8,6 +8,7 @@ package org.players;
  * NOTE: Later versions to include base stats like base damage, armor, jump velocity?, range [in hitbox]?, crit chance
  */
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -20,6 +21,7 @@ import org.DataRetriever;
 import org.world.World;
 import org.world.interactable.Interactable;
 import org.world.interactable.Ladder;
+import org.world.interactable.ManCannon;
 //TODO: MAKE INTERACTION WITH LADDERS AND MANCANNONS
 public abstract class Player
 {
@@ -62,6 +64,14 @@ public abstract class Player
 					status = STATUS.CLIMBING; elapsedFrames = 0; curAnimation = 0;
 				}
 			}
+			else if(i instanceof ManCannon && onGround)
+			{
+				ySpeed -= ((ManCannon)i).getUpDelta(); onGround = false;
+			}
+			else if(i instanceof ManCannon && !onGround)
+			{
+				ySpeed = 0; ySpeed -= ((ManCannon)i).getUpDelta();
+			}
 		}
 
 		
@@ -92,7 +102,7 @@ public abstract class Player
 					onGround = true; return;
 				}
 			}
-			if(readKeys.contains(DataRetriever.getJump()) && readKeys.contains(DataRetriever.getRight()) || readKeys.contains(DataRetriever.getLeft()))
+			if(readKeys.contains(DataRetriever.getJump()) && (readKeys.contains(DataRetriever.getRight()) || readKeys.contains(DataRetriever.getLeft())))
 			{
 				if(inBlock()) return;
 				else
@@ -277,6 +287,13 @@ public abstract class Player
 	
 	//Method to be overridden that draws each player by importing that file
 	public abstract void drawPlayer(Graphics2D g2d);
+	
+    //Fills in the player's hitbox
+    protected void drawHurtbox(Graphics2D g2d)
+    {
+    	g2d.setColor(new Color(0, 255, 30, 60));
+    	g2d.fillRect((int)pHurtbox.getX(), (int)pHurtbox.getY(), (int)pHurtbox.getWidth(), (int)pHurtbox.getHeight());
+    }
 	
 	//All getters
 	public double getX() {return x;} 

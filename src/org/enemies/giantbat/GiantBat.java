@@ -4,7 +4,6 @@ package org.enemies.giantbat;
  * Extends Enemy, will have basic pathing and stuff
  */
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -16,7 +15,6 @@ import javax.imageio.ImageIO;
 import org.DataRetriever;
 import org.Startup;
 import org.enemies.Enemy;
-import org.panels.GamePanel;
 
 public class GiantBat extends Enemy
 {
@@ -150,14 +148,9 @@ public class GiantBat extends Enemy
 			else img = lAnims[0];
 		}
 		g2d.drawImage(img, (int)x, (int)y, null);
-		drawHurtbox(g2d);
+		if(Startup.getRunner().hitboxesEnabled())
+			drawHurtbox(g2d);
 	}
-	
-	private void drawHurtbox(Graphics2D g2d)	//Draws the hurtbox where the enemy would be vulnerable
-    {
-    	g2d.setColor(Color.red);
-    	g2d.drawRect((int)eHurtbox.getX(), (int)eHurtbox.getY(), (int)eHurtbox.getWidth(), (int)eHurtbox.getHeight());
-    }
 	
 	public void setLAF(int i) {lastAttackFrame = i;}
 	public int getLAF() {return lastAttackFrame;}
