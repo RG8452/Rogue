@@ -24,19 +24,17 @@ import org.world.dwarvencaverns.DwarvenCaverns;
 public class ManCannon extends Interactable
 {
 	private double upDelta;
-	private int curAnimation, elapsedFrames, framesPerAnimation = 2;	//Animation info
+	private static int framesPerAnimation = 2; // Animation info
 	private BufferedImage[] anims;
-	
+
 	public ManCannon(int x, int y, int upBlocks, World w)
 	{
 		box = new Rectangle(block * x, block * y - 2, block, block * 2);
-
 		upDelta = (upBlocks > 4) ? upBlocks + upBlocks + 6 + (8 - upBlocks) : upBlocks * 3 + 4;
-		
 		anims = new BufferedImage[8];
-		
-		if(w instanceof DwarvenCaverns)
-		{	
+
+		if (w instanceof DwarvenCaverns)
+		{
 			try
 			{
 				anims[0] = ImageIO.read(new File("src/org/world/dwarvencaverns/Interactables/DwarfManCannonAnim1.png"));
@@ -48,39 +46,47 @@ public class ManCannon extends Interactable
 				anims[6] = ImageIO.read(new File("src/org/world/dwarvencaverns/Interactables/DwarfManCannonAnim7.png"));
 				anims[7] = ImageIO.read(new File("src/org/world/dwarvencaverns/Interactables/DwarfManCannonAnim8.png"));
 			}
-			catch(IOException e) {System.out.println("IMAGE READING ERROR (ManCannon): " + e);}
+			catch (IOException e)
+			{
+				System.out.println("IMAGE READING ERROR (ManCannon): " + e);
+			}
 		}
 	}
-	
+
 	@Override
 	public void interact()
 	{
-		//You can't actually interact with man cannons, so the processing will be done in Player.act()
+		// You can't actually interact with man cannons, so the processing will
+		// be done in Player.act()
 	}
-	
+
 	@Override
 	public void draw(Graphics2D g2d)
 	{
-		//Both if statements check if the man cannon is on screen whatsoever
-		if(getX() + block > World.getDrawX() && getX() < World.getDrawX() + GamePanel.screenX)
+		// Both if statements check if the man cannon is on screen whatsoever
+		if (getX() + block > World.getDrawX() && getX() < World.getDrawX() + GamePanel.screenX)
 		{
-			if(getY() < World.getDrawY() + GamePanel.screenY && getY() + block > World.getDrawY())
+			if (getY() < World.getDrawY() + GamePanel.screenY && getY() + block > World.getDrawY())
 			{
-				//Draws the image, animates, and draws the worldbox if possible
-				g2d.drawImage(anims[curAnimation], (int)(getX() - World.getDrawX()), (int)(getY() - World.getDrawY()), null);
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimation - 2) ? 0 : elapsedFrames + 1; curAnimation = (int)(elapsedFrames / framesPerAnimation);
-				if(Startup.getRunner().worldboxesEnabled())
+				// Draws the image, animates, and draws the worldbox if possible
+				g2d.drawImage(anims[curAnimation], (int) (getX() - World.getDrawX()), (int) (getY() - World.getDrawY()), null);
+				elapsedFrames = (elapsedFrames > 8 * framesPerAnimation - 2) ? 0 : elapsedFrames + 1;
+				curAnimation = (int) (elapsedFrames / framesPerAnimation);
+				if (Startup.getRunner().worldboxesEnabled())
 				{
 					g2d.setColor(new Color(255, 255, 255, 50));
-					g2d.fillRect((int)(getX() - World.getDrawX()), (int)(getY() - World.getDrawY()), (int)getWidth(), (int)getHeight());
+					g2d.fillRect((int) (getX() - World.getDrawX()), (int) (getY() - World.getDrawY()), (int) getWidth(), (int) getHeight());
 				}
 			}
 		}
 		else
 		{
-			elapsedFrames = 0; curAnimation = 0;
+			elapsedFrames = 0;
+			curAnimation = 0;
 		}
 	}
-	
-	public double getUpDelta() {return upDelta;}	//Returns change in velocity
+
+	//@formatter:off
+	public double getUpDelta() {return upDelta;} // Returns change in velocity
+	//@formatter:on
 }

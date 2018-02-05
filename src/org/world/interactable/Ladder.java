@@ -14,18 +14,18 @@ public class Ladder extends Interactable
 {
 	public Ladder(int x, int y, int height)
 	{
-		box = new Rectangle((int)(block * (x+.25)), block * y -1, (int)(block/2), block * height + 1);
+		box = new Rectangle((int) (block * (x + .25)), block * y - 1, (int) (block / 2), block * height + 1);
 	}
-	
+
 	@Override
 	public void interact()
 	{
-		//Ladders don't do much, and all climbing/animating is done in the player act() method
+		// Ladders don't do much, and all climbing/animating is done in the player act() method
 	}
-	
+
 	@Override
 	public void draw(Graphics2D g2d)
 	{
-		//The drawing is taken care of by drawing the obs image in the World class
+		// The drawing is taken care of by drawing the obs image in the World class
 	}
 }

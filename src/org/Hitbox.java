@@ -8,8 +8,6 @@ package org;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import org.DataRetriever;
-import org.panels.GamePanel;
 
 import org.enemies.Enemy;
 
@@ -17,22 +15,24 @@ public class Hitbox extends Rectangle
 {
 	private ArrayList<Enemy> hitEnemies;
 	private int generatedFrame;
-	
+
 	public Hitbox(int x, int y, int width, int height)
 	{
-		super(x,y,width,height);
-		
+		super(x, y, width, height);
+
 		hitEnemies = new ArrayList<Enemy>();
 		generatedFrame = DataRetriever.getFrame();
 	}
-	
-	private void render()	//Method for checking all contact with the enemies on the gamePanel
+
+	private void render() // Method for checking all contact with the enemies onthe gamePanel
 	{
-		//loop through all enemies and if they're in the hitbox, damage them (depending on piercing and stuff)
+		// loop through all enemies and if they're in the hitbox, damage them(depending on piercing and stuff)
 	}
-	
+
+	//@formatter:off
 	public ArrayList<Enemy> getHitEnemies() {return hitEnemies;}
-	
-	//All get methods and intersects(Rectangle r) are inherited from Rectangle
-	//Also setSize(w,h) and setLocation(x,y)
+
+	// All get methods and intersects(Rectangle r) are inherited from Rectangle
+	// Also setSize(w,h) and setLocation(x,y)
+	//@formatter:on
 }

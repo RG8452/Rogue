@@ -12,24 +12,27 @@ import java.awt.Rectangle;
 public abstract class Interactable
 {
 	protected Rectangle box;
-	protected int block = 32;
-	
+	protected static int block = 32;
+	protected int elapsedFrames, curAnimation;
+
 	public abstract void interact();
-	
+
 	public abstract void draw(Graphics2D g2d);
-	
+
+	//@formatter:off
 	public Rectangle getZone() {return box;}
-	public int getX() {return (int)box.getX();}
-	public int getY() {return (int)box.getY();}
-	public int getWidth() {return (int)box.getWidth();}
-	public int getHeight() {return (int)box.getHeight();}
-	
+	public int getX() {return (int) box.getX();}
+	public int getY() {return (int) box.getY();}
+	public int getWidth() {return (int) box.getWidth();}
+	public int getHeight() {return (int) box.getHeight();}
+
 	@Override
-	public String toString()
+	public String toString() 
 	{
 		String output = "";
 		output += "X: " + getX() + "\tY: " + getY();
 		output += "W: " + getWidth() + "\tH: " + getHeight();
 		return output;
 	}
+	//@formatter:on
 }

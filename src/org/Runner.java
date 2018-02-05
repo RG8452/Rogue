@@ -4,8 +4,6 @@ package org;
  * This is the class which will make user inputs actually apply to characters and regulate frames
  * It implements Runnable to help prevent thread pooling and make the frame rate actually do stuff.
  * Instantiated in the Startup class, one object is used to thread all games each time the player starts.
- * 
- * TODO: Later include a boolean for drawing hitboxes and rulerboard? ALso make a developer's console option
  */
 
 import java.awt.Color;
@@ -20,60 +18,66 @@ import org.world.dwarvencaverns.DwarvenCaverns;
 
 public class Runner implements Runnable
 {
-	private static int pauseFrame; //Frame in which the pause key is first pressed to force a delay
-	private boolean paused, stopped, devMode = false, noclip, hitboxes = true, worldboxes = true;	//Game status
-	public static GamePanel tempPanel;	//Temporary panel used when swapping stuff
-	private static int frameDelay = (int)(1000/DataRetriever.getFrameRate());	//This retrieves, in milliseconds, the time to wait between frames
+	private static int pauseFrame; // Frame in which the pause key is first pressed to force a delay
+	private boolean paused, stopped, devMode, noclip, hitboxes, worldboxes, grid; // Game status
+	public static GamePanel tempPanel; // Temporary panel used when swapping stuff
+	private static int frameDelay = (int) (1000 / DataRetriever.getFrameRate()); // This retrieves, in milliseconds, the time to wait between frames
 	public static GamePanel accessPanel;
-	
+
 	@Override
-	public void run() //Overridden "Run" for the Thread to execute
+	public void run() // Overridden "Run" for the Thread to execute
 	{
 		DataRetriever.setWorld(new DwarvenCaverns());
 		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY(), 100));
-		World.setDrawX(); World.setDrawY();
+		World.setDrawX();
+		World.setDrawY();
 		DataRetriever.addEnemy(new GiantBat(300, 200, 1));
-		Startup.getGUI().swapPanels(new GamePanel());	//Firstly, substitute panels
-		accessPanel = ((GamePanel)Startup.getGUI().getPanel());
+		Startup.getGUI().swapPanels(new GamePanel()); // Firstly, substitute panels
+		accessPanel = ((GamePanel) Startup.getGUI().getPanel());
 		accessPanel.repaint();
-		
+
 		try
 		{
-			runGame();	//Call the run game method, needs to be tried to throw exception for sleeping
+			runGame(); // Call the run game method, needs to be tried to throw exception for sleeping
 		}
-		catch(Exception e) {}
-	}	
-	
+		catch (Exception e)
+		{
+		}
+	}
+
 	public void runGame() throws Exception
 	{
-		while(!stopped)
+		while (!stopped)
 		{
-			play();		//Handles all processing
-			DataRetriever.incrementFrame();	//Count frames for universal access to passage of time
-			
-			try		//Delay
+			play(); // Handles all processing
+			DataRetriever.incrementFrame(); // Count frames for universal access to passage of time
+
+			try // Delay
 			{
 				Thread.sleep(frameDelay);
 			}
-			catch(Exception e) {System.out.println(e);}
-			
-			if(Startup.getGUI().getPanel() instanceof GamePanel) accessPanel.repaint();
+			catch (Exception e)
+			{
+				System.out.println(e);
+			}
+
+			if (Startup.getGUI().getPanel() instanceof GamePanel) accessPanel.repaint();
 			else Startup.getGUI().getPanel().repaint();
 		}
 	}
 
-	public void play()	//Method that will eventually handle all processing for enemies and players
+	public void play() // Method that will eventually handle all processing for enemies and players
 	{
-		if(DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
+		if (DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
 		{
-			if(!paused && DataRetriever.getFrame() > pauseFrame + 20)
+			if (!paused && DataRetriever.getFrame() > pauseFrame + 20)
 			{
 				paused = true;
-				tempPanel = (GamePanel)Startup.getGUI().getPanel();
+				tempPanel = (GamePanel) Startup.getGUI().getPanel();
 				Startup.getGUI().swapPanels(new PausePanel());
 				pauseFrame = DataRetriever.getFrame();
 			}
-			else if(paused && DataRetriever.getFrame() > pauseFrame + 20)
+			else if (paused && DataRetriever.getFrame() > pauseFrame + 20)
 			{
 				paused = false;
 				pauseFrame = DataRetriever.getFrame();
@@ -82,36 +86,73 @@ public class Runner implements Runnable
 				DataRetriever.getAllKeys().clear();
 			}
 		}
-		
-		if(!paused)
+
+		if (!paused)
 		{
-			if(!devMode) DataRetriever.getPlayer().act();
+			if (!devMode) DataRetriever.getPlayer().act();
 			else DataRetriever.getPlayer().devAct(noclip);
-			
-			for(Enemy e: DataRetriever.getAllEnemies())
+
+			for (Enemy e : DataRetriever.getAllEnemies())
 			{
 				e.act();
 			}
 		}
 		else
 		{
-			for(Enemy e: DataRetriever.getAllEnemies())
+			for (Enemy e : DataRetriever.getAllEnemies())
 			{
 				e.delayLAF();
 			}
 			Startup.getGUI().getPanel().repaint();
 		}
 	}
-	
-	public void stop() 	//Method called if game is stopped, i.e. user returns to main menu
+
+	public void stop() // Method called if game is stopped, i.e. user returns to main menu
 	{
-		this.stopped = true;		//Stops running the while loop
-		DataRetriever.reset();		//Resets data
-		tempPanel = null;			//Resets object pointer
-		paused = false;				//Unpause
-		pauseFrame = 0;				//Reset pause frame
+		this.stopped = true; // Stops running the while loop
+		DataRetriever.reset(); // Resets data
+		tempPanel = null; // Resets object pointer
+		paused = false; // Unpause
+		pauseFrame = 0; // Reset pause frame
 	}
-	
+
+	// Method which parses commands given in the devPanel
+	public String parseCommand(String s)
+	{
+		switch (s)
+		{
+			case "set hitboxes 0":
+				hitboxes = false;
+				return "hitboxes set to false";
+			case "set hitboxes 1":
+				hitboxes = true;
+				return "hitboxes set to true";
+			case "set worldboxes 0":
+				worldboxes = false;
+				return "worldboxes set to false";
+			case "set worldboxes 1":
+				worldboxes = true;
+				return "worldboxes set to true";
+			case "set devmode 0":
+				devMode = false;
+				return "devmode set to false";
+			case "set devmode 1":
+				devMode = true;
+				return "devmode set to true";
+			case "set noclip 0":
+				noclip = false;
+				return "noclip set to false";
+			case "set noclip 1":
+				noclip = true;
+				return "noclip set to true";
+			default:
+				return "Command unrecognized";
+		}
+	}
+
+	//@formatter:off
 	public boolean hitboxesEnabled() {return hitboxes;}
 	public boolean worldboxesEnabled() {return worldboxes;}
+	public boolean gridEnabled() {return grid;}
+	//@formatter:on
 }

@@ -15,7 +15,7 @@ import org.world.World;
 
 public class DataRetriever
 {
-	//All Variables, with self-explanatory names
+	// All Variables, with self-explanatory names
 	private static final Set<Integer> allKeys = new TreeSet<Integer>();
 	private static int frameRate = 60;
 	private static int frame = 0;
@@ -24,7 +24,7 @@ public class DataRetriever
 	private static ArrayList<Enemy> allEnemies = new ArrayList<>();
 	private static World gameWorld;
 
-	//Individual functions based on key
+	// Individual functions based on key
 	private static int right = KeyEvent.VK_RIGHT;
 	private static int left = KeyEvent.VK_LEFT;
 	private static int up = KeyEvent.VK_UP;
@@ -37,20 +37,26 @@ public class DataRetriever
 	private static int interact = KeyEvent.VK_A;
 	private static int pause = KeyEvent.VK_ESCAPE;
 
-	public static ArrayList<Integer> getControlKeys()		//Returns an ArrayList containing every single key
+	public static ArrayList<Integer> getControlKeys() // Returns an ArrayList containing every single key
 	{
 		ArrayList<Integer> keonIsStupid = new ArrayList<Integer>();
 
-		keonIsStupid.add(right); keonIsStupid.add(left); keonIsStupid.add(up);
-		keonIsStupid.add(down); keonIsStupid.add(jump);
-		keonIsStupid.add(skillOne); keonIsStupid.add(skillTwo);
-		keonIsStupid.add(skillThree); keonIsStupid.add(skillFour);
-		keonIsStupid.add(interact); keonIsStupid.add(pause);
+		keonIsStupid.add(right);
+		keonIsStupid.add(left);
+		keonIsStupid.add(up);
+		keonIsStupid.add(down);
+		keonIsStupid.add(jump);
+		keonIsStupid.add(skillOne);
+		keonIsStupid.add(skillTwo);
+		keonIsStupid.add(skillThree);
+		keonIsStupid.add(skillFour);
+		keonIsStupid.add(interact);
+		keonIsStupid.add(pause);
 
 		return keonIsStupid;
 	}
 
-	public static void resetControls()			//Resets every control to its default
+	public static void resetControls() // Resets every control to its default
 	{
 		right = KeyEvent.VK_RIGHT;
 		left = KeyEvent.VK_LEFT;
@@ -65,7 +71,8 @@ public class DataRetriever
 		pause = KeyEvent.VK_ESCAPE;
 	}
 
-	//Key Getters
+	//@formatter:off
+	// Key Getters
 	public static int getRight() {return right;}
 	public static int getLeft() {return left;}
 	public static int getUp() {return up;}
@@ -78,7 +85,7 @@ public class DataRetriever
 	public static int getInteract() {return interact;}
 	public static int getPause() {return pause;}
 
-	//Key Setters
+	// Key Setters
 	public static void setRight(int r) {right = r;}
 	public static void setLeft(int l) {left = l;}
 	public static void setUp(int u) {up = u;}
@@ -91,33 +98,33 @@ public class DataRetriever
 	public static void setInteract(int i) {interact = i;}
 	public static void setPause(int p) {pause = p;}
 
-	//Key control variables
+	// Key control variables
 	public static void addKeyPressed(int e) {allKeys.add(e);}
 	public static void removeKeyReleased(int e) {allKeys.remove(e);}
 	public static Set<Integer> getAllKeys() {return allKeys;}
 
-	//Time retrieval vars
-	public static int getNanoTime() {return (int)(System.nanoTime());}
-	public static int getMicroTime() {return (int)(System.nanoTime() / 1000);}
-	public static int getMilliTime() {return (int)(System.nanoTime() / 1000000);}
+	// Time retrieval vars
+	public static int getNanoTime() {return (int) (System.nanoTime());}
+	public static int getMicroTime() {return (int) (System.nanoTime() / 1000);}
+	public static int getMilliTime() {return (int) (System.nanoTime() / 1000000);}
 
-	//Frame data
+	// Frame data
 	public static int getFrameRate() {return frameRate;}
 	public static int getFrame() {return frame;}
 	public static void incrementFrame() {frame++;}
 	public static void setFrame(int q) {frame = q;}
-	
-	//Misc
+
+	// Misc
 	public static double getGravityConstant() {return gravityConstant;}
 	public static Player getPlayer() {return p;}
 	public static ArrayList<Enemy> getAllEnemies() {return allEnemies;}
 	public static World getWorld() {return gameWorld;}
-	
 	public static void setPlayer(Player nyanko) {p = nyanko;}
 	public static void addEnemy(Enemy e) {allEnemies.add(e);}
 	public static void removeEnemy(Enemy e) {allEnemies.remove(e);}
 	public static void setWorld(World w) {gameWorld = w;}
 	
+	//@formatter:on
 	public static void reset()
 	{
 		allKeys.clear();
