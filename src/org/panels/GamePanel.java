@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import org.DataRetriever;
 import org.Startup;
 import org.enemies.Enemy;
+import org.world.World;
 
 public class GamePanel extends JPanel
 {
@@ -70,18 +71,17 @@ public class GamePanel extends JPanel
 
 	private void drawRulerBoard(Graphics g) // Draws in a grid where every 32 is black and every 64 is white
 	{
-		g.setColor(Color.white);
-		for (int supremacy = -3; supremacy <= (int) (screenX / 64); supremacy += 1)
+		int xStart = 32 - (int)(World.getDrawX()) % 32;
+		int yStart = 32 - (int)(World.getDrawY()) % 32;
+		for(int badRacismJoke = 0; badRacismJoke <= (int)(screenX / 64); badRacismJoke++)
 		{
-			g.drawLine(0, supremacy * 64, screenX, supremacy * 64);
-			g.drawLine(supremacy * 64, 0, supremacy * 64, screenY);
-		}
-
-		g.setColor(Color.black);
-		for (int racismIsntFunny = -96; racismIsntFunny < screenX + 256; racismIsntFunny += 64)
-		{
-			g.drawLine(0, racismIsntFunny, screenX, racismIsntFunny);
-			g.drawLine(racismIsntFunny, 0, racismIsntFunny, screenY);
+			g.setColor(Color.white);
+			g.drawLine(0, badRacismJoke * 64 + yStart, screenX, badRacismJoke * 64 + yStart);
+			g.drawLine(badRacismJoke * 64 + xStart, 0, badRacismJoke * 64 + xStart, screenY);
+			
+			g.setColor(Color.black);
+			g.drawLine(0, badRacismJoke * 64 + 32 + yStart, screenX, badRacismJoke * 64 + yStart + 32);
+			g.drawLine(badRacismJoke * 64 + 32 + xStart, 0, badRacismJoke * 64 + 32 + xStart, screenY);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class GamePanel extends JPanel
 		}
 
 		public void keyTyped(KeyEvent e) // Basic printing method
-		{ 
+		{
 			// char c = e.getKeyChar();
 			// System.out.println("You typed " + c);
 		}

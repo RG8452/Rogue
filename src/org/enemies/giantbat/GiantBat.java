@@ -112,7 +112,7 @@ public class GiantBat extends Enemy
 			}
 
 			elapsedFrames = (elapsedFrames > 4 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; //Animate
-			curAnimation = elapsedFrames / framesPerAnimationCycle;
+			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 		}
 
 		else if (status == STATUS.HOVERING)
@@ -142,7 +142,7 @@ public class GiantBat extends Enemy
 			y = worldY - World.getDrawY();
 
 			elapsedFrames = (elapsedFrames > 4 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; //Animate
-			curAnimation = elapsedFrames / framesPerAnimationCycle;
+			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 
 			if (DataRetriever.getFrame() - framesPerAttack > lastAttackFrame) //If enough time has passed between attacks
 			{

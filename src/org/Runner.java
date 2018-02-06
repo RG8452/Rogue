@@ -145,6 +145,12 @@ public class Runner implements Runnable
 			case "set noclip 1":
 				noclip = true;
 				return "noclip set to true";
+			case "set grid 1":
+				grid = true;
+				return "grid set to true";
+			case "set grid 0":
+				grid = false;
+				return "grid set to false";
 			default:
 				return "Command unrecognized";
 		}

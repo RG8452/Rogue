@@ -7,7 +7,6 @@ package org.world.interactable;
  * The world type will be passed as a parameter and used to generate different textures
  */
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -19,7 +18,6 @@ import javax.imageio.ImageIO;
 import org.Startup;
 import org.panels.GamePanel;
 import org.world.World;
-import org.world.dwarvencaverns.DwarvenCaverns;
 
 public class ManCannon extends Interactable
 {
@@ -27,13 +25,13 @@ public class ManCannon extends Interactable
 	private static int framesPerAnimation = 2; // Animation info
 	private BufferedImage[] anims;
 
-	public ManCannon(int x, int y, int upBlocks, World w)
+	public ManCannon(int x, int y, int upBlocks, String type)
 	{
 		box = new Rectangle(block * x, block * y - 2, block, block * 2);
 		upDelta = (upBlocks > 4) ? upBlocks + upBlocks + 6 + (8 - upBlocks) : upBlocks * 3 + 4;
 		anims = new BufferedImage[8];
 
-		if (w instanceof DwarvenCaverns)
+		if (type.equals("dc"))
 		{
 			try
 			{
@@ -72,11 +70,7 @@ public class ManCannon extends Interactable
 				g2d.drawImage(anims[curAnimation], (int) (getX() - World.getDrawX()), (int) (getY() - World.getDrawY()), null);
 				elapsedFrames = (elapsedFrames > 8 * framesPerAnimation - 2) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimation);
-				if (Startup.getRunner().worldboxesEnabled())
-				{
-					g2d.setColor(new Color(255, 255, 255, 50));
-					g2d.fillRect((int) (getX() - World.getDrawX()), (int) (getY() - World.getDrawY()), (int) getWidth(), (int) getHeight());
-				}
+				if (Startup.getRunner().worldboxesEnabled()) drawHitbox(g2d);
 			}
 		}
 		else

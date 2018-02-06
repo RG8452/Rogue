@@ -21,7 +21,7 @@ import org.world.interactable.Interactable;
 public abstract class World
 {
 	protected Rectangle fullMap; // Rectangle for the full map, used for making the QTree
-	protected BufferedImage background, midground, foreground, obs; // images to be drawn
+	protected BufferedImage background, midground, foreground; // images to be drawn
 	protected QuadTree worldCollision; // QTree for collision
 	protected ArrayList<Interactable> stuff; // Interactable list
 	protected static int block = 32; // Number of pixels in a block
@@ -39,7 +39,6 @@ public abstract class World
 		g2d.drawImage(background, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null); // Draws all three images successively
 		g2d.drawImage(midground, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
 		g2d.drawImage(foreground, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
-		g2d.drawImage(obs, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
 
 		for (Interactable moistBiscuits : stuff)
 			moistBiscuits.draw(g2d);

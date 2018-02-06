@@ -35,13 +35,11 @@ public class Hero extends Player
 		xOffset = 20;
 		yOffset = 6;
 
-		if (worldX < GamePanel.hScreenX)
-			x = worldX;
+		if (worldX < GamePanel.hScreenX) x = worldX;
 		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
 		else x = GamePanel.hScreenX;
 
-		if (worldY < GamePanel.hScreenY)
-			y = worldY;
+		if (worldY < GamePanel.hScreenY) y = worldY;
 		else if (worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
 		else y = GamePanel.hScreenY - pHeight / 2;
 
@@ -98,8 +96,7 @@ public class Hero extends Player
 	@Override
 	public void drawPlayer(Graphics2D g2d)
 	{
-		if (status == STATUS.CLIMBING)
-			img = curAnimation < 2 ? nAnims[0] : nAnims[1];
+		if (status == STATUS.CLIMBING) img = curAnimation < 2 ? nAnims[0] : nAnims[1];
 
 		else if (facingRight)
 		{
