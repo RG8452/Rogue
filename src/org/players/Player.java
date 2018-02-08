@@ -346,10 +346,10 @@ public abstract class Player
 	// Method which runs through the list of interactables in the world and checks for collision
 	private Interactable touchingInteractable()
 	{
-		for (Interactable jadams : DataRetriever.getWorld().getInteractables())
+		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX() - World.getDrawX()), (int) (jadams.getY() - World.getDrawY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
-			if (pHurtbox.intersects(r2d)) { return jadams; }
+			if (pHurtbox.intersects(r2d)) { System.out.println("CHECK"); return (Interactable)jadams; }
 		}
 
 		return null;

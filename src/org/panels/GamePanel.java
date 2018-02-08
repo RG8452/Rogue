@@ -48,7 +48,6 @@ public class GamePanel extends JPanel
 	{
 		super.paintComponent(g); // First call the super method
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		DataRetriever.getWorld().drawVisibleWorld(g2d);
 		if (Startup.getRunner().gridEnabled()) drawRulerBoard(g2d);
 		g2d.setColor(Color.green);

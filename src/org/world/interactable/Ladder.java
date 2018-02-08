@@ -8,7 +8,6 @@ package org.world.interactable;
  */
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +25,11 @@ public class Ladder extends Interactable
 
 	public Ladder(int x, int y, int h, String type)
 	{
-		height = h;
-		wX = x * block;
-		wY = y * block;
+		this.height = h;
+		this.wX = x * block;
+		this.wY = y * block;
 		img = null;
-		box = new Rectangle((int) (block * (x + .35)), block * y - 1, (int) (block * .3), block * height + 1);
+		this.setRect(wX + block/4, wY, block/2, height * block);
 
 		if (type.equals("dc"))
 		{

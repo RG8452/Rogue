@@ -2,7 +2,6 @@ package org.world.cavecity;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -16,7 +15,6 @@ import org.world.QuadTree;
  * TODO: finish making world with blocks
  */
 import org.world.World;
-import org.world.interactable.Interactable;
 import org.world.interactable.Platform;
 
 public class CaveCity extends World
@@ -38,7 +36,7 @@ public class CaveCity extends World
 		
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight);
 		worldCollision = new QuadTree(0, fullMap);
-		stuff = new ArrayList<Interactable>();
+		interCollision = new QuadTree(0, fullMap);
 		spawnX = 96;
 		spawnY = 384;
 		
@@ -55,10 +53,13 @@ public class CaveCity extends World
 		QTAddB(8, 174, 1, 5);
 		QTAddB(8, 181, 1, 7);
 		QTAddB(8, 190, 1, 7);
-		stuff.add(new Platform(2, 181, 5));
-		stuff.add(new Platform(4, 183, 3));
-		stuff.add(new Platform(2, 185, 3));
-		stuff.add(new Platform(4, 187, 3));
-		stuff.add(new Platform(2, 191, 5));
+		ITAdd(new Platform(2, 181, 5));
+		ITAdd(new Platform(4, 183, 3));
+		ITAdd(new Platform(2, 185, 3));
+		ITAdd(new Platform(4, 187, 3));
+		ITAdd(new Platform(2, 191, 5));
+		ITAdd(new Platform(2, 193, 3));
+		ITAdd(new Platform(4, 195, 3));
+		ITAdd(new Platform(2, 197, 3));
 	}
 }

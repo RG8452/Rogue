@@ -197,6 +197,18 @@ public class QuadTree
 
 		return returnObjects;
 	}
+	
+	public List<Rectangle> retrieveAll(List<Rectangle> returnObjects)
+	{
+		for(int i=0; i < 4; i++)
+		{
+			if(nodes[i] != null) nodes[i].retrieveAll(returnObjects);
+		}
+		
+		returnObjects.addAll(objects);
+		
+		return returnObjects;
+	}
 
 	private void printLevelInfo(int[] indices, Rectangle pRect)
 	{

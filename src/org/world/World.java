@@ -25,7 +25,6 @@ public abstract class World
 	protected Rectangle fullMap; // Rectangle for the full map, used for making the QTree
 	protected BufferedImage background, midground, foreground; // images to be drawn
 	protected QuadTree worldCollision, interCollision; // QTree for collision
-	protected ArrayList<Interactable> stuff; // Interactable list
 	protected static int block = 32; // Number of pixels in a block
 	protected static double drawX, drawY, spawnX, spawnY; // Corner where screen drawing begins & player spawn
 
@@ -42,9 +41,9 @@ public abstract class World
 		g2d.drawImage(midground, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
 		g2d.drawImage(foreground, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
 
-		for (Interactable moistBiscuits : stuff)
-			moistBiscuits.draw(g2d);
-
+		for(Rectangle moistBiscuits: interCollision.retrieveAll(new ArrayList<Rectangle>()))
+			((Interactable)moistBiscuits).draw(g2d);
+		
 		if (Startup.getRunner().worldboxesEnabled()) drawHitboxes(g2d);
 	}
 
@@ -71,13 +70,12 @@ public abstract class World
 	public QuadTree getCollisionTree() {return worldCollision;}
 	public QuadTree getInterTree() {return interCollision;}
 	public Rectangle getFullMap() {return fullMap;}
-	public ArrayList<Interactable> getInteractables() {return stuff;}
 	public int getWidth() {return (int) fullMap.getWidth();}
 	public int getHeight() {return (int) fullMap.getHeight();}
 	
 	public void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x, y, w, h));}
 	public void QTAddB(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(block * x, block * y, block * w, block * h));}
-	public void ITAdd(Interactable i) {interCollision.insert(i.getZone());}
+	public void ITAdd(Interactable i) {interCollision.insert(i);}
 	public static void setDrawX(double dX) {drawX = dX;}
 	public static void setDrawY(double dY) {drawY = dY;}
 	public static double getDrawX() {return drawX;}

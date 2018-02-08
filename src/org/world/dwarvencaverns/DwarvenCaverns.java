@@ -39,7 +39,7 @@ public class DwarvenCaverns extends World
 
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight); // Instantiate various objects
 		worldCollision = new QuadTree(0, fullMap);
-		stuff = new ArrayList<Interactable>();
+		interCollision = new QuadTree(0, fullMap);
 		spawnX = 5888;
 		spawnY = 1056;
 
@@ -209,21 +209,21 @@ public class DwarvenCaverns extends World
 		QTAddB(99, 4, 42, 1);
 		QTAddB(100, 5, 40, 5); // GIRTH BOII
 
-		stuff.add(new Ladder(56, 49, 4, "dc"));
-		stuff.add(new Ladder(84, 45, 5, "dc"));
-		stuff.add(new Ladder(104, 39, 6, "dc"));
-		stuff.add(new Ladder(113, 46, 6, "dc"));
-		stuff.add(new Ladder(132, 39, 8, "dc"));
-		stuff.add(new Ladder(150, 48, 5, "dc"));
-		stuff.add(new Ladder(182, 42, 6, "dc"));
+		ITAdd(new Ladder(56, 49, 4, "dc"));
+		ITAdd(new Ladder(84, 45, 5, "dc"));
+		ITAdd(new Ladder(104, 39, 6, "dc"));
+		ITAdd(new Ladder(113, 46, 6, "dc"));
+		ITAdd(new Ladder(132, 39, 8, "dc"));
+		ITAdd(new Ladder(150, 48, 5, "dc"));
+		ITAdd(new Ladder(182, 42, 6, "dc"));
 
-		stuff.add(new ManCannon(63, 33, 6, "dc"));
-		stuff.add(new ManCannon(21, 27, 5, "dc"));
-		stuff.add(new ManCannon(81, 22, 5, "dc"));
-		stuff.add(new ManCannon(8, 14, 4, "dc"));
-		stuff.add(new ManCannon(7, 10, 5, "dc"));
-		stuff.add(new ManCannon(5, 6, 4, "dc"));
-		stuff.add(new ManCannon(97, 6, 4, "dc"));
-		stuff.add(new ManCannon(155, 28, 8, "dc"));
+		ITAdd(new ManCannon(63, 33, 6, "dc"));
+		ITAdd(new ManCannon(21, 27, 5, "dc"));
+		ITAdd(new ManCannon(81, 22, 5, "dc"));
+		ITAdd(new ManCannon(8, 14, 4, "dc"));
+		ITAdd(new ManCannon(7, 10, 5, "dc"));
+		ITAdd(new ManCannon(5, 6, 4, "dc"));
+		ITAdd(new ManCannon(97, 6, 4, "dc"));
+		ITAdd(new ManCannon(155, 28, 8, "dc"));
 	}
 }

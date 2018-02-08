@@ -8,7 +8,6 @@ package org.world.interactable;
  */
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class ManCannon extends Interactable
 
 	public ManCannon(int x, int y, int upBlocks, String type)
 	{
-		box = new Rectangle(block * x, block * y - 2, block, block * 2);
+		this.setRect(x * block, y * block, block, block * 2);
 		upDelta = (upBlocks > 4) ? upBlocks + upBlocks + 6 + (8 - upBlocks) : upBlocks * 3 + 4;
 		anims = new BufferedImage[8];
 

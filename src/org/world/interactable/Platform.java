@@ -6,13 +6,12 @@ package org.world.interactable;
  * They fall through
  */
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 public class Platform extends Interactable
 {
 	public Platform(int x, int y, int w)
 	{
-		box = new Rectangle(block * x, block * y - 2, block * w, 5);
+		this.setRect(x * block, y * block - 2, w * block, 10);
 	}
 
 	@Override

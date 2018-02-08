@@ -12,23 +12,14 @@ import java.awt.Rectangle;
 
 import org.world.World;
 
-public abstract class Interactable
+public abstract class Interactable extends Rectangle
 {
-	protected Rectangle box;
 	protected static int block = 32;
 	protected int elapsedFrames, curAnimation;
 
 	public abstract void interact();
 
 	public abstract void draw(Graphics2D g2d);
-
-	//@formatter:off
-	public Rectangle getZone() {return box;}
-	public int getX() {return (int) box.getX();}
-	public int getY() {return (int) box.getY();}
-	public int getWidth() {return (int) box.getWidth();}
-	public int getHeight() {return (int) box.getHeight();}
-	//@formatter:on
 	
 	@Override
 	public String toString() 
