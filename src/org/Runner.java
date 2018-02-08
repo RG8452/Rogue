@@ -19,7 +19,7 @@ import org.world.dwarvencaverns.DwarvenCaverns;
 public class Runner implements Runnable
 {
 	private static int pauseFrame; // Frame in which the pause key is first pressed to force a delay
-	private boolean paused, stopped, devMode, noclip, hitboxes, worldboxes, grid; // Game status
+	private boolean paused, stopped, devMode = true, noclip, hitboxes, worldboxes = true, grid; // Game status
 	public static GamePanel tempPanel; // Temporary panel used when swapping stuff
 	private static int frameDelay = (int) (1000 / DataRetriever.getFrameRate()); // This retrieves, in milliseconds, the time to wait between frames
 	public static GamePanel accessPanel;
@@ -70,6 +70,7 @@ public class Runner implements Runnable
 	{
 		if (DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
 		{
+			DataRetriever.getAllKeys().clear();
 			if (!paused && DataRetriever.getFrame() > pauseFrame + 20)
 			{
 				paused = true;
