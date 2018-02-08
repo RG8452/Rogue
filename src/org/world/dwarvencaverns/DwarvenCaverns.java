@@ -40,8 +40,8 @@ public class DwarvenCaverns extends World
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight); // Instantiate various objects
 		worldCollision = new QuadTree(0, fullMap);
 		stuff = new ArrayList<Interactable>();
-		spawnX = 184 * block;
-		spawnY = 33 * block;
+		spawnX = 5888;
+		spawnY = 1056;
 
 		// OUTER WALLS
 		QTAdd(0, 0, worldWidth, block);

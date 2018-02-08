@@ -6,6 +6,7 @@ package org.players;
  * Most of the variable names are either self-explanatory or just basic coordinate and stats
  *
  * NOTE: Later versions to include base stats like base damage, armor, jump velocity?, range [in hitbox]?, crit chance
+ * TODO: Add ability to drop through platforms
  */
 
 import java.awt.Color;
@@ -23,7 +24,6 @@ import org.world.interactable.Interactable;
 import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
 
-//TODO: MAKE INTERACTION WITH LADDERS AND MANCANNONS
 public abstract class Player
 {
 	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; // Basic stats

@@ -40,7 +40,18 @@ public class Ladder extends Interactable
 			}
 			catch (IOException e)
 			{
-				System.out.println("IMAGE READING ERROR (Ladder): " + e);
+				System.out.println("IMAGE READING ERROR (DwarvenCaverns Ladder): " + e);
+			}
+		}
+		else if(type.equals("cc"))
+		{
+			try
+			{
+				img = ImageIO.read(new File("src/org/world/cavecity/Interactables/Ladder.png"));
+			}
+			catch (IOException e)
+			{
+				System.out.println("IMAGE READING ERROR (CaveCity Ladder): " + e);
 			}
 		}
 	}

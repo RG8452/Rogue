@@ -5,6 +5,8 @@ package org.world;
  * The individual Worlds will extend this class and implement its fields and stuff
  * Every world will consist of one huge png for the image drawn
  * The worlds also will contain a final QuadTree of Rectangles that will be used for collision 
+ *
+ * TODO: Add some form of variable to determine stage chronology
  */
 
 import java.awt.Color;
@@ -22,7 +24,7 @@ public abstract class World
 {
 	protected Rectangle fullMap; // Rectangle for the full map, used for making the QTree
 	protected BufferedImage background, midground, foreground; // images to be drawn
-	protected QuadTree worldCollision; // QTree for collision
+	protected QuadTree worldCollision, interCollision; // QTree for collision
 	protected ArrayList<Interactable> stuff; // Interactable list
 	protected static int block = 32; // Number of pixels in a block
 	protected static double drawX, drawY, spawnX, spawnY; // Corner where screen drawing begins & player spawn
@@ -67,6 +69,7 @@ public abstract class World
 
 	//@formatter:off
 	public QuadTree getCollisionTree() {return worldCollision;}
+	public QuadTree getInterTree() {return interCollision;}
 	public Rectangle getFullMap() {return fullMap;}
 	public ArrayList<Interactable> getInteractables() {return stuff;}
 	public int getWidth() {return (int) fullMap.getWidth();}
@@ -74,6 +77,7 @@ public abstract class World
 	
 	public void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x, y, w, h));}
 	public void QTAddB(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(block * x, block * y, block * w, block * h));}
+	public void ITAdd(Interactable i) {interCollision.insert(i.getZone());}
 	public static void setDrawX(double dX) {drawX = dX;}
 	public static void setDrawY(double dY) {drawY = dY;}
 	public static double getDrawX() {return drawX;}
