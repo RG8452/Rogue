@@ -74,6 +74,5 @@ public class Ladder extends Interactable
 				}
 			}
 		}
-		if (Startup.getRunner().worldboxesEnabled()) drawHitbox(g2d);
 	}
 }

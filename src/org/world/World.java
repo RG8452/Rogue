@@ -64,6 +64,17 @@ public abstract class World
 				}
 			}
 		}
+		
+		for(Rectangle onePunchGearRising: interCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getWorldbox()))
+		{
+			if (onePunchGearRising.getX() + onePunchGearRising.getWidth() > drawX || onePunchGearRising.getX() < drawX + GamePanel.screenX)
+			{
+				if (onePunchGearRising.getY() + onePunchGearRising.getHeight() > drawY || onePunchGearRising.getY() < drawY + GamePanel.screenY)
+				{
+					((Interactable)onePunchGearRising).drawHitbox(g2d);
+				}
+			}
+		}
 	}
 
 	//@formatter:off

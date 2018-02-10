@@ -23,6 +23,6 @@ public class Platform extends Interactable
 	@Override
 	public void draw(Graphics2D g2d)
 	{
-		drawHitbox(g2d);
+		//Drawing is done with foreground.png
 	}
 }

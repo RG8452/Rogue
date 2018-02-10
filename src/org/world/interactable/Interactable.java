@@ -32,7 +32,7 @@ public abstract class Interactable extends Rectangle
 	
 	public void drawHitbox(Graphics2D g2d)
 	{
-		g2d.setColor(new Color(255, 255, 255, 50));
+		g2d.setColor(new Color(255, 255, 255, 100));
 		g2d.fillRect((int) (getX() - World.getDrawX()), (int) (getY() - World.getDrawY()), (int) getWidth(), (int) getHeight());
 	}
 }

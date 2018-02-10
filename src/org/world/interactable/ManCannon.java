@@ -69,7 +69,6 @@ public class ManCannon extends Interactable
 				g2d.drawImage(anims[curAnimation], (int) (getX() - World.getDrawX()), (int) (getY() - World.getDrawY()), null);
 				elapsedFrames = (elapsedFrames > 8 * framesPerAnimation - 2) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimation);
-				if (Startup.getRunner().worldboxesEnabled()) drawHitbox(g2d);
 			}
 		}
 		else
