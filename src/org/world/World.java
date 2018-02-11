@@ -23,7 +23,7 @@ import org.world.interactable.Interactable;
 public abstract class World
 {
 	protected Rectangle fullMap; // Rectangle for the full map, used for making the QTree
-	protected BufferedImage background, midground, foreground; // images to be drawn
+	protected BufferedImage[] images; // images to be drawn
 	protected QuadTree worldCollision, interCollision; // QTree for collision
 	protected static int block = 32; // Number of pixels in a block
 	protected static double drawX, drawY, spawnX, spawnY; // Corner where screen drawing begins & player spawn
@@ -37,13 +37,12 @@ public abstract class World
 		setDrawX();
 		setDrawY();
 
-		g2d.drawImage(background, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null); // Draws all three images successively
-		g2d.drawImage(midground, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
-		g2d.drawImage(foreground, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
+		for (BufferedImage bi : images)
+			g2d.drawImage(bi, 0, 0, sX, sY, (int) drawX, (int) drawY, sX + (int) drawX, sY + (int) drawY, null);
 
-		for(Rectangle moistBiscuits: interCollision.retrieveAll(new ArrayList<Rectangle>()))
-			((Interactable)moistBiscuits).draw(g2d);
-		
+		for (Rectangle moistBiscuits : interCollision.retrieveAll(new ArrayList<Rectangle>()))
+			((Interactable) moistBiscuits).draw(g2d);
+
 		if (Startup.getRunner().worldboxesEnabled()) drawHitboxes(g2d);
 	}
 
@@ -64,14 +63,14 @@ public abstract class World
 				}
 			}
 		}
-		
-		for(Rectangle onePunchGearRising: interCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getWorldbox()))
+
+		for (Rectangle onePunchGearRising : interCollision.retrieve(new ArrayList<Rectangle>(), DataRetriever.getPlayer().getWorldbox()))
 		{
 			if (onePunchGearRising.getX() + onePunchGearRising.getWidth() > drawX || onePunchGearRising.getX() < drawX + GamePanel.screenX)
 			{
 				if (onePunchGearRising.getY() + onePunchGearRising.getHeight() > drawY || onePunchGearRising.getY() < drawY + GamePanel.screenY)
 				{
-					((Interactable)onePunchGearRising).drawHitbox(g2d);
+					((Interactable) onePunchGearRising).drawHitbox(g2d);
 				}
 			}
 		}

@@ -23,12 +23,13 @@ import org.world.World;
 import org.world.interactable.Interactable;
 import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
+import org.world.interactable.Platform;
 
 public abstract class Player
 {
 	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; // Basic stats
 	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta; // X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
-	protected boolean facingRight = true, onGround = false; // Boolean for direction facing and ground checking
+	protected boolean facingRight = true, onGround = false, onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected BufferedImage img = null; // Buffered image drawn in animation
 	protected BufferedImage[] lAnims; // Array of all animations
 	protected BufferedImage[] rAnims;
@@ -47,6 +48,7 @@ public abstract class Player
 
 	public void act() // Reads through the set of all keys and the player moves accordingly
 	{
+		boolean recognized = false;
 		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
 
 		Interactable i = touchingInteractable();
@@ -73,6 +75,44 @@ public abstract class Player
 
 		if (i != null)
 		{
+			if (i instanceof Platform)
+			{
+				if (onPlatform && !((Platform) i).getTransparent())
+				{
+					Rectangle2D i2d = (Rectangle2D) (new Rectangle((int) (i.getX() - World.getDrawX()), (int) (i.getY() - World.getDrawY()) + 2, (int) i.getWidth(), (int) i.getHeight() - 2));
+					while (pHurtbox.intersects(i2d))
+					{
+						worldY--;
+						y = worldY - World.getDrawY();
+						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					}
+					ySpeed = 0;
+					onGround = true;
+				}
+				if (readKeys.contains(DataRetriever.getDown()) && readKeys.contains(DataRetriever.getJump()))
+				{
+					worldY += 3;
+					World.setDrawY();
+					y = worldY - World.getDrawY();
+					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					if (!inBlock())
+					{
+						onPlatform = false;
+						inPlatform = true;
+						ySpeed = 4 * DataRetriever.getGravityConstant();
+						((Platform) i).setTransparent(true);
+						onGround = false;
+					}
+					else
+					{
+						worldY -= 3;
+						World.setDrawY();
+						y = worldY - World.getDrawY();
+						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					}
+				}
+			}
+
 			if (i instanceof Ladder)
 			{
 				if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown()) && status != STATUS.CLIMBING)
@@ -160,6 +200,7 @@ public abstract class Player
 		// If right and !left, then must be walking right
 		else if (readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CLIMBING))
 		{
+			recognized = true;
 			worldX += xSpeed;
 			x = worldX - World.getDrawX();
 
@@ -180,6 +221,7 @@ public abstract class Player
 		// If left and !right, then must be walking left
 		else if (readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CLIMBING))
 		{
+			recognized = true;
 			worldX -= xSpeed;
 			x = worldX - World.getDrawX();
 
@@ -200,6 +242,7 @@ public abstract class Player
 		// If right and left, set the player to idle
 		else if (readKeys.contains(DataRetriever.getRight()) && readKeys.contains(DataRetriever.getLeft()))
 		{
+			recognized = true;
 			if (status == STATUS.IDLING)
 			{
 				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
@@ -214,12 +257,34 @@ public abstract class Player
 		}
 
 		// If the player jumps, add a ton to their y velocity
-		if (readKeys.contains(DataRetriever.getJump()) && status != STATUS.CLIMBING && onGround) ySpeed -= jumpDelta;
+		if (readKeys.contains(DataRetriever.getJump()) && status != STATUS.CLIMBING && onGround)
+		{
+			recognized = true;
+			ySpeed -= jumpDelta;
+			onPlatform = false;
+			inPlatform = false;
+		}
 
 		// If not touching the ground, status must be in mid-air so no animation is chosen
 		if (!onGround && status != STATUS.CLIMBING) status = STATUS.JUMPING;
 
-		runCollision();
+		if (onGround && !recognized && status != STATUS.CLIMBING)
+		{
+			if (status == STATUS.IDLING)
+			{
+				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+			}
+			else
+			{
+				elapsedFrames = 0;
+				curAnimation = 0;
+				status = STATUS.IDLING;
+			}
+		}
+
+		if (!onPlatform) runCollision();
+		else runCollisionX();
 	}
 
 	// This method adjusts the hitbox and runs collision algorithms on both x and y for the player
@@ -349,9 +414,37 @@ public abstract class Player
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX() - World.getDrawX()), (int) (jadams.getY() - World.getDrawY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
-			if (pHurtbox.intersects(r2d)) { System.out.println("CHECK"); return (Interactable)jadams; }
+			if (pHurtbox.intersects(r2d))
+			{
+				if (jadams instanceof Platform)
+				{
+					if (ySpeed < 0)
+					{
+						((Platform) jadams).setTransparent(true);
+						inPlatform = true;
+						onPlatform = false;
+					}
+					else if (!((Platform) jadams).getTransparent() && !inPlatform)
+					{
+						onPlatform = true;
+						((Platform) jadams).setTransparent(false);
+					}
+					else
+					{
+						inPlatform = true;
+						onPlatform = false;
+						((Platform) jadams).setTransparent(true);
+					}
+				}
+				return (Interactable) jadams;
+			}
+			else if (jadams instanceof Platform)
+			{
+				((Platform) jadams).setTransparent(false);
+			}
 		}
-
+		inPlatform = false;
+		onPlatform = false;
 		return null;
 	}
 

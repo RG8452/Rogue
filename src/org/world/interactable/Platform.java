@@ -1,4 +1,5 @@
 package org.world.interactable;
+
 /*
  * RG
  * This is an interactable that functions like a normal block
@@ -9,9 +10,12 @@ import java.awt.Graphics2D;
 
 public class Platform extends Interactable
 {
+	private boolean transparent;
+
 	public Platform(int x, int y, int w)
 	{
 		this.setRect(x * block, y * block - 2, w * block, 10);
+		transparent = true;
 	}
 
 	@Override
@@ -25,4 +29,9 @@ public class Platform extends Interactable
 	{
 		//Drawing is done with foreground.png
 	}
+
+	//@formatter:off
+	public void setTransparent(boolean b) {transparent = b;}
+	public boolean getTransparent() {return transparent;}
+	//@formatter:on
 }

@@ -6,15 +6,14 @@ package org.world.dwarvencaverns;
  */
 
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import org.world.QuadTree;
 import org.world.World;
-import org.world.interactable.Interactable;
 import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
 
@@ -26,11 +25,12 @@ public class DwarvenCaverns extends World
 
 	public DwarvenCaverns()
 	{
+	    images = new BufferedImage[3];
 		try // Reads in available images
 		{
-			background = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsBackGround.png"));
-			midground = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsMidGround.png"));
-			foreground = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsForeGround.png"));
+			images[0] = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsBackGround.png"));
+			images[1] = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsMidGround.png"));
+			images[2] = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsForeGround.png"));
 		}
 		catch (IOException e)
 		{
