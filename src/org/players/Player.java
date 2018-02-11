@@ -89,7 +89,7 @@ public abstract class Player
 					ySpeed = 0;
 					onGround = true;
 				}
-				if (readKeys.contains(DataRetriever.getDown()) && readKeys.contains(DataRetriever.getJump()))
+				if (readKeys.contains(DataRetriever.getDown()) && readKeys.contains(DataRetriever.getJump()) && onPlatform)
 				{
 					worldY += 3;
 					World.setDrawY();
@@ -411,6 +411,8 @@ public abstract class Player
 	// Method which runs through the list of interactables in the world and checks for collision
 	private Interactable touchingInteractable()
 	{
+		ArrayList<Interactable> fixer = new ArrayList<Interactable>();
+		
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX() - World.getDrawX()), (int) (jadams.getY() - World.getDrawY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
@@ -424,25 +426,29 @@ public abstract class Player
 						inPlatform = true;
 						onPlatform = false;
 					}
-					else if (!((Platform) jadams).getTransparent() && !inPlatform)
+					else if (!((Platform) jadams).getTransparent())
 					{
 						onPlatform = true;
 						((Platform) jadams).setTransparent(false);
 					}
-					else
-					{
-						inPlatform = true;
-						onPlatform = false;
-						((Platform) jadams).setTransparent(true);
-					}
 				}
-				return (Interactable) jadams;
+				fixer.add((Interactable)jadams);
 			}
 			else if (jadams instanceof Platform)
 			{
 				((Platform) jadams).setTransparent(false);
 			}
 		}
+		if(fixer.size() != 0)
+		{
+			Interactable lowest = fixer.get(0);
+			for(Interactable j: fixer)
+			{
+				if(j.getY() > lowest.getY()) lowest = j;
+			}
+			return lowest;
+		}
+		
 		inPlatform = false;
 		onPlatform = false;
 		return null;
