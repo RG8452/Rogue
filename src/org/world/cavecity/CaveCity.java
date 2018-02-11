@@ -204,7 +204,7 @@ public class CaveCity extends World
 		ITAdd(new Platform(15, 16, 2));
 		ITAdd(new Ladder(9, 1, 3, "cc"));
 		ITAdd(new Ladder(11, 1, 5, "cc"));
-		ITAdd(new Ladder(25, 5, 4, "cc"));
+		ITAdd(new Ladder(25, 5, 3, "cc"));
 
 		//BLOCKS BELOW IT
 		QTAddB(1, 17, 6, 1);
