@@ -31,17 +31,36 @@ public abstract class Player
 	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta; // X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected boolean facingRight = true, onGround = false, onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected BufferedImage img = null; // Buffered image drawn in animation
-	protected BufferedImage[] lAnims; // Array of all animations
-	protected BufferedImage[] rAnims;
-	protected BufferedImage[] nAnims;
-	protected Rectangle pHurtbox; // Player's damage area or hurbox
+	
+	// Array of all animations
+	protected BufferedImage[] lAnims; // Left motion
+	protected BufferedImage[] rAnims; // Right motion
+	protected BufferedImage[] nAnims; // Direction Neutral
+	//All Attack Animations
+	// 1
+	protected BufferedImage[] s1lAnims;
+	protected BufferedImage[] s1rAnims;
+	// 2
+	protected BufferedImage[] s2lAnims;
+	protected BufferedImage[] s2rAnims;
+	// 3
+	protected BufferedImage[] s3lAnims;
+	protected BufferedImage[] s3rAnims;
+	// 4
+	protected BufferedImage[] s4lAnims;
+	protected BufferedImage[] s4rAnims;
+	// 4 Visual Effect
+	protected BufferedImage[] s4ElAnims;
+	protected BufferedImage[] s4ErAnims;
+	
+	protected Rectangle pHurtbox; // Player's damage area or hurtbox
 	private static int framesPerAnimationCycle = 4;// Frames it takes for the animation drawn to change
 	private static double flySpeed = 8.5;
 
-	// Enum used to store all possible outputs for the player's stauts
+	// Enum used to store all possible outputs for the player's status
 	protected enum STATUS
 	{
-		IDLING, MOVING, JUMPING, CLIMBING
+		IDLING, MOVING, JUMPING, CLIMBING, SKILL1, SKILL2, SKILL3, SKILL4
 	};
 
 	protected STATUS status; // Variable used for current status
@@ -254,6 +273,42 @@ public abstract class Player
 				curAnimation = 0;
 				status = STATUS.IDLING;
 			}
+		}
+		
+		// If skillOne Key is pressed, queue up skillOne Animation
+		else if (readKeys.contains(DataRetriever.getSkillOne()))
+		{
+			recognized = true;
+			if (status == STATUS.SKILL1)
+			{
+				elapsedFrames = (elapsedFrames > 12 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+			}
+			else 
+			{
+				elapsedFrames = 0;
+				curAnimation = 0;
+				status = STATUS.SKILL1;
+			}
+			
+		}
+		
+		// If skillTwo Key is pressed, queue up skillTwo Animation
+		else if (readKeys.contains(DataRetriever.getSkillTwo()))
+		{
+			recognized = true;
+			if (status == STATUS.SKILL2)
+			{
+				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+			}
+			else 
+			{
+				elapsedFrames = 0;
+				curAnimation = 0;
+				status = STATUS.SKILL2;
+			}
+			
 		}
 
 		// If the player jumps, add a ton to their y velocity

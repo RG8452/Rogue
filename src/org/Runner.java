@@ -15,6 +15,7 @@ import org.panels.PausePanel;
 import org.players.hero.Hero;
 import org.world.World;
 import org.world.cavecity.CaveCity;
+import org.world.dwarvencaverns.DwarvenCaverns;
 
 public class Runner implements Runnable
 {
