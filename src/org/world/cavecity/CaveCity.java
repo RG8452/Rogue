@@ -41,7 +41,7 @@ public class CaveCity extends World
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight);
 		worldCollision = new QuadTree(0, fullMap);
 		interCollision = new QuadTree(0, fullMap);
-		spawnX = 6272;
+		spawnX = 6208;
 		spawnY = 2120;
 
 		//OUTER WALLS

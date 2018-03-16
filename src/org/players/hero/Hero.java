@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -33,7 +32,7 @@ public class Hero extends Player
 		elapsedFrames = 0;
 		pWidth = 24;
 		pHeight = 54;
-		xOffset = 20;
+		xOffset = 84;
 		yOffset = 6;
 
 		if (worldX < GamePanel.hScreenX) x = worldX;
@@ -53,37 +52,41 @@ public class Hero extends Player
 		s1rAnims = new BufferedImage[12];
 		s2lAnims = new BufferedImage[8];
 		s2rAnims = new BufferedImage[8];
+		s3lAnims = new BufferedImage[6];
+		s3rAnims = new BufferedImage[6];
+		s4lAnims = new BufferedImage[8];
+		s4rAnims = new BufferedImage[8];
 
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
-			rAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight4.png"));
-			rAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight5.png"));
-			rAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight6.png"));
-			rAnims[6] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight7.png"));
-			rAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroMoveRight8.png"));
-			rAnims[8] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroIdleRight1.png"));
-			rAnims[9] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroIdleRight2.png"));
-			rAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroJumpRight1.png"));
-			rAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/HeroJumpRight2.png"));
+			rAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight1.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight2.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight3.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight4.png"));
+			rAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight5.png"));
+			rAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight6.png"));
+			rAnims[6] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight7.png"));
+			rAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight8.png"));
+			rAnims[8] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_IdleRight1.png"));
+			rAnims[9] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_IdleRight2.png"));
+			rAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_JumpRight1.png"));
+			rAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_JumpRight2.png"));
 
-			lAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft3.png"));
-			lAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft4.png"));
-			lAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft5.png"));
-			lAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft6.png"));
-			lAnims[6] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft7.png"));
-			lAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroMoveLeft8.png"));
-			lAnims[8] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroIdleLeft1.png"));
-			lAnims[9] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroIdleLeft2.png"));
-			lAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroJumpLeft1.png"));
-			lAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/HeroJumpLeft2.png"));
+			lAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft1.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft2.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft3.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft4.png"));
+			lAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft5.png"));
+			lAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft6.png"));
+			lAnims[6] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft7.png"));
+			lAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_MoveLeft8.png"));
+			lAnims[8] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_IdleLeft1.png"));
+			lAnims[9] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_IdleLeft2.png"));
+			lAnims[10] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_JumpLeft1.png"));
+			lAnims[11] = ImageIO.read(new File("src/org/players/hero/Animations/LeftFacing/Hero_JumpLeft2.png"));
 
-			nAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/HeroLadder1.png"));
-			nAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/HeroLadder2.png"));
+			nAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Hero_Ladder1.png"));
+			nAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Hero_Ladder2.png"));
 			
 			s1lAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L1.png"));
 			s1lAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L2.png"));
@@ -129,6 +132,33 @@ public class Hero extends Player
 			s2rAnims[6] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R7.png"));
 			s2rAnims[7] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R8.png"));
 			
+			s3lAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L1.png"));
+			s3lAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L2.png"));
+			s3lAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L3.png"));
+			s3lAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L4.png"));
+			s3lAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L5.png"));
+			s3lAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L6.png"));
+			
+			s3rAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R1.png"));
+			s3rAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R2.png"));
+			s3rAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R3.png"));
+			s3rAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R4.png"));
+			s3rAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R5.png"));
+			s3rAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R6.png"));
+
+			s4lAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L1.png"));
+			s4lAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L2.png"));
+			s4lAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L3.png"));
+			s4lAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L4.png"));
+			s4lAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L5.png"));
+			s4lAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L6.png"));
+		
+			s4rAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R1.png"));
+			s4rAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R2.png"));
+			s4rAnims[2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R3.png"));
+			s4rAnims[3] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R4.png"));
+			s4rAnims[4] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R5.png"));
+			s4rAnims[5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R6.png"));
 		}
 		catch (IOException e)
 		{
@@ -164,9 +194,16 @@ public class Hero extends Player
 
 			else if (status == STATUS.MOVING) img = rAnims[curAnimation];
 			
-			else if (status == STATUS.SKILL1) img = s1rAnims[curAnimation];
+			else if (status == STATUS.SKILL1)
+			{
+				img = s1rAnims[curAnimation];
+			}
 			
 			else if (status == STATUS.SKILL2) img = s2rAnims[curAnimation];
+			
+			else if (status == STATUS.SKILL3) img = s3rAnims[curAnimation];
+			
+			else if (status == STATUS.SKILL4) img = s4rAnims[curAnimation];
 		}
 		
 		else
@@ -185,9 +222,16 @@ public class Hero extends Player
 
 			else if (status == STATUS.MOVING) img = lAnims[curAnimation];
 
-			else if (status == STATUS.SKILL1) img = s1lAnims[curAnimation];
+			else if (status == STATUS.SKILL1)
+			{
+				img = s1lAnims[curAnimation];
+			}
 
 			else if (status == STATUS.SKILL2) img = s2lAnims[curAnimation];
+
+			else if (status == STATUS.SKILL3) img = s3lAnims[curAnimation];
+
+			else if (status == STATUS.SKILL4) img = s4lAnims[curAnimation];
 		}
 
 		g2d.drawImage(img, (int) x, (int) y, null);
