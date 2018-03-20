@@ -37,21 +37,8 @@ public abstract class Player
 	protected BufferedImage[] rAnims; // Right motion
 	protected BufferedImage[] nAnims; // Direction Neutral
 	//All Attack Animations
-	// 1
-	protected BufferedImage[] s1lAnims;
-	protected BufferedImage[] s1rAnims;
-	// 2
-	protected BufferedImage[] s2lAnims;
-	protected BufferedImage[] s2rAnims;
-	// 3
-	protected BufferedImage[] s3lAnims;
-	protected BufferedImage[] s3rAnims;
-	// 4
-	protected BufferedImage[] s4lAnims;
-	protected BufferedImage[] s4rAnims;
-	// 4 Visual Effect
-	protected BufferedImage[] s4ElAnims;
-	protected BufferedImage[] s4ErAnims;
+	protected BufferedImage[][] lSkillAnims;
+	protected BufferedImage[][] rSkillAnims;
 	
 	protected Rectangle pHurtbox; // Player's damage area or hurtbox
 	private static int framesPerAnimationCycle = 4;// Frames it takes for the animation drawn to change
@@ -60,13 +47,19 @@ public abstract class Player
 	// Enum used to store all possible outputs for the player's status
 	protected enum STATUS
 	{
-		IDLING, MOVING, JUMPING, CLIMBING, SKILL1, SKILL2, SKILL3, SKILL4
+		IDLING, MOVING, JUMPING, CLIMBING, ATTACKING
 	};
 
 	protected STATUS status; // Variable used for current status
 
 	public void act() // Reads through the set of all keys and the player moves accordingly
 	{
+		if(status == STATUS.ATTACKING)
+		{
+			attack();
+			return;
+		}
+		
 		boolean recognized = false;
 		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
 
@@ -275,7 +268,7 @@ public abstract class Player
 			}
 		}
 		
-		// If skillOne Key is pressed, queue up skillOne Animation
+/*		// If skillOne Key is pressed, queue up skillOne Animation
 		else if (readKeys.contains(DataRetriever.getSkillOne()))
 		{
 			recognized = true;
@@ -357,7 +350,7 @@ public abstract class Player
 				status = STATUS.SKILL4;
 			}
 			
-		}
+		}*/
 		
 		// If the player jumps, add a ton to their y velocity
 		if (readKeys.contains(DataRetriever.getJump()) && status != STATUS.CLIMBING && onGround)
@@ -389,6 +382,9 @@ public abstract class Player
 		if (!onPlatform) runCollision();
 		else runCollisionX();
 	}
+	
+	//Method that is used for attack animations & hitbox generation
+	public abstract void attack();
 
 	// This method adjusts the hitbox and runs collision algorithms on both x and y for the player
 	private void runCollision()
