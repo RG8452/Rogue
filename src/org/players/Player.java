@@ -41,7 +41,7 @@ public abstract class Player
 	protected BufferedImage[][] rSkillAnims;
 	
 	protected Rectangle pHurtbox; // Player's damage area or hurtbox
-	private static int framesPerAnimationCycle = 4;// Frames it takes for the animation drawn to change
+	protected static int framesPerAnimationCycle = 4;// Frames it takes for the animation drawn to change
 	private static double flySpeed = 8.5;
 
 	// Enum used to store all possible outputs for the player's status
@@ -51,6 +51,13 @@ public abstract class Player
 	};
 
 	protected STATUS status; // Variable used for current status
+	
+	protected enum SKILL
+	{
+		SKILL1, SKILL2, SKILL3, SKILL4
+	};
+	
+	protected SKILL skill;
 
 	public void act() // Reads through the set of all keys and the player moves accordingly
 	{
@@ -267,90 +274,6 @@ public abstract class Player
 				status = STATUS.IDLING;
 			}
 		}
-		
-/*		// If skillOne Key is pressed, queue up skillOne Animation
-		else if (readKeys.contains(DataRetriever.getSkillOne()))
-		{
-			recognized = true;
-			if (status == STATUS.SKILL1)
-			{
-				elapsedFrames = (elapsedFrames > 12 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				if (facingRight)
-				{
-					if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
-					worldX += 2;
-					x = worldX - World.getDrawX();
-				}
-				else
-				{
-					if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
-					worldX -= 2;
-					x = worldX - World.getDrawX();
-				}
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.SKILL1;
-			}
-			
-		}
-		
-		// If skillTwo Key is pressed, queue up skillTwo Animation
-		else if (readKeys.contains(DataRetriever.getSkillTwo()))
-		{
-			recognized = true;
-			if (status == STATUS.SKILL2)
-			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.SKILL2;
-			}
-			
-		}
-
-		// If skillThree Key is pressed, queue up skillThree Animation
-		else if (readKeys.contains(DataRetriever.getSkillThree()))
-		{
-			recognized = true;
-			if (status == STATUS.SKILL3)
-			{
-				elapsedFrames = (elapsedFrames > 6 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.SKILL3;
-			}
-			
-		}
-
-		// If skillFour Key is pressed, queue up skillFour Animation
-		else if (readKeys.contains(DataRetriever.getSkillFour()))
-		{
-			recognized = true;
-			if (status == STATUS.SKILL4)
-			{
-				elapsedFrames = (elapsedFrames > 6 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.SKILL4;
-			}
-			
-		}*/
 		
 		// If the player jumps, add a ton to their y velocity
 		if (readKeys.contains(DataRetriever.getJump()) && status != STATUS.CLIMBING && onGround)
