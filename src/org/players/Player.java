@@ -61,17 +61,18 @@ public abstract class Player
 
 	public void act() // Reads through the set of all keys and the player moves accordingly
 	{
-		if(status == STATUS.ATTACKING)
+		boolean recognized = false;
+		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
+		Interactable i = touchingInteractable();
+
+		if ((readKeys.contains(DataRetriever.getSkillOne()) || readKeys.contains(DataRetriever.getSkillTwo()) || 
+				readKeys.contains(DataRetriever.getSkillThree()) || readKeys.contains(DataRetriever.getSkillFour())))
 		{
+			status = STATUS.ATTACKING;
 			attack();
 			return;
 		}
 		
-		boolean recognized = false;
-		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
-
-		Interactable i = touchingInteractable();
-
 		// If standing on the ground, the player must be Idling
 		if (readKeys.size() == 0 && onGround && status != STATUS.CLIMBING)
 		{
@@ -301,7 +302,7 @@ public abstract class Player
 				status = STATUS.IDLING;
 			}
 		}
-
+		
 		if (!onPlatform) runCollision();
 		else runCollisionX();
 	}

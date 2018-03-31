@@ -239,7 +239,7 @@ public class Hero extends Player
 	{
 
 		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
-		
+
 		// If skillOne Key is pressed, queue up skillOne Animation
 		if (readKeys.contains(DataRetriever.getSkillOne()))
 		{
@@ -259,6 +259,7 @@ public class Hero extends Player
 					x = worldX - World.getDrawX();
 				}
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+				System.out.println(elapsedFrames + " " + curAnimation + " " + framesPerAnimationCycle);
 			}
 			else 
 			{
@@ -318,6 +319,11 @@ public class Hero extends Player
 				skill = SKILL.SKILL4;
 			}
 			
+		}
+		
+		if (!onGround)
+		{
+			ySpeed = DataRetriever.getGravityConstant();
 		}
 	}
 }
