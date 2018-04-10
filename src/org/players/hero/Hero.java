@@ -10,8 +10,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
@@ -20,6 +18,8 @@ import org.Startup;
 import org.panels.GamePanel;
 import org.players.Player;
 import org.world.World;
+import org.world.interactable.Interactable;
+import org.world.interactable.Platform;
 
 public class Hero extends Player
 {
@@ -51,9 +51,9 @@ public class Hero extends Player
 		rAnims = new BufferedImage[12];
 		lAnims = new BufferedImage[12];
 		nAnims = new BufferedImage[2];
-		lSkillAnims = new BufferedImage[][] {new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8]};
-		rSkillAnims = new BufferedImage[][] {new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8]};
-		
+		lSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
+		rSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
+
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
 			rAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/RightFacing/Hero_MoveRight1.png"));
@@ -84,7 +84,7 @@ public class Hero extends Player
 
 			nAnims[0] = ImageIO.read(new File("src/org/players/hero/Animations/Hero_Ladder1.png"));
 			nAnims[1] = ImageIO.read(new File("src/org/players/hero/Animations/Hero_Ladder2.png"));
-			
+
 			lSkillAnims[0][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L1.png"));
 			lSkillAnims[0][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L2.png"));
 			lSkillAnims[0][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L3.png"));
@@ -97,7 +97,7 @@ public class Hero extends Player
 			lSkillAnims[0][9] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L10.png"));
 			lSkillAnims[0][10] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L11.png"));
 			lSkillAnims[0][11] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_L12.png"));
-			
+
 			rSkillAnims[0][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_R1.png"));
 			rSkillAnims[0][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_R2.png"));
 			rSkillAnims[0][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_R3.png"));
@@ -110,7 +110,7 @@ public class Hero extends Player
 			rSkillAnims[0][9] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_R10.png"));
 			rSkillAnims[0][10] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_R11.png"));
 			rSkillAnims[0][11] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S1/HeroS1_R12.png"));
-			
+
 			lSkillAnims[1][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_L1.png"));
 			lSkillAnims[1][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_L2.png"));
 			lSkillAnims[1][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_L3.png"));
@@ -119,7 +119,7 @@ public class Hero extends Player
 			lSkillAnims[1][5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_L6.png"));
 			lSkillAnims[1][6] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_L7.png"));
 			lSkillAnims[1][7] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_L8.png"));
-			
+
 			rSkillAnims[1][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R1.png"));
 			rSkillAnims[1][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R2.png"));
 			rSkillAnims[1][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R3.png"));
@@ -128,14 +128,14 @@ public class Hero extends Player
 			rSkillAnims[1][5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R6.png"));
 			rSkillAnims[1][6] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R7.png"));
 			rSkillAnims[1][7] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S2/HeroS2_R8.png"));
-			
+
 			lSkillAnims[2][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L1.png"));
 			lSkillAnims[2][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L2.png"));
 			lSkillAnims[2][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L3.png"));
 			lSkillAnims[2][3] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L4.png"));
 			lSkillAnims[2][4] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L5.png"));
 			lSkillAnims[2][5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_L6.png"));
-			
+
 			rSkillAnims[2][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R1.png"));
 			rSkillAnims[2][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R2.png"));
 			rSkillAnims[2][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S3/HeroS3_R3.png"));
@@ -149,7 +149,7 @@ public class Hero extends Player
 			lSkillAnims[3][3] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L4.png"));
 			lSkillAnims[3][4] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L5.png"));
 			lSkillAnims[3][5] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_L6.png"));
-		
+
 			rSkillAnims[3][0] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R1.png"));
 			rSkillAnims[3][1] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R2.png"));
 			rSkillAnims[3][2] = ImageIO.read(new File("src/org/players/hero/Animations/Abilities/S4/HeroS4_R3.png"));
@@ -166,9 +166,9 @@ public class Hero extends Player
 	}
 
 	/*
-	 * This method checks the player's current status and direction Depending on
-	 * the results, it fetched the proper image to draw onto the JPanel Each png
-	 * is found within the subdirectories of the class
+	 * This method checks the player's current status and direction Depending on the
+	 * results, it fetched the proper image to draw onto the JPanel Each png is
+	 * found within the subdirectories of the class
 	 */
 	@Override
 	public void drawPlayer(Graphics2D g2d)
@@ -190,19 +190,19 @@ public class Hero extends Player
 			}
 
 			else if (status == STATUS.MOVING) img = rAnims[curAnimation];
-			
+
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1)
 			{
 				img = rSkillAnims[0][curAnimation];
 			}
-			
+
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL2) img = rSkillAnims[1][curAnimation];
-			
+
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL3) img = rSkillAnims[2][curAnimation];
-			
+
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = rSkillAnims[3][curAnimation];
 		}
-		
+
 		else
 		{
 			if (status == STATUS.JUMPING)
@@ -235,95 +235,124 @@ public class Hero extends Player
 		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 	}
 
+	//The method that the player calls instead of actually moving
 	public void attack()
 	{
-
-		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
-
-		// If skillOne Key is pressed, queue up skillOne Animation
-		if (readKeys.contains(DataRetriever.getSkillOne()))
+		switch(skill)
 		{
-			if (skill == SKILL.SKILL1)
+			case SKILL1:
+				attackOne();
+				return;
+			case SKILL2:
+				attackTwo();
+				return;
+			case SKILL3:
+				attackThree();
+				return;
+			case SKILL4:
+				attackFour();
+				return;
+			case NONE:
+				return;
+		}
+	}
+
+	private void attackOne() //Basic Slash
+	{
+		//TODO: Generate hitboxes in all attacks
+		if (++elapsedFrames > 12 * framesPerAnimationCycle - 1)
+		{
+			status = STATUS.IDLING;
+			skill = SKILL.NONE;
+			elapsedFrames = 0;
+			curAnimation = 0;
+		}
+		else
+		{
+			curAnimation = elapsedFrames / framesPerAnimationCycle;
+			if(curAnimation != 0 && curAnimation%4 == 0)
 			{
-				elapsedFrames = (elapsedFrames > 12 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				if (facingRight)
+				if(!(DataRetriever.getAllKeys().contains(DataRetriever.getSkillOne())))
 				{
-					if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
-					worldX += 2;
-					x = worldX - World.getDrawX();
+					status = STATUS.IDLING;
+					skill = SKILL.NONE;
+					elapsedFrames = 0;
+					curAnimation = 0;
 				}
-				else
-				{
-					if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
-					worldX -= 2;
-					x = worldX - World.getDrawX();
-				}
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-				System.out.println(elapsedFrames + " " + curAnimation + " " + framesPerAnimationCycle);
 			}
-			else 
+			if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
 			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				skill = SKILL.SKILL1;
+				worldX += facingRight ? 2 : -2;
 			}
-			
 		}
-		
-		// If skillTwo Key is pressed, queue up skillTwo Animation
-		else if (readKeys.contains(DataRetriever.getSkillTwo()))
-		{
-			if (skill == SKILL.SKILL2)
-			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				skill = SKILL.SKILL2;
-			}
-			
-		}
+	}
 
-		// If skillThree Key is pressed, queue up skillThree Animation
-		else if (readKeys.contains(DataRetriever.getSkillThree()))
+	private void attackTwo() //Dash Stab
+	{
+		if (++elapsedFrames > 8 * framesPerAnimationCycle - 1)
 		{
-			if (skill == SKILL.SKILL3)
-			{
-				elapsedFrames = (elapsedFrames > 6 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				skill = SKILL.SKILL3;
-			}
-			
+			status = STATUS.IDLING;
+			skill = SKILL.NONE;
+			elapsedFrames = 0;
+			curAnimation = 0;
 		}
+		else
+		{
+			curAnimation = elapsedFrames / framesPerAnimationCycle;
+		}
+	}
 
-		// If skillFour Key is pressed, queue up skillFour Animation
-		else if (readKeys.contains(DataRetriever.getSkillFour()))
+	private void attackThree() //Retreat
+	{
+		if(elapsedFrames == 0 && !onGround && !onPlatform)
 		{
-			if (skill == SKILL.SKILL4)
-			{
-				elapsedFrames = (elapsedFrames > 6 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else 
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				skill = SKILL.SKILL4;
-			}
-			
+			status = STATUS.IDLING;
+			skill = SKILL.NONE;
+			return;
 		}
-		
-		if (!onGround)
+		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1)
 		{
+			status = STATUS.IDLING;
+			skill = SKILL.NONE;
+			elapsedFrames = 0;
+			curAnimation = 0;
 			ySpeed = DataRetriever.getGravityConstant();
+			World.setDrawY();
+			y = worldY - World.getDrawY();
+			
+			Interactable nyeh = touchingInteractable();
+			if(nyeh instanceof Platform)
+				((Platform)nyeh).setTransparent(false);
+		}
+		else
+		{
+			curAnimation = elapsedFrames / framesPerAnimationCycle;
+			worldX += facingRight ? -6 : 6;
+			facingRight = !facingRight;
+			runCollisionX();
+			facingRight = !facingRight;
+			if(curAnimation < 1) worldY -= 2;
+			else if(curAnimation > 4) worldY += 2;
+			worldY -= ySpeed;
+			
+			Interactable nyeh = touchingInteractable();
+			if(nyeh instanceof Platform)
+				((Platform)nyeh).setTransparent(true);
+		}
+	}
+
+	private void attackFour() //Great Slash
+	{
+		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1)
+		{
+			status = STATUS.IDLING;
+			skill = SKILL.NONE;
+			elapsedFrames = 0;
+			curAnimation = 0;
+		}
+		else
+		{
+			curAnimation = elapsedFrames / framesPerAnimationCycle;
 		}
 	}
 }

@@ -23,7 +23,7 @@ public class GUI extends JFrame
 
 	public GUI()
 	{
-		super("Title"); // Super constructor call to JFrame, creates a frame with window title "Title"
+		super("ROGUE"); // Super constructor call to JFrame, creates a frame with window title "Title"
 	}
 
 	public void init() // Initializes various variables and paints all necessary functions.

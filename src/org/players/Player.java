@@ -31,7 +31,7 @@ public abstract class Player
 	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta; // X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected boolean facingRight = true, onGround = false, onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected BufferedImage img = null; // Buffered image drawn in animation
-	
+
 	// Array of all animations
 	protected BufferedImage[] lAnims; // Left motion
 	protected BufferedImage[] rAnims; // Right motion
@@ -39,7 +39,7 @@ public abstract class Player
 	//All Attack Animations
 	protected BufferedImage[][] lSkillAnims;
 	protected BufferedImage[][] rSkillAnims;
-	
+
 	protected Rectangle pHurtbox; // Player's damage area or hurtbox
 	protected static int framesPerAnimationCycle = 4;// Frames it takes for the animation drawn to change
 	private static double flySpeed = 8.5;
@@ -51,28 +51,57 @@ public abstract class Player
 	};
 
 	protected STATUS status; // Variable used for current status
-	
+
 	protected enum SKILL
 	{
-		SKILL1, SKILL2, SKILL3, SKILL4
+		SKILL1, SKILL2, SKILL3, SKILL4, NONE
 	};
-	
-	protected SKILL skill;
+
+	protected SKILL skill = SKILL.NONE;
 
 	public void act() // Reads through the set of all keys and the player moves accordingly
 	{
 		boolean recognized = false;
 		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
 		Interactable i = touchingInteractable();
-
-		if ((readKeys.contains(DataRetriever.getSkillOne()) || readKeys.contains(DataRetriever.getSkillTwo()) || 
-				readKeys.contains(DataRetriever.getSkillThree()) || readKeys.contains(DataRetriever.getSkillFour())))
+		
+		if (readKeys.contains(DataRetriever.getSkillOne()) && skill == SKILL.NONE)
+		{	
+			status = STATUS.ATTACKING;
+			skill = SKILL.SKILL1;
+			elapsedFrames = 0;
+			curAnimation = 0;
+		}
+		else if (readKeys.contains(DataRetriever.getSkillTwo()) && skill == SKILL.NONE)
 		{
 			status = STATUS.ATTACKING;
-			attack();
-			return;
+			skill = SKILL.SKILL2;
+			elapsedFrames = 0;
+			curAnimation = 0;
+		}
+		else if (readKeys.contains(DataRetriever.getSkillThree()) && skill == SKILL.NONE)
+		{
+			status = STATUS.ATTACKING;
+			skill = SKILL.SKILL3;
+			elapsedFrames = 0;
+			curAnimation = 0;
+		}
+		else if (readKeys.contains(DataRetriever.getSkillFour()) && skill == SKILL.NONE)
+		{
+			status = STATUS.ATTACKING;
+			skill = SKILL.SKILL4;
+			elapsedFrames = 0;
+			curAnimation = 0;
 		}
 		
+		if(status == STATUS.ATTACKING)
+		{
+			attack();
+			runCollision();
+			checkInteractables(i, readKeys);
+			return;
+		}
+
 		// If standing on the ground, the player must be Idling
 		if (readKeys.size() == 0 && onGround && status != STATUS.CLIMBING)
 		{
@@ -92,67 +121,8 @@ public abstract class Player
 			runCollision();
 			return; // Return because you're done
 		}
-
-		if (i != null)
-		{
-			if (i instanceof Platform)
-			{
-				if (onPlatform && !((Platform) i).getTransparent())
-				{
-					Rectangle2D i2d = (Rectangle2D) (new Rectangle((int) (i.getX() - World.getDrawX()), (int) (i.getY() - World.getDrawY()) + 2, (int) i.getWidth(), (int) i.getHeight() - 2));
-					while (pHurtbox.intersects(i2d))
-					{
-						worldY--;
-						y = worldY - World.getDrawY();
-						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
-					}
-					ySpeed = 0;
-					onGround = true;
-				}
-				if (readKeys.contains(DataRetriever.getDown()) && readKeys.contains(DataRetriever.getJump()) && onPlatform)
-				{
-					worldY += 3;
-					World.setDrawY();
-					y = worldY - World.getDrawY();
-					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
-					if (!inBlock())
-					{
-						onPlatform = false;
-						inPlatform = true;
-						ySpeed = 4 * DataRetriever.getGravityConstant();
-						((Platform) i).setTransparent(true);
-						onGround = false;
-					}
-					else
-					{
-						worldY -= 3;
-						World.setDrawY();
-						y = worldY - World.getDrawY();
-						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
-					}
-				}
-			}
-
-			if (i instanceof Ladder)
-			{
-				if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown()) && status != STATUS.CLIMBING)
-				{
-					status = STATUS.CLIMBING;
-					elapsedFrames = 0;
-					curAnimation = 0;
-				}
-			}
-			else if (i instanceof ManCannon && onGround)
-			{
-				ySpeed -= ((ManCannon) i).getUpDelta();
-				onGround = false;
-			}
-			else if (i instanceof ManCannon && !onGround)
-			{
-				ySpeed = 0;
-				ySpeed -= ((ManCannon) i).getUpDelta();
-			}
-		}
+		
+		checkInteractables(i, readKeys);
 
 		if (status == STATUS.CLIMBING)
 		{
@@ -275,7 +245,7 @@ public abstract class Player
 				status = STATUS.IDLING;
 			}
 		}
-		
+
 		// If the player jumps, add a ton to their y velocity
 		if (readKeys.contains(DataRetriever.getJump()) && status != STATUS.CLIMBING && onGround)
 		{
@@ -302,9 +272,73 @@ public abstract class Player
 				status = STATUS.IDLING;
 			}
 		}
-		
+
 		if (!onPlatform) runCollision();
 		else runCollisionX();
+	}
+
+	private void checkInteractables(Interactable i, Set<Integer> readKeys)
+	{
+		if (i != null)
+		{
+			if (i instanceof Platform)
+			{
+				if (onPlatform && !((Platform) i).getTransparent())
+				{
+					Rectangle2D i2d = (Rectangle2D) (new Rectangle((int) (i.getX() - World.getDrawX()), (int) (i.getY() - World.getDrawY()) + 2, (int) i.getWidth(), (int) i.getHeight() - 2));
+					while (pHurtbox.intersects(i2d))
+					{
+						worldY--;
+						y = worldY - World.getDrawY();
+						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					}
+					ySpeed = 0;
+					onGround = true;
+				}
+				if (readKeys.contains(DataRetriever.getDown()) && readKeys.contains(DataRetriever.getJump()) && onPlatform)
+				{
+					worldY += 3;
+					World.setDrawY();
+					y = worldY - World.getDrawY();
+					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					if (!inBlock())
+					{
+						onPlatform = false;
+						inPlatform = true;
+						ySpeed = 4 * DataRetriever.getGravityConstant();
+						((Platform) i).setTransparent(true);
+						onGround = false;
+					}
+					else
+					{
+						worldY -= 3;
+						World.setDrawY();
+						y = worldY - World.getDrawY();
+						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					}
+				}
+			}
+
+			if (i instanceof Ladder)
+			{
+				if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown()) && status != STATUS.CLIMBING)
+				{
+					status = STATUS.CLIMBING;
+					elapsedFrames = 0;
+					curAnimation = 0;
+				}
+			}
+			else if (i instanceof ManCannon && onGround)
+			{
+				ySpeed -= ((ManCannon) i).getUpDelta();
+				onGround = false;
+			}
+			else if (i instanceof ManCannon && !onGround)
+			{
+				ySpeed = 0;
+				ySpeed -= ((ManCannon) i).getUpDelta();
+			}
+		}
 	}
 	
 	//Method that is used for attack animations & hitbox generation
@@ -320,11 +354,12 @@ public abstract class Player
 		else ySpeed += DataRetriever.getGravityConstant(); // If in air, fall faster
 	}
 
-	private void runCollisionX()
+	protected void runCollisionX()
 	{
 		// Reset Hurtbox and then check for collisions with any nearby rect; if colliding, force out of the block
-		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
 		World.setDrawX();
+		x = worldX - World.getDrawX();
+		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
@@ -340,7 +375,7 @@ public abstract class Player
 		x = worldX - World.getDrawX();
 	}
 
-	private void runCollisionY()
+	protected void runCollisionY()
 	{
 		worldY += ySpeed; // Change y vars
 		World.setDrawY();
@@ -393,7 +428,8 @@ public abstract class Player
 		{
 			for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{
-				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));;
+				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
+				;
 				while (pHurtbox.intersects(r2d)) // pHurtbox.intersects(r)
 				{
 					worldX = facingRight ? worldX - 1 : worldX + 1;
@@ -432,10 +468,10 @@ public abstract class Player
 	}
 
 	// Method which runs through the list of interactables in the world and checks for collision
-	private Interactable touchingInteractable()
+	protected Interactable touchingInteractable()
 	{
 		ArrayList<Interactable> fixer = new ArrayList<Interactable>();
-		
+
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX() - World.getDrawX()), (int) (jadams.getY() - World.getDrawY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
@@ -455,23 +491,23 @@ public abstract class Player
 						((Platform) jadams).setTransparent(false);
 					}
 				}
-				fixer.add((Interactable)jadams);
+				fixer.add((Interactable) jadams);
 			}
 			else if (jadams instanceof Platform)
 			{
 				((Platform) jadams).setTransparent(false);
 			}
 		}
-		if(fixer.size() != 0)
+		if (fixer.size() != 0)
 		{
 			Interactable lowest = fixer.get(0);
-			for(Interactable j: fixer)
+			for (Interactable j : fixer)
 			{
-				if(j.getY() > lowest.getY()) lowest = j;
+				if (j.getY() > lowest.getY()) lowest = j;
 			}
 			return lowest;
 		}
-		
+
 		inPlatform = false;
 		onPlatform = false;
 		return null;
