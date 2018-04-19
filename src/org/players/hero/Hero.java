@@ -19,10 +19,12 @@ import org.panels.GamePanel;
 import org.players.Player;
 import org.world.World;
 import org.world.interactable.Interactable;
+import org.world.interactable.ManCannon;
 import org.world.interactable.Platform;
 
 public class Hero extends Player
 {
+	private boolean touchedMCOnRetreat = false; //True if retreat hits a mancannon
 	public Hero(double h, double k, int maxHP) // Constructor to set important variables
 	{
 		worldX = h;
@@ -323,21 +325,29 @@ public class Hero extends Player
 			Interactable nyeh = touchingInteractable();
 			if(nyeh instanceof Platform)
 				((Platform)nyeh).setTransparent(false);
+			touchedMCOnRetreat = false;
 		}
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
-			worldX += facingRight ? -6 : 6;
+			worldX += facingRight ? touchedMCOnRetreat ? -4 : -6 : touchedMCOnRetreat ? 4 : 6;
 			facingRight = !facingRight;
 			runCollisionX();
 			facingRight = !facingRight;
 			if(curAnimation < 1) worldY -= 2;
 			else if(curAnimation > 4) worldY += 2;
-			worldY -= ySpeed;
 			
 			Interactable nyeh = touchingInteractable();
 			if(nyeh instanceof Platform)
 				((Platform)nyeh).setTransparent(true);
+			else if(nyeh instanceof ManCannon)
+			{
+				ySpeed -= ((ManCannon)nyeh).getUpDelta();
+				onGround = false;
+				touchedMCOnRetreat = true;
+				return;
+			}
+			if(!touchedMCOnRetreat) worldY -= ySpeed;
 		}
 	}
 

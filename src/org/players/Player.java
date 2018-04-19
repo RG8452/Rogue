@@ -108,7 +108,7 @@ public abstract class Player
 			// This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
 			if (status == STATUS.IDLING)
 			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				elapsedFrames = (elapsedFrames >= 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -129,13 +129,14 @@ public abstract class Player
 			ySpeed = 0;
 			if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown()))
 			{
-				elapsedFrames = (elapsedFrames > 4 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				elapsedFrames = (elapsedFrames >= 4 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 
 			if (readKeys.contains(DataRetriever.getUp()))
 			{
 				worldY -= xSpeed;
+				if(worldY < World.block) worldY += xSpeed;
 				World.setDrawY();
 				y = worldY - World.getDrawY();
 				pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
@@ -196,7 +197,7 @@ public abstract class Player
 
 			if (facingRight && status == STATUS.MOVING)
 			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				elapsedFrames = (elapsedFrames >= 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -217,7 +218,7 @@ public abstract class Player
 
 			if (!facingRight && status == STATUS.MOVING)
 			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				elapsedFrames = (elapsedFrames >= 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -235,7 +236,7 @@ public abstract class Player
 			recognized = true;
 			if (status == STATUS.IDLING)
 			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				elapsedFrames = (elapsedFrames >= 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -262,7 +263,7 @@ public abstract class Player
 		{
 			if (status == STATUS.IDLING)
 			{
-				elapsedFrames = (elapsedFrames > 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
+				elapsedFrames = (elapsedFrames >= 8 * framesPerAnimationCycle - 1) ? 0 : elapsedFrames + 1;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else

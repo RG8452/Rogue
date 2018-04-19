@@ -25,7 +25,7 @@ public abstract class World
 	protected Rectangle fullMap; // Rectangle for the full map, used for making the QTree
 	protected BufferedImage[] images; // images to be drawn
 	protected QuadTree worldCollision, interCollision; // QTree for collision
-	protected static int block = 32; // Number of pixels in a block
+	public static int block = 32; // Number of pixels in a block
 	protected static double drawX, drawY, spawnX, spawnY; // Corner where screen drawing begins & player spawn
 
 	// Draws the portion of the World that is visible based on the player's world coords
