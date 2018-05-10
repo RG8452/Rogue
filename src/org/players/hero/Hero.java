@@ -49,6 +49,7 @@ public class Hero extends Player
 		else y = GamePanel.hScreenY - pHeight / 2;
 
 		pHurtbox = new Rectangle((int) x + xOffset, (int) y + yOffset, pWidth, pHeight);
+		pHitbox = null;
 		jumpDelta = 16;
 		rAnims = new BufferedImage[12];
 		lAnims = new BufferedImage[12];
@@ -286,6 +287,10 @@ public class Hero extends Player
 			{
 				worldX += facingRight ? 2 : -2;
 			}
+			else if (curAnimation == 3)
+			{
+//				hitbox = new Hitbox();
+			}
 		}
 	}
 
@@ -301,6 +306,7 @@ public class Hero extends Player
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
+			worldX += facingRight ? 4 : -4;
 		}
 	}
 

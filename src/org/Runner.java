@@ -14,7 +14,7 @@ import org.panels.GamePanel;
 import org.panels.PausePanel;
 import org.players.hero.Hero;
 import org.world.World;
-import org.world.dwarvencaverns.DwarvenCaverns;
+import org.world.cavecity.CaveCity;
 
 public class Runner implements Runnable
 {
@@ -27,7 +27,7 @@ public class Runner implements Runnable
 	@Override
 	public void run() // Overridden "Run" for the Thread to execute
 	{
-		DataRetriever.setWorld(new DwarvenCaverns());
+		DataRetriever.setWorld(new CaveCity());
 		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY(), 100));
 		World.setDrawX();
 		World.setDrawY();

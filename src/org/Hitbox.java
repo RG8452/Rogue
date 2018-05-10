@@ -2,25 +2,27 @@ package org;
 /*
  * RG
  * This class will create Hitbox objects, which will be used for damaging enemies & such
- * A Hitbox is essentially a Rectangle with x,y,width,height, and a ArrayList of all enemies that it has hit
+ * A Hitbox is essentially a Rectangle with x,y,width,height, and a HashSet of all enemies that it has hit
+ * It's also notable that the hitbox coords use world coords, NOT screen coords
  * Variables such as Damage, piercing, hitscan, DoT, etc may be introduced later
  */
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.enemies.Enemy;
 
 public class Hitbox extends Rectangle
 {
-	private ArrayList<Enemy> hitEnemies;
+	private HashSet<Enemy> hitEnemies;
 	private int generatedFrame;
 
 	public Hitbox(int x, int y, int width, int height)
 	{
 		super(x, y, width, height);
 
-		hitEnemies = new ArrayList<Enemy>();
+		hitEnemies = new HashSet<Enemy>();
 		generatedFrame = DataRetriever.getFrame();
 	}
 
@@ -30,8 +32,8 @@ public class Hitbox extends Rectangle
 	}
 
 	//@formatter:off
-	public ArrayList<Enemy> getHitEnemies() {return hitEnemies;}
-
+	public HashSet<Enemy> getHitEnemies() {return hitEnemies;}
+	public void clearEnemies() {hitEnemies.clear();}
 	// All get methods and intersects(Rectangle r) are inherited from Rectangle
 	// Also setSize(w,h) and setLocation(x,y)
 	//@formatter:on

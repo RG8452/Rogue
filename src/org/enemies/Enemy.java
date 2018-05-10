@@ -10,6 +10,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import org.world.World;
+
 public abstract class Enemy
 {
 	protected int maxHealth, health, curAnimation, elapsedFrames, lastAttackFrame, eWidth, eHeight, xOffset, yOffset, level; //Basic stats for health and animation
@@ -18,7 +20,7 @@ public abstract class Enemy
 	protected BufferedImage img; //Image to be drawn by each class
 	protected BufferedImage[] rAnims; //Arrays for left and right images
 	protected BufferedImage[] lAnims;
-	protected Rectangle eHurtbox; //Rectangle for checking damage to enemy sprite
+	protected Rectangle eWorldbox; //Rectangle for checking pos in world
 	protected static int framesPerAnimationCycle = 4; //Frames that elapse between each change in animation
 
 	//Enum used to store all possible outputs for the enemy's stauts
@@ -51,7 +53,7 @@ public abstract class Enemy
 	protected void drawHurtbox(Graphics2D g2d) // Draws the hurtbox where the enemy would be vulnerable
 	{
 		g2d.setColor(new Color(255, 0, 0, 100));
-		g2d.fillRect((int) eHurtbox.getX(), (int) eHurtbox.getY(), (int) eHurtbox.getWidth(), (int) eHurtbox.getHeight());
+		g2d.fillRect((int)(eWorldbox.getX() - World.getDrawX()), (int)(eWorldbox.getY() - World.getDrawY()), eWidth, eHeight);
 	}
 
 	//@formatter:off
@@ -64,12 +66,13 @@ public abstract class Enemy
 	public int getLastAttackFrame() {return lastAttackFrame;}
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
-	public Rectangle getHurtbox() {return eHurtbox;}
+	public Rectangle getWorldbox() {return eWorldbox;}
 
 	// Setter methods
 	public void setX(double nX) {x = nX;}
 	public void setY(double nY) {y = nY;}
 	public void setHealth(int nH) {health = nH;}
+	public void damage(int d) {health -= d;}
 	public void setXSpeed(double nXS) {xSpeed = nXS;}
 	public void setYSpeed(double nYS) {ySpeed = nYS;}
 	public void delayLAF() {lastAttackFrame++;}

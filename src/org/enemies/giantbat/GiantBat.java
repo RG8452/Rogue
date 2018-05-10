@@ -56,7 +56,7 @@ public class GiantBat extends Enemy
 		eHeight = 52;
 		xOffset = 0;
 		yOffset = 10; //Establish Rectangle info
-		eHurtbox = new Rectangle((int) x + xOffset, (int) y + yOffset, 64, 52); //Instantiate hurtbox
+		eWorldbox = new Rectangle((int)worldX, (int)worldY, eWidth, eHeight);
 		facingRight = (x < DataRetriever.getPlayer().getX()); //Determine orientation
 
 		try //Read in all images for animation
@@ -174,7 +174,7 @@ public class GiantBat extends Enemy
 			y = worldY - World.getDrawY();
 		}
 		
-		eHurtbox.setLocation((int) x + xOffset, (int) y + yOffset); //Reset hitbox
+		eWorldbox.setLocation((int)worldX, (int)worldY);
 	}
 
 	@Override
