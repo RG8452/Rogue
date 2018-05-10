@@ -19,7 +19,7 @@ import org.world.cavecity.CaveCity;
 public class Runner implements Runnable
 {
 	private static int pauseFrame; // Frame in which the pause key is first pressed to force a delay
-	private boolean paused, stopped, devMode, noclip, hitboxes, worldboxes, grid; // Game status
+	private boolean paused, stopped, devMode, noclip, hitboxes = true, worldboxes, grid; // Game status
 	public static GamePanel tempPanel; // Temporary panel used when swapping stuff
 	private static int frameDelay = (int) (1000 / DataRetriever.getFrameRate()); // This retrieves, in milliseconds, the time to wait between frames
 	public static GamePanel accessPanel;

@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.DataRetriever;
+import org.Hitbox;
 import org.Startup;
 import org.panels.GamePanel;
 import org.players.Player;
@@ -39,6 +40,7 @@ public class Hero extends Player
 		pHeight = 54;
 		xOffset = 84;
 		yOffset = 6;
+		critModifier = 1.5;
 
 		if (worldX < GamePanel.hScreenX) x = worldX;
 		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
@@ -287,9 +289,11 @@ public class Hero extends Player
 			{
 				worldX += facingRight ? 2 : -2;
 			}
-			else if (curAnimation == 3)
+			else if (curAnimation == 3) 
 			{
-//				hitbox = new Hitbox();
+				//KEON LOOK HERE, COORDINATES ARE GAY
+				pHitbox = new Hitbox(facingRight?(int)worldX+120:(int)worldX+66, (int)worldY + 50, 22, 44); 
+				pHitbox.render(Math.random()>critChance?damage:(int)(damage*critModifier), false);
 			}
 		}
 	}

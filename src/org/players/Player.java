@@ -26,7 +26,10 @@ import org.world.interactable.Platform;
 
 public abstract class Player
 {
-	protected int health, level, maxHealth, curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; // Basic stats
+	protected int curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; //Positioning variables
+	protected int health, level, maxHealth, damage; // Basic stats
+	protected double critChance, critModifier; //Chance of a hit being critical; probability goes up to 1.0, uses Math.random for calculation
+	protected double armor; //Armor stat to reduce damage from hits
 	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta; // X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
 	protected boolean facingRight = true, onGround = false, onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected BufferedImage img = null; // Buffered image drawn in animation
