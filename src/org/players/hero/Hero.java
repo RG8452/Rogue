@@ -26,12 +26,15 @@ import org.world.interactable.Platform;
 public class Hero extends Player
 {
 	private boolean touchedMCOnRetreat = false; //True if retreat hits a mancannon
-	public Hero(double h, double k, int maxHP) // Constructor to set important variables
+	private static int baseDamage = 5, baseMHP = 100;
+
+	public Hero(double h, double k) // Constructor to initialize everything
 	{
 		worldX = h;
 		worldY = k;
-		maxHealth = maxHP;
-		health = maxHP;
+		maxHealth = baseMHP;
+		damage = baseDamage;
+		health = maxHealth;
 		xSpeed = 7;
 		ySpeed = 3.5;
 		curAnimation = 0;
@@ -41,15 +44,8 @@ public class Hero extends Player
 		xOffset = 84;
 		yOffset = 6;
 		critModifier = 1.5;
-
-		if (worldX < GamePanel.hScreenX) x = worldX;
-		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
-		else x = GamePanel.hScreenX;
-
-		if (worldY < GamePanel.hScreenY) y = worldY;
-		else if (worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
-		else y = GamePanel.hScreenY - pHeight / 2;
-
+		critChance = .01;
+		level = 1;
 		pHurtbox = new Rectangle((int) x + xOffset, (int) y + yOffset, pWidth, pHeight);
 		pHitbox = null;
 		jumpDelta = 16;
@@ -58,6 +54,14 @@ public class Hero extends Player
 		nAnims = new BufferedImage[2];
 		lSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
 		rSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
+
+		if (worldX < GamePanel.hScreenX) x = worldX;
+		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
+		else x = GamePanel.hScreenX;
+
+		if (worldY < GamePanel.hScreenY) y = worldY;
+		else if (worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
+		else y = GamePanel.hScreenY - pHeight / 2;
 
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
@@ -243,7 +247,7 @@ public class Hero extends Player
 	//The method that the player calls instead of actually moving
 	public void attack()
 	{
-		switch(skill)
+		switch (skill)
 		{
 			case SKILL1:
 				attackOne();
@@ -275,25 +279,32 @@ public class Hero extends Player
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
-			if(curAnimation != 0 && curAnimation%4 == 0)
+			if (curAnimation != 0 && curAnimation % 4 == 0)
 			{
-				if(!(DataRetriever.getAllKeys().contains(DataRetriever.getSkillOne())))
+				if (!(DataRetriever.getAllKeys().contains(DataRetriever.getSkillOne())))
 				{
 					status = STATUS.IDLING;
 					skill = SKILL.NONE;
 					elapsedFrames = 0;
 					curAnimation = 0;
+					return;
 				}
 			}
 			if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
 			{
 				worldX += facingRight ? 2 : -2;
 			}
-			else if (curAnimation == 3) 
+			else if (curAnimation == 3)
 			{
 				//KEON LOOK HERE, COORDINATES ARE GAY
-				pHitbox = new Hitbox(facingRight?(int)worldX+120:(int)worldX+66, (int)worldY + 50, 22, 44); 
-				pHitbox.render(Math.random()>critChance?damage:(int)(damage*critModifier), false);
+				if (elapsedFrames == 3 * framesPerAnimationCycle) 
+				{
+					pHitbox = new Hitbox(facingRight ? (int) worldX + 115 : (int) worldX + 61, (int) worldY + 36, 27, 60);
+				}
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+
+				//BAD HITBOX
+				//new Hitbox(facingRight?(int)worldX+54:(int)worldX+29, (int)worldY + 3, 12, 22).render(0,false);
 			}
 		}
 	}
@@ -316,7 +327,7 @@ public class Hero extends Player
 
 	private void attackThree() //Retreat
 	{
-		if(elapsedFrames == 0 && !onGround && !onPlatform)
+		if (elapsedFrames == 0 && !onGround && !onPlatform)
 		{
 			status = STATUS.IDLING;
 			skill = SKILL.NONE;
@@ -331,10 +342,9 @@ public class Hero extends Player
 			ySpeed = DataRetriever.getGravityConstant();
 			World.setDrawY();
 			y = worldY - World.getDrawY();
-			
+
 			Interactable nyeh = touchingInteractable();
-			if(nyeh instanceof Platform)
-				((Platform)nyeh).setTransparent(false);
+			if (nyeh instanceof Platform) ((Platform) nyeh).setTransparent(false);
 			touchedMCOnRetreat = false;
 		}
 		else
@@ -344,20 +354,19 @@ public class Hero extends Player
 			facingRight = !facingRight;
 			runCollisionX();
 			facingRight = !facingRight;
-			if(curAnimation < 1) worldY -= 2;
-			else if(curAnimation > 4) worldY += 2;
-			
+			if (curAnimation < 1) worldY -= 2;
+			else if (curAnimation > 4) worldY += 2;
+
 			Interactable nyeh = touchingInteractable();
-			if(nyeh instanceof Platform)
-				((Platform)nyeh).setTransparent(true);
-			else if(nyeh instanceof ManCannon)
+			if (nyeh instanceof Platform) ((Platform) nyeh).setTransparent(true);
+			else if (nyeh instanceof ManCannon)
 			{
-				ySpeed -= ((ManCannon)nyeh).getUpDelta();
+				ySpeed -= ((ManCannon) nyeh).getUpDelta();
 				onGround = false;
 				touchedMCOnRetreat = true;
 				return;
 			}
-			if(!touchedMCOnRetreat) worldY -= ySpeed;
+			if (!touchedMCOnRetreat) worldY -= ySpeed;
 		}
 	}
 

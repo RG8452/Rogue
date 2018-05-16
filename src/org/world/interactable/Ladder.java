@@ -29,7 +29,7 @@ public class Ladder extends Interactable
 		this.wX = x * block;
 		this.wY = y * block;
 		img = null;
-		this.setRect(wX + block/4, wY - 3, block/2, height * block + 3);
+		this.setRect(wX + block / 4, wY - 3, block / 2, height * block + 3);
 
 		if (type.equals("dc"))
 		{
@@ -42,7 +42,7 @@ public class Ladder extends Interactable
 				System.out.println("IMAGE READING ERROR (DwarvenCaverns Ladder): " + e);
 			}
 		}
-		else if(type.equals("cc"))
+		else if (type.equals("cc"))
 		{
 			try
 			{

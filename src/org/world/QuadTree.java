@@ -82,8 +82,8 @@ public class QuadTree
 	}
 
 	/*
-	 * Determine which node the obct belongs to. -1 means object cannot
-	 * completely fit within a child node & is part of the parent node.
+	 * Determine which node the obct belongs to. -1 means object cannot completely
+	 * fit within a child node & is part of the parent node.
 	 */
 	private int getIndex(Rectangle pRect)
 	{
@@ -197,16 +197,16 @@ public class QuadTree
 
 		return returnObjects;
 	}
-	
+
 	public List<Rectangle> retrieveAll(List<Rectangle> returnObjects)
 	{
-		for(int i=0; i < 4; i++)
+		for (int i = 0; i < 4; i++)
 		{
-			if(nodes[i] != null) nodes[i].retrieveAll(returnObjects);
+			if (nodes[i] != null) nodes[i].retrieveAll(returnObjects);
 		}
-		
+
 		returnObjects.addAll(objects);
-		
+
 		return returnObjects;
 	}
 

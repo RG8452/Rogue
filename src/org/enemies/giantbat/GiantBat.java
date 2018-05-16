@@ -19,6 +19,7 @@ import org.world.World;
 
 public class GiantBat extends Enemy
 {
+	private static int baseMHealth = 25, baseDamage = 5; //Base stats for leveling up
 	private int framesPerAttack = 180; //Frames between each attack
 	private int distFromCenter = 176; //Distance the bat flies away over the player's center
 	private int distAboveCenter = 132; //Distance over the player's head the bird flies
@@ -43,6 +44,9 @@ public class GiantBat extends Enemy
 		worldY = yPos;
 		x = xPos - World.getDrawX();
 		y = yPos - World.getDrawY();
+		maxHealth = baseMHealth;
+		health = maxHealth;
+		damage = baseDamage;
 		level = l; //Set basic variables
 		canFly = true; //All giant bats can fly
 		rAnims = new BufferedImage[4];
@@ -53,10 +57,10 @@ public class GiantBat extends Enemy
 		elapsedFrames = 0;
 		curAnimation = 0; //Set animation values
 		eWidth = 64;
-		eHeight = 52;
+		eHeight = 60;
 		xOffset = 0;
 		yOffset = 10; //Establish Rectangle info
-		eWorldbox = new Rectangle((int)worldX, (int)worldY, eWidth, eHeight);
+		eWorldbox = new Rectangle((int) worldX, (int) worldY, eWidth, eHeight);
 		facingRight = (x < DataRetriever.getPlayer().getX()); //Determine orientation
 
 		try //Read in all images for animation
@@ -79,14 +83,13 @@ public class GiantBat extends Enemy
 
 	/*
 	 * This is a stupid override that just forces the enemy to follow a pre-laid
-	 * path Essentially, while PATHING it locks into the correct y and x
-	 * coordinate ranges While HOVERING it will move back and forth within the
-	 * range determined by distFromCenter After a length of time
-	 * (framesPerAttack) pass, it begins ATTACKING When ATTACKING, it uses an
-	 * exponential formula to determine a nice parabolic arc towards the center
-	 * of the player After the attack, all necessary variables are reset and it
-	 * begins PATHING again
-	 */	
+	 * path Essentially, while PATHING it locks into the correct y and x coordinate
+	 * ranges While HOVERING it will move back and forth within the range determined
+	 * by distFromCenter After a length of time (framesPerAttack) pass, it begins
+	 * ATTACKING When ATTACKING, it uses an exponential formula to determine a nice
+	 * parabolic arc towards the center of the player After the attack, all
+	 * necessary variables are reset and it begins PATHING again
+	 */
 	@Override
 	public void act()
 	{
@@ -99,11 +102,11 @@ public class GiantBat extends Enemy
 			if (worldY < pWY - distAboveCenter - 4) worldY += ySpeed; //Move into the Y range
 			else if (worldY > pWY - distAboveCenter + 4) worldY -= ySpeed;
 			y = worldY - World.getDrawY();
-			
+
 			if (worldX > pXMid + distFromCenter) worldX -= xSpeed; //Move into the X range
 			else if (worldX < pXMid - distFromCenter) worldX += xSpeed;
 			x = worldX - World.getDrawX();
-			
+
 			if (pWY - distAboveCenter - 4 < worldY && pWY - distAboveCenter + 4 > worldY && pXMid - distFromCenter < worldX && pXMid + distFromCenter > worldX)
 			{
 				lastAttackFrame = DataRetriever.getFrame(); //If in range, then begin HOVERING and reset needed variables
@@ -136,7 +139,7 @@ public class GiantBat extends Enemy
 				} //If all the way right, start going left
 			}
 			x = worldX - World.getDrawX();
-			
+
 			if (worldY < pWY - distAboveCenter - 4) worldY++; //Move into the Y range
 			else if (worldY > pWY - distAboveCenter + 4) worldY -= ySpeed;
 			y = worldY - World.getDrawY();
@@ -169,12 +172,12 @@ public class GiantBat extends Enemy
 				status = STATUS.PATHING;
 				facingRight = (worldY < pXMid);
 			}
-			
+
 			x = worldX - World.getDrawX();
 			y = worldY - World.getDrawY();
 		}
-		
-		eWorldbox.setLocation((int)worldX, (int)worldY);
+
+		eWorldbox.setLocation((int) worldX, (int) worldY);
 	}
 
 	@Override
@@ -195,7 +198,6 @@ public class GiantBat extends Enemy
 	}
 
 	//@formatter:off
-	public void setLAF(int i) {lastAttackFrame = i;}
-	public int getLAF() {return lastAttackFrame;}
+	protected String getClassName() {return "GiantBat";}
 	//@formatter:on
 }

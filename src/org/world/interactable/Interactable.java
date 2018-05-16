@@ -20,16 +20,16 @@ public abstract class Interactable extends Rectangle
 	public abstract void interact();
 
 	public abstract void draw(Graphics2D g2d);
-	
+
 	@Override
-	public String toString() 
+	public String toString()
 	{
 		String output = "";
 		output += "X: " + getX() + "\tY: " + getY();
 		output += "W: " + getWidth() + "\tH: " + getHeight();
 		return output;
 	}
-	
+
 	public void drawHitbox(Graphics2D g2d)
 	{
 		g2d.setColor(new Color(255, 255, 255, 100));

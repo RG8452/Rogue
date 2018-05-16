@@ -19,37 +19,37 @@ import org.world.World;
 public class Hitbox extends Rectangle
 {
 	private HashSet<Enemy> hitEnemies;
-	private int generatedFrame;
 
 	public Hitbox(int x, int y, int width, int height)
 	{
 		super(x, y, width, height);
 
 		hitEnemies = new HashSet<Enemy>();
-		generatedFrame = DataRetriever.getFrame();
 	}
 
 	//Renders the hitbox on a given frame, checks enemies, and damages them
 	public void render(int damage, boolean singleTarget)
 	{
-		for(Enemy e: this.checkEnemies(singleTarget))
+		for (Enemy e : this.checkEnemies(singleTarget))
+		{
 			e.damage(damage);
-		if(Startup.getRunner().hitboxesEnabled())
-			drawHitbox((Graphics2D)Startup.getGUI().getGraphics());
+		}
+//		System.out.println(hitEnemies);
+		if (Startup.getRunner().hitboxesEnabled()) drawHitbox((Graphics2D) Startup.getGUI().getGraphics());
 	}
-	
+
 	//Returns a list of all enemies in the current hitbox
 	private ArrayList<Enemy> checkEnemies(boolean onePunch)
 	{
 		ArrayList<Enemy> spaghettiAndMeatballs = new ArrayList<>();
-		for(Enemy e: DataRetriever.getAllEnemies()) //Loop through all enemies
+		for (Enemy e : DataRetriever.getAllEnemies()) //Loop through all enemies
 		{
-			if(e.getWorldbox().intersects(this)) //If this hits the enemy
+			if (e.getWorldbox().intersects(this)) //If this hits the enemy
 			{
-				if(hitEnemies.add(e)) //If this enemy hasn't been hit yet
+				if (hitEnemies.add(e)) //If this enemy hasn't been hit yet
 				{
 					spaghettiAndMeatballs.add(e);
-					if(onePunch) return spaghettiAndMeatballs; //Return early if single target
+					if (onePunch) return spaghettiAndMeatballs; //Return early if single target
 				}
 			}
 		}
@@ -60,9 +60,9 @@ public class Hitbox extends Rectangle
 	public void drawHitbox(Graphics2D g)
 	{
 		g.setColor(new Color(0, 40, 255, 110));
-		g.fillRect((int)(x - World.getDrawX()), (int)(y - World.getDrawY()), width, height);
+		g.fillRect((int) (x - World.getDrawX()), (int) (y - World.getDrawY()), width, height);
 	}
-	
+
 	//@formatter:off
 	public HashSet<Enemy> getHitEnemies() {return hitEnemies;}
 	public void clearEnemies() {hitEnemies.clear();}

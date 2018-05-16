@@ -14,8 +14,10 @@ import org.world.World;
 
 public abstract class Enemy
 {
-	protected int maxHealth, health, curAnimation, elapsedFrames, lastAttackFrame, eWidth, eHeight, xOffset, yOffset, level; //Basic stats for health and animation
-	protected double worldX, worldY, x, y, xSpeed, ySpeed; //Position stored as double but drawn as int to maintain absolute accuracty
+	protected int maxHealth, health, level, damage; //Basic stats 
+	protected double armor, critChance; //More Stats
+	protected int curAnimation, elapsedFrames, lastAttackFrame, eWidth, eHeight, xOffset, yOffset; //Basic animation info
+	protected double worldX, worldY, x, y, xSpeed, ySpeed; //Position stored as double but drawn as int to maintain absolute accuracy
 	protected boolean canFly, facingRight; //Booleans for direction facing as well as flight
 	protected BufferedImage img; //Image to be drawn by each class
 	protected BufferedImage[] rAnims; //Arrays for left and right images
@@ -32,11 +34,11 @@ public abstract class Enemy
 	protected STATUS status; //Variable used for current status
 	protected double pWX, pWY; //Player coords for reference when pathing
 
-	public void act()
-	{
-		//Methods for making the enemy act
-	}
+	public abstract void act(); //Methods for making the enemy act
 
+	protected abstract String getClassName(); //Returns the class name of the enemy
+
+	//Returns true if the enemy can fly or is on the ground
 	public boolean onGround()
 	{
 		if (canFly) return true; //If the enemy can fly, it doesn't matter
@@ -47,13 +49,43 @@ public abstract class Enemy
 		}
 	}
 
+	//Method to power level an enemy up several times
+	public void powerLevel(int levels)
+	{
+		while (levels-- > 0)
+			levelUp();
+	}
+
+	//Levels an enemy up, increases stats
+	protected void levelUp()
+	{
+		maxHealth *= 1.375;
+		damage *= 1.25;
+		health = maxHealth;
+		level++;
+	}
+
+	//Method for when the enemy takes damage; should check for deaths & make health bars
+	public void damage(int d)
+	{
+		health -= d;
+	}
+
 	// Method for drawing the enemy, to be overridden for each class to import jpgs
 	public abstract void drawEnemy(Graphics2D g2d);
 
 	protected void drawHurtbox(Graphics2D g2d) // Draws the hurtbox where the enemy would be vulnerable
 	{
 		g2d.setColor(new Color(255, 0, 0, 100));
-		g2d.fillRect((int)(eWorldbox.getX() - World.getDrawX()), (int)(eWorldbox.getY() - World.getDrawY()), eWidth, eHeight);
+		g2d.fillRect((int) (eWorldbox.getX() - World.getDrawX()), (int) (eWorldbox.getY() - World.getDrawY()), eWidth, eHeight);
+	}
+
+	//@Override
+	public String toString()
+	{
+		String output = getClassName() + "@" + Integer.toHexString(this.hashCode());
+		output += String.format(" WX:%d WY:%d MH:%d H:%d LVL:%d", (int) worldX, (int) worldY, maxHealth, health, level);
+		return output;
 	}
 
 	//@formatter:off
@@ -72,9 +104,10 @@ public abstract class Enemy
 	public void setX(double nX) {x = nX;}
 	public void setY(double nY) {y = nY;}
 	public void setHealth(int nH) {health = nH;}
-	public void damage(int d) {health -= d;}
 	public void setXSpeed(double nXS) {xSpeed = nXS;}
 	public void setYSpeed(double nYS) {ySpeed = nYS;}
 	public void delayLAF() {lastAttackFrame++;}
+	public void setLAF(int i) {lastAttackFrame = i;}
+	public int getLAF() {return lastAttackFrame;}
 	//@formatter:on
 }

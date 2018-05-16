@@ -51,7 +51,7 @@ public class GUI extends JFrame
 		}
 		myPanel.repaint(); // Repaint the panel to see the changes
 	}
-	
+
 	//@formatter:off
 	// Getter methods to retrieve dimensions of workable panel
 	public Dimension getDim() {return dim;}

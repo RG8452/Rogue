@@ -28,10 +28,11 @@ public class Runner implements Runnable
 	public void run() // Overridden "Run" for the Thread to execute
 	{
 		DataRetriever.setWorld(new CaveCity());
-		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY(), 100));
+		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY()));
 		World.setDrawX();
 		World.setDrawY();
 		DataRetriever.addEnemy(new GiantBat(300, 200, 1));
+		DataRetriever.addEnemy(new GiantBat(600, 100, 1));
 		Startup.getGUI().swapPanels(new GamePanel()); // Firstly, substitute panels
 		accessPanel = ((GamePanel) Startup.getGUI().getPanel());
 		accessPanel.repaint();

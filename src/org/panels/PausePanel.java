@@ -141,7 +141,7 @@ public class PausePanel extends JPanel
 		}
 
 		public void keyTyped(KeyEvent e) // Basic printing method
-		{ 
+		{
 			// char c = e.getKeyChar();
 			// System.out.println("You typed " + c);
 			if (e.getKeyChar() == '`' || e.getKeyChar() == '~')
@@ -176,7 +176,6 @@ public class PausePanel extends JPanel
 				}
 			}
 		}
-		
 
 		//@formatter:off
 		public void mousePressed(MouseEvent e) {}

@@ -124,7 +124,7 @@ public class Button
 
 		g.drawString(message, xLoc, y + (int) (height * 2 / 3));
 	}
-	
+
 	//@formatter:off
 	// Series of getter methods for all of the priavte variables
 	public int getX() {return x;}

@@ -98,7 +98,7 @@ public abstract class Player
 			curAnimation = 0;
 		}
 
-		if (status == STATUS.ATTACKING)	//If the player is attacking
+		if (status == STATUS.ATTACKING) //If the player is attacking
 		{
 			attack(); //Call attack method to get animations & hitboxes
 			runCollision(); //Check for bumping into walls, falling, etc.
@@ -112,7 +112,7 @@ public abstract class Player
 			// This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
 			if (status == STATUS.IDLING)
 			{
-				if(++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else //If you begin idling, reset status and animation
@@ -133,13 +133,13 @@ public abstract class Player
 			ySpeed = 0;
 			if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown())) //If moving
 			{
-				if(++elapsedFrames >= 4 * framesPerAnimationCycle) elapsedFrames = 0;
+				if (++elapsedFrames >= 4 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 
 			if (readKeys.contains(DataRetriever.getUp())) //If climbing up
 			{
-				worldY -= xSpeed;	//Move Up
+				worldY -= xSpeed; //Move Up
 				if (worldY < World.block) worldY += xSpeed; //Prevent climbing out of the world
 				World.setDrawY(); //Reset world view
 				y = worldY - World.getDrawY(); //Reset hitbox positioning
@@ -203,7 +203,7 @@ public abstract class Player
 
 			if (facingRight && status == STATUS.MOVING)
 			{
-				if(++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -224,7 +224,7 @@ public abstract class Player
 
 			if (!facingRight && status == STATUS.MOVING)
 			{
-				if(++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -242,7 +242,7 @@ public abstract class Player
 			recognized = true;
 			if (status == STATUS.IDLING)
 			{
-				if(++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
@@ -269,7 +269,7 @@ public abstract class Player
 		{
 			if (status == STATUS.IDLING)
 			{
-				if(++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else

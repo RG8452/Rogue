@@ -25,7 +25,7 @@ public class DwarvenCaverns extends World
 
 	public DwarvenCaverns()
 	{
-	    images = new BufferedImage[3];
+		images = new BufferedImage[3];
 		try // Reads in available images
 		{
 			images[0] = ImageIO.read(new File("src/org/world/dwarvencaverns/Map/CavernsBackGround.png"));
