@@ -109,6 +109,7 @@ public class DataRetriever
 	public static int getMilliTime() {return (int) (System.nanoTime() / 1000000);}
 
 	// Frame data
+	public static void setFrameRate(int q) {frameRate = q;}
 	public static int getFrameRate() {return frameRate;}
 	public static int getFrame() {return frame;}
 	public static void incrementFrame() {frame++;}

@@ -266,50 +266,64 @@ public class Hero extends Player
 		}
 	}
 
-	private void attackOne() //Basic Slash
+	private void attackOne() //Basic Slash FINISHED
 	{
-		//TODO: Generate hitboxes in all attacks
-		if (++elapsedFrames > 12 * framesPerAnimationCycle - 1)
+		if (++elapsedFrames > 12 * framesPerAnimationCycle - 1) //If the animation has run out of frames
 		{
 			status = STATUS.IDLING;
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
 			curAnimation = 0;
 		}
-		else
+		else //Progress the animation
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
-			if (curAnimation != 0 && curAnimation % 4 == 0)
+			if (curAnimation != 0 && curAnimation % 4 == 0) //If the player has used one of the three phases
 			{
-				if (!(DataRetriever.getAllKeys().contains(DataRetriever.getSkillOne())))
+				if (!(DataRetriever.getAllKeys().contains(DataRetriever.getSkillOne()))) //Check if the player wants to attack again
 				{
-					status = STATUS.IDLING;
+					status = STATUS.IDLING; //If the player stops hitting attack, stop attacking, else progress
 					skill = SKILL.NONE;
 					elapsedFrames = 0;
 					curAnimation = 0;
 					return;
 				}
 			}
-			if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10)
+			if (curAnimation == 4 || curAnimation == 5 || curAnimation == 9 || curAnimation == 10) //On frames 5,6,10,11 move the player
 			{
 				worldX += facingRight ? 2 : -2;
 			}
-			else if (curAnimation == 3)
+			else if (curAnimation == 2) //On frame 3, generate a hitbox
 			{
-				//KEON LOOK HERE, COORDINATES ARE GAY
-				if (elapsedFrames == 3 * framesPerAnimationCycle) 
+				if (elapsedFrames == 2 * framesPerAnimationCycle) //R:{54,3}to{66,25}; L:{29,3}to{41,25}
 				{
 					pHitbox = new Hitbox(facingRight ? (int) worldX + 115 : (int) worldX + 61, (int) worldY + 36, 27, 60);
 				}
 				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
-
-				//BAD HITBOX
-				//new Hitbox(facingRight?(int)worldX+54:(int)worldX+29, (int)worldY + 3, 12, 22).render(0,false);
+				return;
+			}
+			if (curAnimation == 6) //On frame 7, generate a hitbox
+			{
+				if (elapsedFrames == 6 * framesPerAnimationCycle) //R:{61,1}to{69,25}; L:{31,1}to{39,25}
+				{
+					pHitbox = new Hitbox(facingRight ? (int) worldX + 122 : (int) worldX + 70, (int) worldY + 32, 25, 60);
+				}
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+				return;
+			}
+			if (curAnimation == 10) //On frame 11, generate a hitbox
+			{
+				if (elapsedFrames == 10 * framesPerAnimationCycle) //R:{53,9}to{66,16}; L:{29,9}to{42,16}
+				{
+					pHitbox = new Hitbox(facingRight ? (int) worldX + 110 : (int) worldX + 58, (int) worldY + 58, 36, 18);
+				}
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+				return;
 			}
 		}
 	}
 
-	private void attackTwo() //Dash Stab
+	private void attackTwo() //Dash Stab FINISHED
 	{
 		if (++elapsedFrames > 8 * framesPerAnimationCycle - 1)
 		{
@@ -322,20 +336,45 @@ public class Hero extends Player
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
 			worldX += facingRight ? 4 : -4;
+
+			if (curAnimation > 2 && curAnimation < 6) //Frames 4-6
+			{
+				if (elapsedFrames == 3 * framesPerAnimationCycle)
+				{
+					pHitbox = new Hitbox(facingRight ? (int) worldX + 104 : (int) worldX + 62, (int) worldY + 64, 36, 15);
+				}
+				pHitbox.setLocation(facingRight ? pHitbox.x + 4 : pHitbox.x - 4, pHitbox.y);
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+			}
+			else if (curAnimation == 6 || curAnimation == 7) //Frames 7 and 8
+			{
+				if (elapsedFrames == 6 * framesPerAnimationCycle) //Generate a hitbox that renders twice
+				{
+					pHitbox = new Hitbox(0, 0, 0, 0);
+				}
+				//First box: R:{54,15}to{67,18}; L:{25,15}to{39,18}
+				pHitbox.setLocation(facingRight ? (int) worldX + 108 : (int) worldX + 54, (int) worldY + 66);
+				pHitbox.setSize(42, 15);
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+				//Second box: R:{65,10}to{70,23}; L:{28,10}to{33,23}
+				pHitbox.setLocation(facingRight ? (int) worldX + 120 : (int) worldX + 60, (int) worldY + 50);
+				pHitbox.setSize(22, 50);
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+			}
 		}
 	}
 
-	private void attackThree() //Retreat
+	private void attackThree() //Retreat FINISHED
 	{
-		if (elapsedFrames == 0 && !onGround && !onPlatform)
+		if (elapsedFrames == 0 && !onGround && !onPlatform) //If the attack starts in the air, quick fail
 		{
 			status = STATUS.IDLING;
 			skill = SKILL.NONE;
 			return;
 		}
-		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1)
+		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the attack runs out of time
 		{
-			status = STATUS.IDLING;
+			status = STATUS.IDLING; //Reset gravity, positioning, and animation
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
 			curAnimation = 0;
@@ -343,21 +382,21 @@ public class Hero extends Player
 			World.setDrawY();
 			y = worldY - World.getDrawY();
 
-			Interactable nyeh = touchingInteractable();
+			Interactable nyeh = touchingInteractable(); //Check for platform interaction
 			if (nyeh instanceof Platform) ((Platform) nyeh).setTransparent(false);
 			touchedMCOnRetreat = false;
 		}
-		else
+		else //Proceed animation
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
 			worldX += facingRight ? touchedMCOnRetreat ? -4 : -6 : touchedMCOnRetreat ? 4 : 6;
-			facingRight = !facingRight;
+			facingRight = !facingRight; //Push the player backwards, and flip direction quickly for wall checking
 			runCollisionX();
-			facingRight = !facingRight;
-			if (curAnimation < 1) worldY -= 2;
+			facingRight = !facingRight; //Flip back after wall checking
+			if (curAnimation < 1) worldY -= 2; //Change position
 			else if (curAnimation > 4) worldY += 2;
 
-			Interactable nyeh = touchingInteractable();
+			Interactable nyeh = touchingInteractable(); //Run through platform checking & MCannons
 			if (nyeh instanceof Platform) ((Platform) nyeh).setTransparent(true);
 			else if (nyeh instanceof ManCannon)
 			{
@@ -366,22 +405,32 @@ public class Hero extends Player
 				touchedMCOnRetreat = true;
 				return;
 			}
-			if (!touchedMCOnRetreat) worldY -= ySpeed;
+			if (!touchedMCOnRetreat) worldY -= ySpeed; //If the player hit a mancannon, launch
 		}
 	}
 
-	private void attackFour() //Great Slash
+	private void attackFour() //Great Slash FINISHED
 	{
-		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1)
+		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the animation is over, finish
 		{
 			status = STATUS.IDLING;
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
 			curAnimation = 0;
+			return;
 		}
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
+
+			if (curAnimation == 2) //Frame 3
+			{
+				if (elapsedFrames == 2 * framesPerAnimationCycle)
+				{
+					pHitbox = new Hitbox(facingRight ? (int) worldX + 118 : (int) worldX + 64, (int) worldY + 33, 32, 62);
+				}
+				pHitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
+			}
 		}
 	}
 }

@@ -121,6 +121,13 @@ public class Runner implements Runnable
 	// Method which parses commands given in the devPanel
 	public String parseCommand(String s)
 	{
+		if(s.matches("set framerate [0-9]+"))
+		{
+			DataRetriever.setFrameRate(Integer.parseInt(s.substring(s.lastIndexOf(" ") + 1)));
+			frameDelay = (int) (1000 / DataRetriever.getFrameRate());
+			return "framerate set to " + Integer.parseInt(s.substring(s.lastIndexOf(" ") + 1));
+		}
+		
 		switch (s)
 		{
 			case "set hitboxes 0":
