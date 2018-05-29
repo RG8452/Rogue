@@ -74,10 +74,16 @@ public abstract class Enemy
 	// Method for drawing the enemy, to be overridden for each class to import jpgs
 	public abstract void drawEnemy(Graphics2D g2d);
 
-	protected void drawHurtbox(Graphics2D g2d) // Draws the hurtbox where the enemy would be vulnerable
+	//Method for retrieving the enemy's masked resistance value byte
+	//From left to right: Blind, Electric, Fire, Frozen, Poison, Vulnerable, Weak, Instant-Kill
+	//These flags should be set by declaring a byte with the notation 0bxxxxxxxx where every x is 1 if resist or 0 if not
+	protected abstract byte getResistanceByte();
+
+	//Draws in the enemy hitbox
+	protected void drawHurtbox(Graphics2D g2d) //Draws the hurtbox where the enemy would be vulnerable
 	{
 		g2d.setColor(new Color(255, 0, 0, 100));
-		g2d.fillRect((int) (eWorldbox.getX() - World.getDrawX()), (int) (eWorldbox.getY() - World.getDrawY()), eWidth, eHeight);
+		g2d.fillRect((int) (eWorldbox.getX() - World.getDrawX()), (int) (eWorldbox.getY() - World.getDrawY()), (int) eWorldbox.getWidth(), (int) eWorldbox.getHeight());
 	}
 
 	//@Override
@@ -89,8 +95,8 @@ public abstract class Enemy
 	}
 
 	//@formatter:off
-	// Getter methods
-	public double getX() {return x;}
+    //Getter methods
+    public double getX() {return x;}
 	public double getY() {return y;}
 	public int getHealth() {return health;}
 	public int getMaxHealth() {return maxHealth;}
@@ -99,15 +105,23 @@ public abstract class Enemy
 	public double getXSpeed() {return xSpeed;}
 	public double getYSpeed() {return ySpeed;}
 	public Rectangle getWorldbox() {return eWorldbox;}
-
-	// Setter methods
+	
+	//Resistance getters; Pulls flags out of the masked resistance byte to determine resistances
+	public boolean resistBlind() {return (getResistanceByte() & 0x80) != 0;} //First byte is blindness
+	public boolean resistElec() {return (getResistanceByte() & 0x40) != 0;} //Second byte is electricity
+	public boolean resistFire() {return (getResistanceByte() & 0x20) != 0;} //Third byte is fire
+	public boolean resistFreeze() {return (getResistanceByte() & 0x10) != 0;} //Fourth byte is freeze
+	public boolean resistPoison() {return (getResistanceByte() & 0x8) != 0;} //Fifth byte is poison
+	public boolean resistVuln() {return (getResistanceByte() & 0x4) != 0;} //Sixth byte is vulnerability (defense down)
+	public boolean resistWeak() {return (getResistanceByte() & 0x2) != 0;} //Seventh byte is weakness (damage down)
+	public boolean resistInsta() {return (getResistanceByte() & 0x1) != 0;} //Eighth byte is instant death
+	
+	//Setter methods
 	public void setX(double nX) {x = nX;}
 	public void setY(double nY) {y = nY;}
 	public void setHealth(int nH) {health = nH;}
 	public void setXSpeed(double nXS) {xSpeed = nXS;}
 	public void setYSpeed(double nYS) {ySpeed = nYS;}
 	public void delayLAF() {lastAttackFrame++;}
-	public void setLAF(int i) {lastAttackFrame = i;}
-	public int getLAF() {return lastAttackFrame;}
 	//@formatter:on
 }

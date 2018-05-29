@@ -34,7 +34,7 @@ public class Hitbox extends Rectangle
 		{
 			e.damage(damage);
 		}
-//		System.out.println(hitEnemies);
+		//System.out.println(hitEnemies);
 		if (Startup.getRunner().hitboxesEnabled()) drawHitbox((Graphics2D) Startup.getGUI().getGraphics());
 	}
 

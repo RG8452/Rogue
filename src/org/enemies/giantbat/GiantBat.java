@@ -20,22 +20,22 @@ import org.world.World;
 public class GiantBat extends Enemy
 {
 	private static int baseMHealth = 25, baseDamage = 5; //Base stats for leveling up
+	private static byte resistanceByte = 0b00010010; //R: Freeze, Weakness
 	private int framesPerAttack = 180; //Frames between each attack
 	private int distFromCenter = 176; //Distance the bat flies away over the player's center
 	private int distAboveCenter = 132; //Distance over the player's head the bird flies
-
-	// Local enum
-	private enum STATUS
-	{
-		PATHING, HOVERING, ATTACKING
-	};
-
 	private STATUS status;
 	private int framesPerAnimationCycle = 6; //Atatus variable and frames per cycle
 	private double attackStartX, attackStartY; //Coords where the attack begins, used in math
 	private double attackPXMid; //Player coords at beginning of attack
 	private boolean leftPass = false;
 	private int attackDuration = 110; //Bool for passing left in hover and frames during attack
+
+	// Local enum
+	private enum STATUS
+	{
+		PATHING, HOVERING, ATTACKING
+	};
 
 	// Constructor
 	public GiantBat(double xPos, double yPos, int l)
@@ -199,5 +199,6 @@ public class GiantBat extends Enemy
 
 	//@formatter:off
 	protected String getClassName() {return "GiantBat";}
+	protected byte getResistanceByte() {return resistanceByte;}
 	//@formatter:on
 }
