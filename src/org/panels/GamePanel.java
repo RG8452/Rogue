@@ -49,14 +49,14 @@ public class GamePanel extends JPanel
 		Graphics2D g2d = (Graphics2D) g;
 		DataRetriever.getWorld().drawVisibleWorld(g2d);
 		if (Startup.getRunner().gridEnabled()) drawRulerBoard(g2d);
-		
-		if(Startup.getRunner().statsEnabled())
+
+		if (Startup.getRunner().statsEnabled())
 		{
 			g2d.setColor(Color.green);
 			g2d.drawString("FRAME: " + DataRetriever.getFrame(), 50, 50);
 			g2d.setColor(Color.blue.brighter());
-			g2d.drawString("PWX: " + (int)(DataRetriever.getPlayer().getWorldX()), 50, 65);
-			g2d.drawString("PWY: " + (int)(DataRetriever.getPlayer().getWorldY()), 130, 65);
+			g2d.drawString("PWX: " + (int) (DataRetriever.getPlayer().getWorldX()), 50, 65);
+			g2d.drawString("PWY: " + (int) (DataRetriever.getPlayer().getWorldY()), 130, 65);
 		}
 
 		DataRetriever.getPlayer().drawPlayer(g2d);

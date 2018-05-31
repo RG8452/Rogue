@@ -54,13 +54,13 @@ public class Hero extends Player
 		lSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
 		rSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
 
-//		if (worldX < GamePanel.hScreenX) x = worldX;
-//		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
-//		else x = GamePanel.hScreenX;
-//
-//		if (worldY < GamePanel.hScreenY) y = worldY;
-//		else if (worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
-//		else y = GamePanel.hScreenY - pHeight / 2;
+		//		if (worldX < GamePanel.hScreenX) x = worldX;
+		//		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
+		//		else x = GamePanel.hScreenX;
+		//
+		//		if (worldY < GamePanel.hScreenY) y = worldY;
+		//		else if (worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
+		//		else y = GamePanel.hScreenY - pHeight / 2;
 
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
@@ -239,7 +239,7 @@ public class Hero extends Player
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = lSkillAnims[3][curAnimation];
 		}
 
-		g2d.drawImage(img, (int)(worldX - World.getDrawX()), (int)(worldY - World.getDrawY()), null);
+		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
 		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 		if (Startup.getRunner().hitboxesEnabled() && hitbox != null) hitbox.drawHitbox(g2d);
 	}
@@ -299,7 +299,7 @@ public class Hero extends Player
 			{
 				if (elapsedFrames == 2 * framesPerAnimationCycle) //R:{54,3}to{66,25}; L:{29,3}to{41,25}
 				{
-					hitbox = new Hitbox(facingRight ? (int) worldX + 115 : (int) worldX + 61, (int) worldY + 36, 27, 60);
+					hitbox = new Hitbox(facingRight ? (int) worldX + 106 : (int) worldX + 56, (int) worldY + 4, 28, 48);
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 				return;
@@ -308,7 +308,7 @@ public class Hero extends Player
 			{
 				if (elapsedFrames == 6 * framesPerAnimationCycle) //R:{61,1}to{69,25}; L:{31,1}to{39,25}
 				{
-					hitbox = new Hitbox(facingRight ? (int) worldX + 122 : (int) worldX + 70, (int) worldY + 32, 25, 60);
+					hitbox = new Hitbox(facingRight ? (int) worldX + 120 : (int) worldX + 60, (int) worldY, 20, 52);
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 				return;
@@ -317,7 +317,7 @@ public class Hero extends Player
 			{
 				if (elapsedFrames == 10 * framesPerAnimationCycle) //R:{53,9}to{66,16}; L:{29,9}to{42,16}
 				{
-					hitbox = new Hitbox(facingRight ? (int) worldX + 110 : (int) worldX + 58, (int) worldY + 58, 36, 18);
+					hitbox = new Hitbox(facingRight ? (int) worldX + 104 : (int) worldX + 56, (int) worldY + 16, 36, 18);
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 				return;
@@ -342,9 +342,9 @@ public class Hero extends Player
 
 			if (curAnimation > 2 && curAnimation < 6) //Frames 4-6
 			{
-				if (elapsedFrames == 3 * framesPerAnimationCycle)
+				if (elapsedFrames == 3 * framesPerAnimationCycle) //R:{54,15}to{67,18}; L:{25,15}to{39,18}
 				{
-					hitbox = new Hitbox(facingRight ? (int) worldX + 104 : (int) worldX + 62, (int) worldY + 64, 36, 15);
+					hitbox = new Hitbox(facingRight ? (int) worldX + 102 : (int) worldX + 52, (int) worldY + 28, 36, 12);
 				}
 				hitbox.setLocation(facingRight ? hitbox.x + 4 : hitbox.x - 4, hitbox.y);
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
@@ -356,12 +356,12 @@ public class Hero extends Player
 					hitbox = new Hitbox(0, 0, 0, 0);
 				}
 				//First box: R:{54,15}to{67,18}; L:{25,15}to{39,18}
-				hitbox.setLocation(facingRight ? (int) worldX + 108 : (int) worldX + 54, (int) worldY + 66);
-				hitbox.setSize(42, 15);
+				hitbox.setLocation(facingRight ? (int) worldX + 96 : (int) worldX + 43, (int) worldY + 28);
+				hitbox.setSize(48, 12);
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 				//Second box: R:{65,10}to{70,23}; L:{28,10}to{33,23}
-				hitbox.setLocation(facingRight ? (int) worldX + 120 : (int) worldX + 60, (int) worldY + 50);
-				hitbox.setSize(22, 50);
+				hitbox.setLocation(facingRight ? (int) worldX + 125 : (int) worldX + 54, (int) worldY + 18);
+				hitbox.setSize(17, 40);
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 			}
 		}
@@ -431,13 +431,13 @@ public class Hero extends Player
 			{
 				if (elapsedFrames == 2 * framesPerAnimationCycle)
 				{
-					hitbox = new Hitbox(facingRight ? (int) worldX + 118 : (int) worldX + 64, (int) worldY + 33, 32, 62);
+					hitbox = new Hitbox(facingRight ? (int) worldX + 104 : (int) worldX + 56, (int) worldY, 32, 56);
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 			}
 		}
 	}
-	
+
 	//@formatter:off
 	public String getClassName() {return "Hero";}
 	//@formatter:on

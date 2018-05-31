@@ -72,14 +72,14 @@ public class Runner implements Runnable
 		if (DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
 		{
 			DataRetriever.getAllKeys().clear();
-			if (!paused && DataRetriever.getFrame() > pauseFrame + DataRetriever.getFrameRate()/3)
+			if (!paused && DataRetriever.getFrame() > pauseFrame + DataRetriever.getFrameRate() / 3)
 			{
 				paused = true;
 				tempPanel = (GamePanel) Startup.getGUI().getPanel();
 				Startup.getGUI().swapPanels(new PausePanel());
 				pauseFrame = DataRetriever.getFrame();
 			}
-			else if (paused && DataRetriever.getFrame() > pauseFrame + DataRetriever.getFrameRate()/3)
+			else if (paused && DataRetriever.getFrame() > pauseFrame + DataRetriever.getFrameRate() / 3)
 			{
 				paused = false;
 				pauseFrame = DataRetriever.getFrame();
@@ -121,13 +121,13 @@ public class Runner implements Runnable
 	// Method which parses commands given in the devPanel
 	public String parseCommand(String s)
 	{
-		if(s.matches("set framerate [0-9]+"))
+		if (s.matches("set framerate [0-9]+"))
 		{
 			DataRetriever.setFrameRate(Integer.parseInt(s.substring(s.lastIndexOf(" ") + 1)));
 			frameDelay = (int) (1000 / DataRetriever.getFrameRate());
 			return "framerate set to " + Integer.parseInt(s.substring(s.lastIndexOf(" ") + 1));
 		}
-		
+
 		switch (s)
 		{
 			case "set stats 0":

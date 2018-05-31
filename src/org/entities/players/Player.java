@@ -511,6 +511,6 @@ public abstract class Player extends Entity
 	protected void drawHurtbox(Graphics2D g2d)
 	{
 		g2d.setColor(new Color(0, 255, 30, 60));
-		g2d.fillRect((int)(worldbox.getX() - World.getDrawX()), (int)(worldbox.getY() - World.getDrawY()), width, height);
+		g2d.fillRect((int) (worldbox.getX() - World.getDrawX()), (int) (worldbox.getY() - World.getDrawY()), width, height);
 	}
 }

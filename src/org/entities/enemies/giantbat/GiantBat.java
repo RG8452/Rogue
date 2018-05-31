@@ -184,7 +184,7 @@ public class GiantBat extends Enemy
 			if (status != STATUS.ATTACKING) img = lAnims[curAnimation]; //Same as right but left
 			else img = lAnims[0];
 		}
-		g2d.drawImage(img, (int)(worldbox.getX() - World.getDrawX()), (int)(worldbox.getY() - World.getDrawY()), null);
+		g2d.drawImage(img, (int) (worldbox.getX() - World.getDrawX()), (int) (worldbox.getY() - World.getDrawY()), null);
 		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 	}
 
