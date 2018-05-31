@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -21,7 +20,7 @@ import javax.swing.JPanel;
 
 import org.DataRetriever;
 import org.Startup;
-import org.enemies.Enemy;
+import org.entities.enemies.Enemy;
 import org.world.World;
 
 public class GamePanel extends JPanel
@@ -57,7 +56,7 @@ public class GamePanel extends JPanel
 			g2d.drawString("FRAME: " + DataRetriever.getFrame(), 50, 50);
 			g2d.setColor(Color.blue.brighter());
 			g2d.drawString("PWX: " + (int)(DataRetriever.getPlayer().getWorldX()), 50, 65);
-			g2d.drawString("PWY: " + (int)(DataRetriever.getPlayer().getWorldY()), 100, 65);
+			g2d.drawString("PWY: " + (int)(DataRetriever.getPlayer().getWorldY()), 130, 65);
 		}
 
 		DataRetriever.getPlayer().drawPlayer(g2d);

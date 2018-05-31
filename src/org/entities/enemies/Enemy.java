@@ -1,4 +1,4 @@
-package org.enemies;
+package org.entities.enemies;
 /**
  * RG
  * Abstract class that each enemy will extend
@@ -7,22 +7,14 @@ package org.enemies;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 
+import org.entities.Entity;
 import org.world.World;
 
-public abstract class Enemy
+public abstract class Enemy extends Entity
 {
-	protected int maxHealth, health, level, damage; //Basic stats 
-	protected double armor, critChance; //More Stats
-	protected int curAnimation, elapsedFrames, lastAttackFrame, eWidth, eHeight, xOffset, yOffset; //Basic animation info
-	protected double worldX, worldY, x, y, xSpeed, ySpeed; //Position stored as double but drawn as int to maintain absolute accuracy
-	protected boolean canFly, facingRight; //Booleans for direction facing as well as flight
-	protected BufferedImage img; //Image to be drawn by each class
-	protected BufferedImage[] rAnims; //Arrays for left and right images
-	protected BufferedImage[] lAnims;
-	protected Rectangle eWorldbox; //Rectangle for checking pos in world
+	protected int lastAttackFrame; //Frame at which the enemy began attacking
+	protected boolean canFly; //True if the enemy can fly
 	protected static int framesPerAnimationCycle = 4; //Frames that elapse between each change in animation
 
 	//Enum used to store all possible outputs for the enemy's stauts
@@ -33,10 +25,6 @@ public abstract class Enemy
 
 	protected STATUS status; //Variable used for current status
 	protected double pWX, pWY; //Player coords for reference when pathing
-
-	public abstract void act(); //Methods for making the enemy act
-
-	protected abstract String getClassName(); //Returns the class name of the enemy
 
 	//Returns true if the enemy can fly or is on the ground
 	public boolean onGround()
@@ -66,7 +54,7 @@ public abstract class Enemy
 	}
 
 	//Method for when the enemy takes damage; should check for deaths & make health bars
-	public void damage(int d)
+	public void damageEnemy(int d)
 	{
 		health -= d;
 	}
@@ -83,7 +71,7 @@ public abstract class Enemy
 	protected void drawHurtbox(Graphics2D g2d) //Draws the hurtbox where the enemy would be vulnerable
 	{
 		g2d.setColor(new Color(255, 0, 0, 100));
-		g2d.fillRect((int) (eWorldbox.getX() - World.getDrawX()), (int) (eWorldbox.getY() - World.getDrawY()), (int) eWorldbox.getWidth(), (int) eWorldbox.getHeight());
+		g2d.fillRect((int) (worldbox.getX() - World.getDrawX()), (int) (worldbox.getY() - World.getDrawY()), width, height);
 	}
 
 	//@Override
@@ -96,15 +84,7 @@ public abstract class Enemy
 
 	//@formatter:off
     //Getter methods
-    public double getX() {return x;}
-	public double getY() {return y;}
-	public int getHealth() {return health;}
-	public int getMaxHealth() {return maxHealth;}
-	public int getCurAnimation() {return curAnimation;}
 	public int getLastAttackFrame() {return lastAttackFrame;}
-	public double getXSpeed() {return xSpeed;}
-	public double getYSpeed() {return ySpeed;}
-	public Rectangle getWorldbox() {return eWorldbox;}
 	
 	//Resistance getters; Pulls flags out of the masked resistance byte to determine resistances
 	public boolean resistBlind() {return (getResistanceByte() & 0x80) != 0;} //First byte is blindness
@@ -117,11 +97,6 @@ public abstract class Enemy
 	public boolean resistInsta() {return (getResistanceByte() & 0x1) != 0;} //Eighth byte is instant death
 	
 	//Setter methods
-	public void setX(double nX) {x = nX;}
-	public void setY(double nY) {y = nY;}
-	public void setHealth(int nH) {health = nH;}
-	public void setXSpeed(double nXS) {xSpeed = nXS;}
-	public void setYSpeed(double nYS) {ySpeed = nYS;}
 	public void delayLAF() {lastAttackFrame++;}
 	//@formatter:on
 }

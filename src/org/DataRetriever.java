@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.enemies.Enemy;
-import org.players.Player;
+import org.entities.enemies.Enemy;
+import org.entities.players.Player;
 import org.world.World;
 
 public class DataRetriever

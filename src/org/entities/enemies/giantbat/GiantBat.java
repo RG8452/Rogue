@@ -1,4 +1,4 @@
-package org.enemies.giantbat;
+package org.entities.enemies.giantbat;
 /*
  * Class file for the Giant Bat enemy
  * Extends Enemy, will have basic pathing and stuff
@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 import org.DataRetriever;
 import org.Startup;
-import org.enemies.Enemy;
+import org.entities.enemies.Enemy;
 import org.world.World;
 
 public class GiantBat extends Enemy
@@ -42,8 +42,6 @@ public class GiantBat extends Enemy
 	{
 		worldX = xPos;
 		worldY = yPos;
-		x = xPos - World.getDrawX();
-		y = yPos - World.getDrawY();
 		maxHealth = baseMHealth;
 		health = maxHealth;
 		damage = baseDamage;
@@ -56,24 +54,24 @@ public class GiantBat extends Enemy
 		status = STATUS.PATHING; //Status always begins as PATHING
 		elapsedFrames = 0;
 		curAnimation = 0; //Set animation values
-		eWidth = 64;
-		eHeight = 60;
+		width = 64;
+		height = 60;
 		xOffset = 0;
 		yOffset = 10; //Establish Rectangle info
-		eWorldbox = new Rectangle((int) worldX, (int) worldY, eWidth, eHeight);
-		facingRight = (x < DataRetriever.getPlayer().getX()); //Determine orientation
+		worldbox = new Rectangle((int) worldX, (int) worldY, width, height);
+		facingRight = (worldX < DataRetriever.getPlayer().getWorldX()); //Determine orientation
 
 		try //Read in all images for animation
 		{
-			rAnims[0] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/RightFacing/GBatRightIdle1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/RightFacing/GBatRightIdle2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/RightFacing/GBatRightIdle3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/RightFacing/GBatRightIdle4.png"));
+			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle1.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle2.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle3.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle4.png"));
 
-			lAnims[0] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle3.png"));
-			lAnims[3] = ImageIO.read(new File("src/org/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle4.png"));
+			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle1.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle2.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle3.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle4.png"));
 		}
 		catch (IOException e)
 		{
@@ -101,11 +99,9 @@ public class GiantBat extends Enemy
 		{
 			if (worldY < pWY - distAboveCenter - 4) worldY += ySpeed; //Move into the Y range
 			else if (worldY > pWY - distAboveCenter + 4) worldY -= ySpeed;
-			y = worldY - World.getDrawY();
 
 			if (worldX > pXMid + distFromCenter) worldX -= xSpeed; //Move into the X range
 			else if (worldX < pXMid - distFromCenter) worldX += xSpeed;
-			x = worldX - World.getDrawX();
 
 			if (pWY - distAboveCenter - 4 < worldY && pWY - distAboveCenter + 4 > worldY && pXMid - distFromCenter < worldX && pXMid + distFromCenter > worldX)
 			{
@@ -138,11 +134,9 @@ public class GiantBat extends Enemy
 					facingRight = false;
 				} //If all the way right, start going left
 			}
-			x = worldX - World.getDrawX();
 
 			if (worldY < pWY - distAboveCenter - 4) worldY++; //Move into the Y range
 			else if (worldY > pWY - distAboveCenter + 4) worldY -= ySpeed;
-			y = worldY - World.getDrawY();
 
 			elapsedFrames = (elapsedFrames > 4 * framesPerAnimationCycle - 2) ? 0 : elapsedFrames + 1; //Animate
 			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
@@ -172,12 +166,9 @@ public class GiantBat extends Enemy
 				status = STATUS.PATHING;
 				facingRight = (worldY < pXMid);
 			}
-
-			x = worldX - World.getDrawX();
-			y = worldY - World.getDrawY();
 		}
 
-		eWorldbox.setLocation((int) worldX, (int) worldY);
+		worldbox.setLocation((int) worldX, (int) worldY);
 	}
 
 	@Override
@@ -193,7 +184,7 @@ public class GiantBat extends Enemy
 			if (status != STATUS.ATTACKING) img = lAnims[curAnimation]; //Same as right but left
 			else img = lAnims[0];
 		}
-		g2d.drawImage(img, (int) x, (int) y, null);
+		g2d.drawImage(img, (int)(worldbox.getX() - World.getDrawX()), (int)(worldbox.getY() - World.getDrawY()), null);
 		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 	}
 

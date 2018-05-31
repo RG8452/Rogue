@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.Startup;
 import org.panels.GamePanel;
 import org.world.World;
 

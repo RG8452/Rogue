@@ -8,11 +8,11 @@ package org;
 
 import java.awt.Color;
 
-import org.enemies.Enemy;
-import org.enemies.giantbat.GiantBat;
+import org.entities.enemies.Enemy;
+import org.entities.enemies.giantbat.GiantBat;
+import org.entities.players.hero.Hero;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
-import org.players.hero.Hero;
 import org.world.World;
 import org.world.cavecity.CaveCity;
 
@@ -72,14 +72,14 @@ public class Runner implements Runnable
 		if (DataRetriever.getAllKeys().contains(DataRetriever.getPause()))
 		{
 			DataRetriever.getAllKeys().clear();
-			if (!paused && DataRetriever.getFrame() > pauseFrame + 20)
+			if (!paused && DataRetriever.getFrame() > pauseFrame + DataRetriever.getFrameRate()/3)
 			{
 				paused = true;
 				tempPanel = (GamePanel) Startup.getGUI().getPanel();
 				Startup.getGUI().swapPanels(new PausePanel());
 				pauseFrame = DataRetriever.getFrame();
 			}
-			else if (paused && DataRetriever.getFrame() > pauseFrame + 20)
+			else if (paused && DataRetriever.getFrame() > pauseFrame + DataRetriever.getFrameRate()/3)
 			{
 				paused = false;
 				pauseFrame = DataRetriever.getFrame();

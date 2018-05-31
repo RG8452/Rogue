@@ -13,7 +13,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.enemies.Enemy;
+import org.entities.enemies.Enemy;
 import org.world.World;
 
 public class Hitbox extends Rectangle
@@ -32,7 +32,7 @@ public class Hitbox extends Rectangle
 	{
 		for (Enemy e : this.checkEnemies(singleTarget))
 		{
-			e.damage(damage);
+			e.damageEnemy(damage);
 		}
 		//System.out.println(hitEnemies);
 		if (Startup.getRunner().hitboxesEnabled()) drawHitbox((Graphics2D) Startup.getGUI().getGraphics());

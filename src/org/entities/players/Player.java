@@ -1,4 +1,4 @@
-package org.players;
+package org.entities.players;
 /**
  * RG
  * Abstract class that each player will extend
@@ -17,33 +17,24 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.DataRetriever;
-import org.Hitbox;
+import org.entities.Entity;
 import org.world.World;
 import org.world.interactable.Interactable;
 import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
 import org.world.interactable.Platform;
 
-public abstract class Player
+public abstract class Player extends Entity
 {
-	protected int curAnimation, elapsedFrames, pWidth, pHeight, xOffset, yOffset; //Positioning variables
-	protected int health, level, maxHealth, damage; // Basic stats
 	protected double critChance, critModifier; //Chance of a hit being critical; probability goes up to 1.0, uses Math.random for calculation
-	protected double armor; //Armor stat to reduce damage from hits
-	protected double x, y, worldX, worldY, xSpeed, ySpeed, jumpDelta; // X and Y are doubles to keep absolute track of the players, while their drawing will be on ints
-	protected boolean facingRight = true, onGround = false, onPlatform, inPlatform; // Boolean for direction facing and ground checking
+	protected double jumpDelta; //Velocity change that occurs when the player jumps
+	protected boolean onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected BufferedImage img = null; // Buffered image drawn in animation
 
-	// Array of all animations
-	protected BufferedImage[] lAnims; // Left motion
-	protected BufferedImage[] rAnims; // Right motion
-	protected BufferedImage[] nAnims; // Direction Neutral
-	//All Attack Animations
-	protected BufferedImage[][] lSkillAnims;
-	protected BufferedImage[][] rSkillAnims;
+	protected BufferedImage[] nAnims; // Idling animations
+	protected BufferedImage[][] lSkillAnims; // L Attack animations
+	protected BufferedImage[][] rSkillAnims; // R Attack animations
 
-	protected Rectangle pHurtbox; // Player's damage area or hurtbox
-	protected Hitbox pHitbox; // Player's currently functioning hitbox
 	protected static int framesPerAnimationCycle = 4;// Frames it takes for the animation drawn to change
 	private static double flySpeed = 8.5;
 
@@ -142,9 +133,8 @@ public abstract class Player
 				worldY -= xSpeed; //Move Up
 				if (worldY < World.block) worldY += xSpeed; //Prevent climbing out of the world
 				World.setDrawY(); //Reset world view
-				y = worldY - World.getDrawY(); //Reset hitbox positioning
-				pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset); //reset actual hitbox
-				if (pHurtbox.getY() + World.getDrawY() + pHeight <= i.getY()) //If climbing off the top of the ladder
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset); //reset actual hitbox
+				if (worldbox.getY() + height <= i.getY()) //If climbing off the top of the ladder
 				{
 					ySpeed = DataRetriever.getGravityConstant(); //Reset gravity
 					status = STATUS.IDLING; //Back to idling
@@ -157,9 +147,8 @@ public abstract class Player
 			{
 				worldY += xSpeed;
 				World.setDrawY();
-				y = worldY - World.getDrawY();
-				pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
-				if (pHurtbox.getY() + World.getDrawY() + pHeight > i.getY() + i.getHeight() - 5) //If at the bottom of the ladder
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+				if (worldbox.getY() + height > i.getY() + i.getHeight() - 5) //If at the bottom of the ladder
 				{
 					worldY -= 5; //Push up
 					ySpeed = DataRetriever.getGravityConstant();
@@ -181,16 +170,14 @@ public abstract class Player
 					ySpeed -= jumpDelta * .75; //Give yourself some upwards velocity
 					worldX = readKeys.contains(DataRetriever.getRight()) ? worldX + xSpeed * 3.5 : worldX - xSpeed * 3.5; //Launch off
 					World.setDrawX(); //Reset the world view, player position, and hurtbox
-					x = worldX - World.getDrawX();
-					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 					runCollision(); //Run your collision
 					return; //All done
 				}
 			}
 
 			World.setDrawY(); //Assumption: if you are on a ladder and don't jump off, you don't need to check y
-			y = worldY - World.getDrawY();
-			pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 			return;
 		}
 
@@ -199,7 +186,6 @@ public abstract class Player
 		{
 			recognized = true; //Recognized input, avoid idling
 			worldX += xSpeed; //Move right & reset position
-			x = worldX - World.getDrawX();
 
 			if (facingRight && status == STATUS.MOVING)
 			{
@@ -220,7 +206,6 @@ public abstract class Player
 		{
 			recognized = true; //Identical to walking right but the other right
 			worldX -= xSpeed;
-			x = worldX - World.getDrawX();
 
 			if (!facingRight && status == STATUS.MOVING)
 			{
@@ -293,12 +278,11 @@ public abstract class Player
 			{
 				if (onPlatform && !((Platform) i).getTransparent()) //If you're on a platform and it is solid
 				{
-					Rectangle2D i2d = (Rectangle2D) (new Rectangle((int) (i.getX() - World.getDrawX()), (int) (i.getY() - World.getDrawY()) + 2, (int) i.getWidth(), (int) i.getHeight() - 2));
-					while (pHurtbox.intersects(i2d)) //Raise the player to the top of the platform
+					Rectangle2D i2d = (Rectangle2D) (new Rectangle((int) (i.getX()), (int) (i.getY()) + 2, (int) i.getWidth(), (int) i.getHeight() - 2));
+					while (worldbox.intersects(i2d)) //Raise the player to the top of the platform
 					{
 						worldY--;
-						y = worldY - World.getDrawY();
-						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+						worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 					}
 					ySpeed = 0;
 					onGround = true; //Treat platform as solid ground
@@ -308,8 +292,7 @@ public abstract class Player
 				{
 					worldY += 3; //Move down and reset positioning
 					World.setDrawY();
-					y = worldY - World.getDrawY();
-					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 					if (!inBlock()) //If the player doesn't drop through into a block
 					{
 						onPlatform = false; //No longer on but in a platform
@@ -322,8 +305,7 @@ public abstract class Player
 					{
 						worldY -= 3; //Bump back up onto platform
 						World.setDrawY();
-						y = worldY - World.getDrawY();
-						pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+						worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 					}
 				}
 			}
@@ -368,49 +350,43 @@ public abstract class Player
 	{
 		// Reset Hurtbox and then check for collisions with any nearby rect; if colliding, force out of the block
 		World.setDrawX();
-		x = worldX - World.getDrawX();
-		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
-			while (pHurtbox.intersects(r2d)) // pHurtbox.intersects(r)
+			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
+			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
 			{
 				worldX = facingRight ? worldX - 1 : worldX + 1;
-				x = worldX - World.getDrawX();
-				pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 			}
 		}
 
 		World.setDrawX();
-		x = worldX - World.getDrawX();
 	}
 
 	protected void runCollisionY()
 	{
 		worldY += ySpeed; // Change y vars
 		World.setDrawY();
-		y = worldY - World.getDrawY(); // Adjust screen pos based on world pos
 		onGround = false;
 		boolean ceilingContact = false;
 
 		// Just like the x, this checks y collisions and stops the player from getting through hitboxes
-		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
-			while (pHurtbox.intersects(r2d)) // pHurtbox.intersects(r)
+			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
+			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
 			{
 				worldY = ySpeed < 0 ? worldY + 1 : worldY - 1;
-				y = worldY - World.getDrawY();
-				pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 				if (ySpeed > 0) onGround = true;
 				else ceilingContact = true;
 			}
 		}
 
 		World.setDrawY();
-		y = worldY - World.getDrawY();
-		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
 	}
 
@@ -432,48 +408,42 @@ public abstract class Player
 		}
 
 		World.setDrawX();
-		x = worldX - World.getDrawX();
-		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		if (!noclip)
 		{
 			for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{
-				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
+				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
 				;
-				while (pHurtbox.intersects(r2d)) // pHurtbox.intersects(r)
+				while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
 				{
 					worldX = facingRight ? worldX - 1 : worldX + 1;
-					x = worldX - World.getDrawX();
-					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 				}
 			}
 		}
 
 		World.setDrawX();
-		x = worldX - World.getDrawX();
 
 		if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getJump())) worldY -= flySpeed;
 		else if (readKeys.contains(DataRetriever.getDown())) worldY += flySpeed;
 
-		y = worldY - World.getDrawY();
-		pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		World.setDrawY();
 		if (!noclip)
 		{
 			for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{
-				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
-				while (pHurtbox.intersects(r2d)) // pHurtbox.intersects(r)
+				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
+				while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
 				{
 					worldY = readKeys.contains(DataRetriever.getDown()) ? worldY - 1 : worldY + 1;
-					y = worldY - World.getDrawY();
-					pHurtbox.setLocation((int) x + xOffset, (int) y + yOffset);
+					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 				}
 			}
 		}
 
 		World.setDrawY();
-		y = worldY - World.getDrawY();
 		status = STATUS.JUMPING;
 	}
 
@@ -484,8 +454,8 @@ public abstract class Player
 
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX() - World.getDrawX()), (int) (jadams.getY() - World.getDrawY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
-			if (pHurtbox.intersects(r2d))
+			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX()), (int) (jadams.getY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
+			if (worldbox.intersects(r2d))
 			{
 				if (jadams instanceof Platform) //PLATFORM LOGIC
 				{
@@ -528,8 +498,8 @@ public abstract class Player
 	{
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX() - World.getDrawX()), (int) (r.getY() - World.getDrawY()), (int) r.getWidth(), (int) r.getHeight()));
-			if (pHurtbox.intersects(r2d)) return true;
+			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
+			if (worldbox.intersects(r2d)) return true;
 		}
 		return false;
 	}
@@ -541,38 +511,6 @@ public abstract class Player
 	protected void drawHurtbox(Graphics2D g2d)
 	{
 		g2d.setColor(new Color(0, 255, 30, 60));
-		g2d.fillRect((int) pHurtbox.getX(), (int) pHurtbox.getY(), (int) pHurtbox.getWidth(), (int) pHurtbox.getHeight());
+		g2d.fillRect((int)(worldbox.getX() - World.getDrawX()), (int)(worldbox.getY() - World.getDrawY()), width, height);
 	}
-
-	//@formatter:off
-	// All getters
-	public double getX() {return x;}
-	public double getY() {return y;}
-	public double getWorldX() {return worldX;}
-	public double getWorldY() {return worldY;}
-	public int getXOffset() {return xOffset;}
-	public int getHealth() {return health;}
-	public int getLevel() {return level;}
-	public int getMaxHealth() {return maxHealth;}
-	public int getCurAnimation() {return curAnimation;}
-	public double getXSpeed() {return xSpeed;}
-	public double getYSpeed() {return ySpeed;}
-	public Rectangle getHurtbox() {return pHurtbox;}
-	public int getWidth() {return pWidth;}
-	public int getHeight() {return pHeight;}
-	public Rectangle getWorldbox() 
-	{
-		return new Rectangle((int) (pHurtbox.getX() + World.getDrawX()), (int) (pHurtbox.getY() + World.getDrawY()), (int) pHurtbox.getWidth(), (int) pHurtbox.getHeight());
-	}
-
-	// Setter methods
-	public void setX(double nX) {x = nX;}
-	public void setY(double nY) {y = nY;}
-	public void setWorldX(double nWX) {worldX = nWX;}
-	public void setWorldY(double nWY) {worldY = nWY;}
-	public void setHealth(int nH) {health = nH;}
-	public void setMaxHealth(int nMH) {maxHealth = nMH;}
-	public void setXSpeed(double nXS) {xSpeed = nXS;}
-	public void setYSpeed(double nYS) {ySpeed = nYS;}
-	//@formatter:on
 }
