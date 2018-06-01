@@ -19,7 +19,7 @@ import org.world.World;
 
 public class GiantBat extends Enemy
 {
-	private static int baseMHealth = 25, baseDamage = 5; //Base stats for leveling up
+	private static int baseMHealth = 25, bDamage = 5; //Base stats for leveling up
 	private static byte resistanceByte = 0b00010010; //R: Freeze, Weakness
 	private int framesPerAttack = 180; //Frames between each attack
 	private int distFromCenter = 176; //Distance the bat flies away over the player's center
@@ -190,6 +190,8 @@ public class GiantBat extends Enemy
 
 	//@formatter:off
 	protected String getClassName() {return "GiantBat";}
+	protected int getBaseDamage() {return bDamage;}
+	protected int getBaseHealth() {return baseMHealth;}
 	protected byte getResistanceByte() {return resistanceByte;}
 	//@formatter:on
 }

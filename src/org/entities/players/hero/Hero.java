@@ -2,7 +2,6 @@ package org.entities.players.hero;
 /**
  * RG
  * This is the class for the Hero player. It will extend Player and have all drawing and attacks necessary for the Hero.
- * Consider reading in every single image into an array and changing reference instead of continually reading
  */
 
 import java.awt.Graphics2D;
@@ -25,14 +24,13 @@ import org.world.interactable.Platform;
 public class Hero extends Player
 {
 	private boolean touchedMCOnRetreat = false; //True if retreat hits a mancannon
-	private static int baseDamage = 5, baseMHP = 100;
+	private static int bDamage = 5, baseMHP = 100;
 
 	public Hero(double h, double k) // Constructor to initialize everything
 	{
 		worldX = h;
 		worldY = k;
-		maxHealth = baseMHP;
-		damage = baseDamage;
+		damage = bDamage;
 		health = maxHealth;
 		xSpeed = 7;
 		ySpeed = 3.5;
@@ -53,14 +51,6 @@ public class Hero extends Player
 		nAnims = new BufferedImage[2];
 		lSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
 		rSkillAnims = new BufferedImage[][] { new BufferedImage[12], new BufferedImage[8], new BufferedImage[6], new BufferedImage[8] };
-
-		//		if (worldX < GamePanel.hScreenX) x = worldX;
-		//		else if (worldX > DataRetriever.getWorld().getWidth() - GamePanel.hScreenX) x = GamePanel.screenX - (DataRetriever.getWorld().getWidth() - worldX);
-		//		else x = GamePanel.hScreenX;
-		//
-		//		if (worldY < GamePanel.hScreenY) y = worldY;
-		//		else if (worldY > DataRetriever.getWorld().getHeight() - GamePanel.hScreenY) y = GamePanel.screenY - (DataRetriever.getWorld().getHeight() - worldY) - pHeight;
-		//		else y = GamePanel.hScreenY - pHeight / 2;
 
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
@@ -244,29 +234,8 @@ public class Hero extends Player
 		if (Startup.getRunner().hitboxesEnabled() && hitbox != null) hitbox.drawHitbox(g2d);
 	}
 
-	//The method that the player calls instead of actually moving
-	public void attack()
-	{
-		switch (skill)
-		{
-			case SKILL1:
-				attackOne();
-				return;
-			case SKILL2:
-				attackTwo();
-				return;
-			case SKILL3:
-				attackThree();
-				return;
-			case SKILL4:
-				attackFour();
-				return;
-			case NONE:
-				return;
-		}
-	}
-
-	private void attackOne() //Basic Slash FINISHED
+	@Override
+	protected void attackOne() //Basic Slash FINISHED
 	{
 		if (++elapsedFrames > 12 * framesPerAnimationCycle - 1) //If the animation has run out of frames
 		{
@@ -325,7 +294,8 @@ public class Hero extends Player
 		}
 	}
 
-	private void attackTwo() //Dash Stab FINISHED
+	@Override
+	protected void attackTwo() //Dash Stab FINISHED
 	{
 		if (++elapsedFrames > 8 * framesPerAnimationCycle - 1)
 		{
@@ -367,7 +337,8 @@ public class Hero extends Player
 		}
 	}
 
-	private void attackThree() //Retreat FINISHED
+	@Override
+	protected void attackThree() //Retreat FINISHED
 	{
 		if (elapsedFrames == 0 && !onGround && !onPlatform) //If the attack starts in the air, quick fail
 		{
@@ -412,7 +383,8 @@ public class Hero extends Player
 		}
 	}
 
-	private void attackFour() //Great Slash FINISHED
+	@Override
+	protected void attackFour() //Great Slash FINISHED
 	{
 		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the animation is over, finish
 		{
@@ -439,6 +411,8 @@ public class Hero extends Player
 	}
 
 	//@formatter:off
-	public String getClassName() {return "Hero";}
+	protected String getClassName() {return "Hero";}
+	protected int getBaseDamage() {return bDamage;}
+	protected int getBaseHealth() {return baseMHP;}
 	//@formatter:on
 }

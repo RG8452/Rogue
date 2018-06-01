@@ -16,7 +16,7 @@ public abstract class Entity
 	protected int level; //Entity's level, adjusts statistics
 	protected int health; //Statistic that stores current Health (damage until dead)
 	protected int maxHealth; //Statistic to store maximum health
-	protected int baseDamage; //Statistic to store the base damage of the entity
+	protected int baseDamage = getBaseDamage(); //Statistic to store the base damage of the entity
 	protected int damage; //Statistic which stores actual damage
 	protected double armor; //Number representing the defense of the enemy
 	protected double worldX; //Horizontal positioning of the enemy in the world
@@ -35,8 +35,6 @@ public abstract class Entity
 
 	public abstract void act(); //Method that makes entities move
 
-	protected abstract String getClassName(); //Returns the class name of the enemy
-
 	//@formatter:off
 	//Getter methods
 	public int getXOffset() {return xOffset;}
@@ -52,6 +50,10 @@ public abstract class Entity
 	public double getWorldX() {return worldX;}
 	public double getWorldY() {return worldY;}
 	public Rectangle getWorldbox() {return worldbox;}
+	
+	protected abstract int getBaseDamage();
+	protected abstract int getBaseHealth();
+	protected abstract String getClassName(); //Returns the class name of the enemy
 	
 	//Setter methods
 	public void setWorldX(double nWX) {worldX = nWX;}

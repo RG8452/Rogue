@@ -334,7 +334,33 @@ public abstract class Player extends Entity
 	}
 
 	//Method that is used for attack animations & hitbox generation
-	public abstract void attack();
+	public void attack()
+	{
+		switch (skill)
+		{
+			case SKILL1:
+				attackOne();
+				return;
+			case SKILL2:
+				attackTwo();
+				return;
+			case SKILL3:
+				attackThree();
+				return;
+			case SKILL4:
+				attackFour();
+				return;
+			case NONE:
+				return;
+		}
+	}
+	
+	//@formatter:off
+	protected abstract void attackOne();
+	protected abstract void attackTwo();
+	protected abstract void attackThree();
+	protected abstract void attackFour();
+	//@formatter:off
 
 	// This method adjusts the hitbox and runs collision algorithms on both x and y for the player
 	private void runCollision()
