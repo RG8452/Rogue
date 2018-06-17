@@ -35,7 +35,6 @@ public class Hitbox extends Rectangle
 			e.damageEnemy(damage);
 		}
 		//System.out.println(hitEnemies);
-		if (Startup.getRunner().hitboxesEnabled()) drawHitbox((Graphics2D) Startup.getGUI().getGraphics());
 	}
 
 	//Returns a list of all enemies in the current hitbox

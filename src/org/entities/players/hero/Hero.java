@@ -23,8 +23,9 @@ import org.world.interactable.Platform;
 
 public class Hero extends Player
 {
-	private boolean touchedMCOnRetreat = false; //True if retreat hits a mancannon
 	private static int bDamage = 5, baseMHP = 100;
+	private HWave wave = null;
+	private boolean touchedMCOnRetreat = false;
 
 	public Hero(double h, double k) // Constructor to initialize everything
 	{
@@ -164,9 +165,7 @@ public class Hero extends Player
 	}
 
 	/*
-	 * This method checks the player's current status and direction Depending on the
-	 * results, it fetched the proper image to draw onto the JPanel Each png is
-	 * found within the subdirectories of the class
+	 * This method checks the player's current status and direction Depending on the results It fetched the proper image to draw onto the JPanel Each png is found within the subdirectories of the class
 	 */
 	@Override
 	public void drawPlayer(Graphics2D g2d)
@@ -227,6 +226,12 @@ public class Hero extends Player
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL3) img = lSkillAnims[2][curAnimation];
 
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = lSkillAnims[3][curAnimation];
+		}
+
+		if (wave != null) 
+		{
+			wave.draw(g2d);
+			wave.render();
 		}
 
 		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
@@ -383,18 +388,20 @@ public class Hero extends Player
 		}
 	}
 
-	@Override
 	protected void attackFour() //Great Slash FINISHED
 	{
-		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the animation is over, finish
+		if(elapsedFrames == 0 && wave != null) return;
+		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1 && wave != null && wave.getFrame() > 2) //If the animation is over, finish
 		{
 			status = STATUS.IDLING;
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
 			curAnimation = 0;
 			hitbox = null;
+
 			return;
 		}
+		else if(wave != null) return;
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
@@ -407,6 +414,9 @@ public class Hero extends Player
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 			}
+			
+			if (curAnimation == 5) //Frame 6
+				wave = new HWave(facingRight ? (int) worldX + 32 : (int) worldX - 32, (int) worldY, facingRight, damage);
 		}
 	}
 
@@ -414,5 +424,6 @@ public class Hero extends Player
 	protected String getClassName() {return "Hero";}
 	protected int getBaseDamage() {return bDamage;}
 	protected int getBaseHealth() {return baseMHP;}
+	public void destroyWave() {wave = null;}
 	//@formatter:on
 }
