@@ -354,6 +354,9 @@ public class Hero extends Player
 		}
 		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the attack runs out of time
 		{
+			worldY -= 5;
+			yOffset = 6;
+			worldbox.setSize(width, height);
 			status = STATUS.IDLING; //Reset gravity, positioning, and animation
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
@@ -367,6 +370,8 @@ public class Hero extends Player
 		}
 		else //Proceed animation
 		{
+			yOffset = 32;
+			worldbox.setSize(width, height - 26);
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
 			worldX += facingRight ? touchedMCOnRetreat ? -4 : -6 : touchedMCOnRetreat ? 4 : 6;
 			facingRight = !facingRight; //Push the player backwards, and flip direction quickly for wall checking
