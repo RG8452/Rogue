@@ -23,8 +23,9 @@ import org.world.interactable.Platform;
 
 public class Hero extends Player
 {
-	private boolean touchedMCOnRetreat = false; //True if retreat hits a mancannon
 	private static int bDamage = 5, baseMHP = 100;
+	private HWave wave = null;
+	private boolean touchedMCOnRetreat = false;
 
 	public Hero(double h, double k) // Constructor to initialize everything
 	{
@@ -54,32 +55,32 @@ public class Hero extends Player
 
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
-			rAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight4.png"));
-			rAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight5.png"));
-			rAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight6.png"));
-			rAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight7.png"));
-			rAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight8.png"));
+			rAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight1.png"));
+			rAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight2.png"));
+			rAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight3.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight4.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight5.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight6.png"));
+			rAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight7.png"));
+			rAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight8.png"));
 			rAnims[8] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_IdleRight1.png"));
 			rAnims[9] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_IdleRight2.png"));
 			rAnims[10] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_JumpRight1.png"));
 			rAnims[11] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_JumpRight2.png"));
 
-			lAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft3.png"));
+			lAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft1.png"));
+			lAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft2.png"));
+			lAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft3.png"));
 			lAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft4.png"));
-			lAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft5.png"));
-			lAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft6.png"));
-			lAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft7.png"));
-			lAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft8.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft5.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft6.png"));
+			lAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft7.png"));
+			lAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft8.png"));
 			lAnims[8] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_IdleLeft1.png"));
 			lAnims[9] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_IdleLeft2.png"));
 			lAnims[10] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_JumpLeft1.png"));
 			lAnims[11] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_JumpLeft2.png"));
-
+			
 			nAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/Hero_Ladder1.png"));
 			nAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/Hero_Ladder2.png"));
 
@@ -164,9 +165,7 @@ public class Hero extends Player
 	}
 
 	/*
-	 * This method checks the player's current status and direction Depending on the
-	 * results, it fetched the proper image to draw onto the JPanel Each png is
-	 * found within the subdirectories of the class
+	 * This method checks the player's current status and direction Depending on the results It fetched the proper image to draw onto the JPanel Each png is found within the subdirectories of the class
 	 */
 	@Override
 	public void drawPlayer(Graphics2D g2d)
@@ -227,6 +226,12 @@ public class Hero extends Player
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL3) img = lSkillAnims[2][curAnimation];
 
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = lSkillAnims[3][curAnimation];
+		}
+
+		if (wave != null) 
+		{
+			wave.draw(g2d);
+			wave.render();
 		}
 
 		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
@@ -349,6 +354,9 @@ public class Hero extends Player
 		}
 		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the attack runs out of time
 		{
+			worldY -= 5;
+			yOffset = 6;
+			worldbox.setSize(width, height);
 			status = STATUS.IDLING; //Reset gravity, positioning, and animation
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
@@ -362,6 +370,8 @@ public class Hero extends Player
 		}
 		else //Proceed animation
 		{
+			yOffset = 32;
+			worldbox.setSize(width, height - 26);
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
 			worldX += facingRight ? touchedMCOnRetreat ? -4 : -6 : touchedMCOnRetreat ? 4 : 6;
 			facingRight = !facingRight; //Push the player backwards, and flip direction quickly for wall checking
@@ -383,18 +393,20 @@ public class Hero extends Player
 		}
 	}
 
-	@Override
 	protected void attackFour() //Great Slash FINISHED
 	{
-		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1) //If the animation is over, finish
+		if(elapsedFrames == 0 && wave != null) return;
+		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1 && wave != null && wave.getFrame() > 2) //If the animation is over, finish
 		{
 			status = STATUS.IDLING;
 			skill = SKILL.NONE;
 			elapsedFrames = 0;
 			curAnimation = 0;
 			hitbox = null;
+
 			return;
 		}
+		else if(wave != null) return;
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
@@ -407,6 +419,9 @@ public class Hero extends Player
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 			}
+			
+			if (curAnimation == 5) //Frame 6
+				wave = new HWave(facingRight ? (int) worldX + 32 : (int) worldX - 32, (int) worldY, facingRight, damage);
 		}
 	}
 
@@ -414,5 +429,6 @@ public class Hero extends Player
 	protected String getClassName() {return "Hero";}
 	protected int getBaseDamage() {return bDamage;}
 	protected int getBaseHealth() {return baseMHP;}
+	public void destroyWave() {wave = null;}
 	//@formatter:on
 }

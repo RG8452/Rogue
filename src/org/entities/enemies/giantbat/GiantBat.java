@@ -46,6 +46,7 @@ public class GiantBat extends Enemy
 		health = maxHealth;
 		damage = baseDamage;
 		level = l; //Set basic variables
+		powerLevel(l);
 		canFly = true; //All giant bats can fly
 		rAnims = new BufferedImage[4];
 		lAnims = new BufferedImage[4]; //Instantiate the arrays
