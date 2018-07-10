@@ -55,32 +55,32 @@ public class Hero extends Player
 
 		try // This little chunk reads in every animation image and stores them into the arrays
 		{
-			rAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight4.png"));
-			rAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight5.png"));
-			rAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight6.png"));
-			rAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight7.png"));
-			rAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight8.png"));
+			rAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight1.png"));
+			rAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight2.png"));
+			rAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight3.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight4.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight5.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight6.png"));
+			rAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight7.png"));
+			rAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_MoveRight8.png"));
 			rAnims[8] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_IdleRight1.png"));
 			rAnims[9] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_IdleRight2.png"));
 			rAnims[10] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_JumpRight1.png"));
 			rAnims[11] = ImageIO.read(new File("src/org/entities/players/hero/Animations/RightFacing/Hero_JumpRight2.png"));
 
-			lAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft3.png"));
+			lAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft1.png"));
+			lAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft2.png"));
+			lAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft3.png"));
 			lAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft4.png"));
-			lAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft5.png"));
-			lAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft6.png"));
-			lAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft7.png"));
-			lAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft8.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft5.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft6.png"));
+			lAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft7.png"));
+			lAnims[5] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft8.png"));
 			lAnims[8] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_IdleLeft1.png"));
 			lAnims[9] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_IdleLeft2.png"));
 			lAnims[10] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_JumpLeft1.png"));
 			lAnims[11] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_JumpLeft2.png"));
-
+			
 			nAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/Hero_Ladder1.png"));
 			nAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/Hero_Ladder2.png"));
 
