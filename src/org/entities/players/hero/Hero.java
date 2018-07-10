@@ -71,7 +71,7 @@ public class Hero extends Player
 			lAnims[6] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft1.png"));
 			lAnims[7] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft2.png"));
 			lAnims[0] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft3.png"));
-			lAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft4.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft4.png"));
 			lAnims[2] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft5.png"));
 			lAnims[3] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft6.png"));
 			lAnims[4] = ImageIO.read(new File("src/org/entities/players/hero/Animations/LeftFacing/Hero_MoveLeft7.png"));
