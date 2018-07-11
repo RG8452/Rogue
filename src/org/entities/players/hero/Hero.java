@@ -164,9 +164,9 @@ public class Hero extends Player
 		status = STATUS.IDLING;
 	}
 
-	/*
-	 * This method checks the player's current status and direction Depending on the results It fetched the proper image to draw onto the JPanel Each png is found within the subdirectories of the class
-	 */
+	//This method is called when the player is drawn
+	//Each image is stored in the subdirectories of hero/Animations and inside the anims[] arrays
+	//Depending on status and orientation, the proper image is chosen
 	@Override
 	public void drawPlayer(Graphics2D g2d)
 	{
@@ -188,10 +188,7 @@ public class Hero extends Player
 
 			else if (status == STATUS.MOVING) img = rAnims[curAnimation];
 
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1)
-			{
-				img = rSkillAnims[0][curAnimation];
-			}
+			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1) img = rSkillAnims[0][curAnimation];
 
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL2) img = rSkillAnims[1][curAnimation];
 
@@ -216,10 +213,7 @@ public class Hero extends Player
 
 			else if (status == STATUS.MOVING) img = lAnims[curAnimation];
 
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1)
-			{
-				img = lSkillAnims[0][curAnimation];
-			}
+			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1) img = lSkillAnims[0][curAnimation];
 
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL2) img = lSkillAnims[1][curAnimation];
 
@@ -228,7 +222,7 @@ public class Hero extends Player
 			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = lSkillAnims[3][curAnimation];
 		}
 
-		if (wave != null) 
+		if (wave != null)
 		{
 			wave.draw(g2d);
 			wave.render();
@@ -395,7 +389,7 @@ public class Hero extends Player
 
 	protected void attackFour() //Great Slash FINISHED
 	{
-		if(elapsedFrames == 0 && wave != null) return;
+		if (elapsedFrames == 0 && wave != null) return;
 		if (++elapsedFrames > 6 * framesPerAnimationCycle - 1 && wave != null && wave.getFrame() > 2) //If the animation is over, finish
 		{
 			status = STATUS.IDLING;
@@ -406,7 +400,7 @@ public class Hero extends Player
 
 			return;
 		}
-		else if(wave != null) return;
+		else if (wave != null) return;
 		else
 		{
 			curAnimation = elapsedFrames / framesPerAnimationCycle;
@@ -419,7 +413,7 @@ public class Hero extends Player
 				}
 				hitbox.render(Math.random() > critChance ? damage : (int) (damage * critModifier), false);
 			}
-			
+
 			if (curAnimation == 5) //Frame 6
 				wave = new HWave(facingRight ? (int) worldX + 32 : (int) worldX - 32, (int) worldY, facingRight, damage);
 		}

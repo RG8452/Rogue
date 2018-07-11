@@ -9,14 +9,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.DataRetriever;
+import org.Startup;
 import org.entities.enemies.Enemy;
+import org.world.World;
 
 public class Crossbowman extends Enemy
 {
 	private static int baseDamage = 10, baseHealth = 20;
 	private static byte resistanceByte = 0b00000000;
-	private BufferedImage[] nAnims;
-	
+	private BufferedImage[] nAnims, rAttack, lAttack;
+	private CrossbowBolt bolt;
+
 	public Crossbowman(double xPos, double yPos, int l)
 	{
 		worldX = xPos;
@@ -30,6 +33,8 @@ public class Crossbowman extends Enemy
 		rAnims = new BufferedImage[12]; //0-7 for walk, 8-9 for idle, 10-11 for jump
 		lAnims = new BufferedImage[12]; //Instantiate the arrays
 		nAnims = new BufferedImage[2];
+		rAttack = new BufferedImage[12];
+		lAttack = new BufferedImage[12];
 		xSpeed = 5;
 		ySpeed = 3; //Set speed variables (final)
 		elapsedFrames = 0;
@@ -40,6 +45,7 @@ public class Crossbowman extends Enemy
 		yOffset = 0; //Establish Rectangle info
 		worldbox = new Rectangle((int) worldX, (int) worldY, width, height);
 		facingRight = (worldX < DataRetriever.getPlayer().getWorldX()); //Determine orientation
+		status = STATUS.CLIMBING;
 
 		try //Read in all images for animation
 		{
@@ -71,6 +77,32 @@ public class Crossbowman extends Enemy
 			
 			nAnims[0] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/Crossbowmen_Ladder1.png"));
 			nAnims[1] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/Crossbowmen_Ladder2.png"));
+			
+			rAttack[0] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R1.png"));
+			rAttack[1] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R2.png"));
+			rAttack[2] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R3.png"));
+			rAttack[3] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R4.png"));
+			rAttack[4] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R5.png"));
+			rAttack[5] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R6.png"));
+			rAttack[6] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R7.png"));
+			rAttack[7] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R8.png"));
+			rAttack[8] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R9.png"));
+			rAttack[9] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R10.png"));
+			rAttack[10] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R11.png"));
+			rAttack[11] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/CrossbowmenAttack_R12.png"));
+			
+			lAttack[0] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L1.png"));
+			lAttack[1] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L2.png"));
+			lAttack[2] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L3.png"));
+			lAttack[3] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L4.png"));
+			lAttack[4] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L5.png"));
+			lAttack[5] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L6.png"));
+			lAttack[6] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L7.png"));
+			lAttack[7] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L8.png"));
+			lAttack[8] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L9.png"));
+			lAttack[9] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L10.png"));
+			lAttack[10] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L11.png"));
+			lAttack[11] = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/CrossbowmenAttack_L12.png"));
 		}
 		catch (IOException e)
 		{
@@ -81,8 +113,46 @@ public class Crossbowman extends Enemy
 	@Override
 	public void drawEnemy(Graphics2D g2d)
 	{
-		// TODO Auto-generated method stub
+		if (status == STATUS.CLIMBING) img = curAnimation < 2 ? nAnims[0] : nAnims[1];
 
+		else if (facingRight)
+		{
+			if (status == STATUS.JUMPING)
+			{
+				if (ySpeed < 0) img = rAnims[10];
+				else img = rAnims[11];
+			}
+
+			else if (status == STATUS.IDLING)
+			{
+				if (curAnimation < 4) img = rAnims[8];
+				else img = rAnims[9];
+			}
+			
+			else if (status == STATUS.MOVING) img = rAnims[curAnimation];
+		}
+
+		else
+		{
+			if (status == STATUS.JUMPING)
+			{
+				if (ySpeed < 0) img = lAnims[10];
+				else img = lAnims[11];
+			}
+
+			else if (status == STATUS.IDLING)
+			{
+				if (curAnimation < 4) img = lAnims[8];
+				else img = lAnims[9];
+			}
+
+			else if (status == STATUS.MOVING) img = lAnims[curAnimation];
+		}
+
+
+		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
+		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
+		if (Startup.getRunner().hitboxesEnabled() && hitbox != null) hitbox.drawHitbox(g2d);
 	}
 
 	@Override
@@ -97,5 +167,6 @@ public class Crossbowman extends Enemy
 	protected int getBaseHealth() {return baseHealth;}
 	protected String getClassName() {return "Crossbowman";}
 	protected byte getResistanceByte() {return resistanceByte;}
+	protected void destroyBolt() {bolt = null;}
 	//@formatter:on
 }

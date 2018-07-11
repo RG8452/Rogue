@@ -28,12 +28,16 @@ public class Hitbox extends Rectangle
 	}
 
 	//Renders the hitbox on a given frame, checks enemies, and damages them
-	public void render(int damage, boolean singleTarget)
+	//Returns true if the attack is single strike and hits an enemy (AKA destroy this hitbox)
+	public boolean render(int damage, boolean singleTarget)
 	{
 		for (Enemy e : this.checkEnemies(singleTarget))
 		{
 			e.damageEnemy(damage);
+			if(this.checkEnemies(singleTarget).size() == 1)
+				return true;
 		}
+		return false;
 		//System.out.println(hitEnemies);
 	}
 

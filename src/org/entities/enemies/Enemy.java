@@ -20,7 +20,7 @@ public abstract class Enemy extends Entity
 	//Enum used to store all possible outputs for the enemy's stauts
 	protected enum STATUS
 	{
-		IDLING, MOVING, JUMPING, ATTACKING
+		IDLING, MOVING, JUMPING, ATTACKING, CLIMBING
 	};
 
 	protected STATUS status; //Variable used for current status
