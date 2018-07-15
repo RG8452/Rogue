@@ -11,13 +11,12 @@ import javax.imageio.ImageIO;
 import org.entities.players.Player;
 
 /**
- * RG
- * Class for the Archer character, extends Player and contains attacks and drawing info 
+ * RG Class for the Archer character, extends Player and contains attacks and drawing info
  */
 public class Archer extends Player
 {
 	private static int bDamage = 5, baseMHP = 100;
-	
+
 	public Archer(double h, double k) //Constructor initializes Archer
 	{
 		worldX = h;
@@ -34,7 +33,7 @@ public class Archer extends Player
 		critModifier = 1.75;
 		critChance = .02;
 		level = 1;
-		worldbox = new Rectangle((int)worldX + xOffset, (int)worldY + yOffset, width, height);
+		worldbox = new Rectangle((int) worldX + xOffset, (int) worldY + yOffset, width, height);
 		hitbox = null;
 		jumpDelta = 18;
 		rAnims = new BufferedImage[8];
@@ -42,7 +41,8 @@ public class Archer extends Player
 		nAnims = null;
 		lSkillAnims = null;
 		rSkillAnims = null;
-		
+		status = STATUS.IDLING;
+
 		try
 		{
 			rAnims[0] = ImageIO.read(new File("src/org/entities/players/archer/Animations/RightFacing/Archer_MoveRight1.png"));
@@ -53,7 +53,7 @@ public class Archer extends Player
 			rAnims[5] = ImageIO.read(new File("src/org/entities/players/archer/Animations/RightFacing/Archer_MoveRight6.png"));
 			rAnims[6] = ImageIO.read(new File("src/org/entities/players/archer/Animations/RightFacing/Archer_MoveRight7.png"));
 			rAnims[7] = ImageIO.read(new File("src/org/entities/players/archer/Animations/RightFacing/Archer_MoveRight8.png"));
-			
+
 			lAnims[0] = ImageIO.read(new File("src/org/entities/players/archer/Animations/LeftFacing/Archer_MoveLeft1.png"));
 			lAnims[1] = ImageIO.read(new File("src/org/entities/players/archer/Animations/LeftFacing/Archer_MoveLeft2.png"));
 			lAnims[2] = ImageIO.read(new File("src/org/entities/players/archer/Animations/LeftFacing/Archer_MoveLeft3.png"));
@@ -63,47 +63,45 @@ public class Archer extends Player
 			lAnims[6] = ImageIO.read(new File("src/org/entities/players/archer/Animations/LeftFacing/Archer_MoveLeft7.png"));
 			lAnims[7] = ImageIO.read(new File("src/org/entities/players/archer/Animations/LeftFacing/Archer_MoveLeft8.png"));
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			System.out.println("IMAGE READING ERROR (Archer): " + e);
 		}
-		
-		status = STATUS.IDLING;
 	}
-	
+
 	@Override
 	public void drawPlayer(Graphics2D g2d)
 	{
 
 	}
-	
+
 	@Override
 	protected void attackOne()
 	{
-		
+
 	}
-	
+
 	@Override
 	protected void attackTwo()
 	{
-		
+
 	}
-	
+
 	@Override
 	protected void attackThree()
 	{
-		
+
 	}
-	
+
 	@Override
 	protected void attackFour()
 	{
-		
+
 	}
 
-	//@formatter:on
+	//@formatter:off
 	protected String getClassName() {return "Archer";}
 	protected int getBaseDamage() {return bDamage;}
 	protected int getBaseHealth() {return baseMHP;}
-	//@formatter:off
+	//@formatter:on
 }

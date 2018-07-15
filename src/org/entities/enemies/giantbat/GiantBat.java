@@ -21,6 +21,29 @@ public class GiantBat extends Enemy
 {
 	private static int baseMHealth = 25, bDamage = 5; //Base stats for leveling up
 	private static byte resistanceByte = 0b00010010; //R: Freeze, Weakness
+	private static BufferedImage[] rAnims = new BufferedImage[4];
+	private static BufferedImage[] lAnims = new BufferedImage[4];
+
+	static
+	{
+		try //Read in all images for animation
+		{
+			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle1.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle2.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle3.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle4.png"));
+
+			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle1.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle2.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle3.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle4.png"));
+		}
+		catch (IOException e)
+		{
+			System.out.println("IMAGE READING ERROR (GBat): " + e);
+		}
+	}
+
 	private int framesPerAttack = 180; //Frames between each attack
 	private int distFromCenter = 176; //Distance the bat flies away over the player's center
 	private int distAboveCenter = 132; //Distance over the player's head the bird flies
@@ -48,8 +71,6 @@ public class GiantBat extends Enemy
 		level = l; //Set basic variables
 		powerLevel(l);
 		canFly = true; //All giant bats can fly
-		rAnims = new BufferedImage[4];
-		lAnims = new BufferedImage[4]; //Instantiate the arrays
 		xSpeed = 4.75;
 		ySpeed = 3; //Set speed variables (final)
 		status = STATUS.PATHING; //Status always begins as PATHING
@@ -61,34 +82,15 @@ public class GiantBat extends Enemy
 		yOffset = 10; //Establish Rectangle info
 		worldbox = new Rectangle((int) worldX, (int) worldY, width, height);
 		facingRight = (worldX < DataRetriever.getPlayer().getWorldX()); //Determine orientation
-
-		try //Read in all images for animation
-		{
-			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle4.png"));
-
-			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle3.png"));
-			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle4.png"));
-		}
-		catch (IOException e)
-		{
-			System.out.println("IMAGE READING ERROR (GBat): " + e);
-		}
 	}
 
-	/*
-	 * This is a stupid override that just forces the enemy to follow a pre-laid
-	 * path Essentially, while PATHING it locks into the correct y and x coordinate
-	 * ranges While HOVERING it will move back and forth within the range determined
-	 * by distFromCenter After a length of time (framesPerAttack) pass, it begins
-	 * ATTACKING When ATTACKING, it uses an exponential formula to determine a nice
-	 * parabolic arc towards the center of the player After the attack, all
-	 * necessary variables are reset and it begins PATHING again
-	 */
+	//	This is a stupid override that just forces the enemy to follow a pre-laid
+	//	path Essentially, while PATHING it locks into the correct y and x coordinate
+	//	ranges While HOVERING it will move back and forth within the range determined
+	//	by distFromCenter After a length of time (framesPerAttack) pass, it begins
+	//	ATTACKING When ATTACKING, it uses an exponential formula to determine a nice
+	//	parabolic arc towards the center of the player After the attack, all
+	//	necessary variables are reset and it begins PATHING again
 	@Override
 	public void act()
 	{

@@ -31,6 +31,8 @@ public abstract class Player extends Entity
 	protected boolean onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected BufferedImage img = null; // Buffered image drawn in animation
 
+	protected BufferedImage[] rAnims; //Note:: Animations are declared in Player but not enemy
+	protected BufferedImage[] lAnims; //The reasoning is that players are only ever constructed once, so there's no reason to statically read
 	protected BufferedImage[] nAnims; // Idling animations
 	protected BufferedImage[][] lSkillAnims; // L Attack animations
 	protected BufferedImage[][] rSkillAnims; // R Attack animations

@@ -27,9 +27,6 @@ public abstract class Entity
 	protected boolean onGround; //Boolean which stores whether or not the enemy is on the ground
 	protected BufferedImage img = null; //Buffered image drawn in animation
 
-	protected BufferedImage[] lAnims; //Array of images for left motion
-	protected BufferedImage[] rAnims; //Array of images for right motion
-
 	protected Rectangle worldbox; //The area in which the entity can be damaged
 	protected Hitbox hitbox; //Hitbox that the entity is generating
 
