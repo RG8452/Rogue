@@ -67,7 +67,7 @@ public class Militia extends Enemy
 		maxHealth = baseHealth;
 		health = baseHealth;
 		damage = baseDamage;
-		canFly = false;
+		inFlight = false;
 		xSpeed = 5;
 		ySpeed = 3; //Set speed variables (final)
 		elapsedFrames = 0;

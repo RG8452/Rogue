@@ -8,28 +8,30 @@ package org.entities.enemies;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import org.DataRetriever;
 import org.entities.Entity;
 import org.world.World;
 
 public abstract class Enemy extends Entity
 {
 	protected int lastAttackFrame; //Frame at which the enemy began attacking
-	protected boolean canFly; //True if the enemy can fly
+	protected boolean inFlight; //True if the enemy can fly
 	protected static int framesPerAnimationCycle = 4; //Frames that elapse between each change in animation
 
 	//Enum used to store all possible outputs for the enemy's stauts
 	protected enum STATUS
 	{
-		IDLING, MOVING, JUMPING, ATTACKING, CLIMBING
-	};
+		IDLING, PATHING, JUMPING, ATTACKING, CLIMBING
+	}
 
 	protected STATUS status; //Variable used for current status
 	protected double pWX, pWY; //Player coords for reference when pathing
+	protected double pXMid = pWX + DataRetriever.getPlayer().getWidth() / 2 + DataRetriever.getPlayer().getXOffset();
 
 	//Returns true if the enemy can fly or is on the ground
 	public boolean onGround()
 	{
-		if (canFly) return true; //If the enemy can fly, it doesn't matter
+		if (inFlight) return false; //If the enemy can fly, it doesn't matter
 		else
 		{
 			// Determine if the enemy is on the ground
@@ -59,6 +61,31 @@ public abstract class Enemy extends Entity
 		health -= d;
 	}
 
+	// Method for making enemies path and attack the player
+	public void act()
+	{
+		class Flying
+		{
+			void act()
+			{
+				return;
+			}
+		}
+		class Walking
+		{
+			void act()
+			{
+				return;
+			}
+		}
+		
+		Walking walker = new Walking();
+		Flying flyer = new Flying();
+		
+		if (inFlight) flyer.act();
+		else walker.act();
+	}
+	
 	// Method for drawing the enemy, to be overridden for each class to import jpgs
 	public abstract void drawEnemy(Graphics2D g2d);
 

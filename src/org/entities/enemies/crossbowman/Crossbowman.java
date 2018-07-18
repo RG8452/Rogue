@@ -99,7 +99,7 @@ public class Crossbowman extends Enemy
 		maxHealth = baseHealth;
 		health = baseHealth;
 		damage = baseDamage;
-		canFly = false;
+		inFlight = false;
 		xSpeed = 5;
 		ySpeed = 3; //Set speed variables (final)
 		elapsedFrames = 0;
@@ -133,7 +133,7 @@ public class Crossbowman extends Enemy
 				else img = rAnims[9];
 			}
 
-			else if (status == STATUS.MOVING) img = rAnims[curAnimation];
+			else if (status == STATUS.PATHING) img = rAnims[curAnimation];
 		}
 
 		else
@@ -150,7 +150,7 @@ public class Crossbowman extends Enemy
 				else img = lAnims[9];
 			}
 
-			else if (status == STATUS.MOVING) img = lAnims[curAnimation];
+			else if (status == STATUS.PATHING) img = lAnims[curAnimation];
 		}
 
 		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);

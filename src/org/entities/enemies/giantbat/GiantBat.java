@@ -47,12 +47,11 @@ public class GiantBat extends Enemy
 	private int framesPerAttack = 180; //Frames between each attack
 	private int distFromCenter = 176; //Distance the bat flies away over the player's center
 	private int distAboveCenter = 132; //Distance over the player's head the bird flies
-	private STATUS status;
-	private int framesPerAnimationCycle = 6; //Atatus variable and frames per cycle
+	private STATUS status; //Status variable
 	private double attackStartX, attackStartY; //Coords where the attack begins, used in math
 	private double attackPXMid; //Player coords at beginning of attack
-	private boolean leftPass = false;
-	private int attackDuration = 110; //Bool for passing left in hover and frames during attack
+	private boolean leftPass = false; //Bool for passing left in hover
+	private int attackDuration = 110; //Frames during attack
 
 	// Local enum
 	private enum STATUS
@@ -70,7 +69,7 @@ public class GiantBat extends Enemy
 		damage = baseDamage;
 		level = l; //Set basic variables
 		powerLevel(l);
-		canFly = true; //All giant bats can fly
+		inFlight = true; //All giant bats can fly
 		xSpeed = 4.75;
 		ySpeed = 3; //Set speed variables (final)
 		status = STATUS.PATHING; //Status always begins as PATHING
