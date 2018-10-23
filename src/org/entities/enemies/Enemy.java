@@ -7,6 +7,9 @@ package org.entities.enemies;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 import org.DataRetriever;
 import org.entities.Entity;
@@ -38,6 +41,59 @@ public abstract class Enemy extends Entity
 			return true;
 		}
 	}
+	
+	public void runCollision()
+	{
+		runCollisionX();
+		runCollisionY();
+
+		if (onGround) ySpeed = DataRetriever.getGravityConstant(); // If on ground, reset falling speed
+		else ySpeed += DataRetriever.getGravityConstant(); // If in air, fall faster
+	}
+
+	protected void runCollisionX()
+	{
+		// Reset Hurtbox and then check for collisions with any nearby rect; if colliding, force out of the block
+		World.setDrawX();
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
+		{
+			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
+			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+			{
+				worldX = facingRight ? worldX - 1 : worldX + 1;
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+			}
+		}
+
+		World.setDrawX();
+	}
+
+	protected void runCollisionY()
+	{
+		worldY += ySpeed; // Change y vars
+		World.setDrawY();
+		onGround = false;
+		boolean ceilingContact = false;
+
+		// Just like the x, this checks y collisions and stops the player from getting through hitboxes
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
+		{
+			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
+			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+			{
+				worldY = ySpeed < 0 ? worldY + 1 : worldY - 1;
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+				if (ySpeed > 0) onGround = true;
+				else ceilingContact = true;
+			}
+		}
+
+		World.setDrawY();
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
+	}
 
 	//Method to power level an enemy up several times
 	public void powerLevel(int levels)
@@ -59,31 +115,6 @@ public abstract class Enemy extends Entity
 	public void damageEnemy(int d)
 	{
 		health -= d;
-	}
-
-	// Method for making enemies path and attack the player
-	public void act()
-	{
-		class Flying
-		{
-			void act()
-			{
-				return;
-			}
-		}
-		class Walking
-		{
-			void act()
-			{
-				return;
-			}
-		}
-		
-		Walking walker = new Walking();
-		Flying flyer = new Flying();
-		
-		if (inFlight) flyer.act();
-		else walker.act();
 	}
 	
 	// Method for drawing the enemy, to be overridden for each class to import jpgs

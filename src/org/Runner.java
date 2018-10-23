@@ -10,6 +10,7 @@ import java.awt.Color;
 
 import org.entities.enemies.Enemy;
 import org.entities.enemies.giantbat.GiantBat;
+import org.entities.enemies.militia.Militia;
 import org.entities.players.hero.Hero;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
@@ -33,6 +34,8 @@ public class Runner implements Runnable
 		World.setDrawY();
 		DataRetriever.addEnemy(new GiantBat(300, 200, 1));
 		DataRetriever.addEnemy(new GiantBat(600, 100, 1));
+		DataRetriever.addEnemy(new Militia(6208 - 64, 2120, 1));
+		DataRetriever.addEnemy(new Militia(6208 - 128, 2120, 1));
 		Startup.getGUI().swapPanels(new GamePanel()); // Firstly, substitute panels
 		accessPanel = ((GamePanel) Startup.getGUI().getPanel());
 		accessPanel.repaint();

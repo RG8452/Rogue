@@ -9,12 +9,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.DataRetriever;
-import org.entities.enemies.Enemy;
+import org.Startup;
+import org.entities.enemies.Human;
+import org.world.World;
 
-public class Militia extends Enemy
+public class Militia extends Human
 {
 	private static int baseDamage = 10, baseHealth = 20;
 	private static byte resistanceByte = 0b00000000;
+	private static int range = 64;
 	private static BufferedImage[] rAnims = new BufferedImage[12]; //0-7 for walk, 8-9 for idle, 10-11 for jump
 	private static BufferedImage[] lAnims = new BufferedImage[12];
 	private static BufferedImage[] nAnims = new BufferedImage[2];
@@ -23,31 +26,31 @@ public class Militia extends Enemy
 	{
 		try //Read in all images for animation
 		{
-			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight4.png"));
-			rAnims[4] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight5.png"));
-			rAnims[5] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight6.png"));
-			rAnims[6] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight7.png"));
-			rAnims[7] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_MoveRight8.png"));
-			rAnims[8] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_IdleRight1.png"));
-			rAnims[9] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_IdleRight2.png"));
-			rAnims[10] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_JumpRight1.png"));
-			rAnims[11] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Miltia_JumpRight2.png"));
+			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight1.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight2.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight3.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight4.png"));
+			rAnims[4] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight5.png"));
+			rAnims[5] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight6.png"));
+			rAnims[6] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight7.png"));
+			rAnims[7] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_MoveRight8.png"));
+			rAnims[8] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_IdleRight1.png"));
+			rAnims[9] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_IdleRight2.png"));
+			rAnims[10] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_JumpRight1.png"));
+			rAnims[11] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/RightFacing/Militia_JumpRight2.png"));
 
-			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft3.png"));
-			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft4.png"));
-			lAnims[4] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft5.png"));
-			lAnims[5] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft6.png"));
-			lAnims[6] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft7.png"));
-			lAnims[7] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_MoveLeft8.png"));
-			lAnims[8] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_IdleLeft1.png"));
-			lAnims[9] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_IdleLeft2.png"));
-			lAnims[10] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_JumpLeft1.png"));
-			lAnims[11] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Miltia_JumpLeft2.png"));
+			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft1.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft2.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft3.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft4.png"));
+			lAnims[4] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft5.png"));
+			lAnims[5] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft6.png"));
+			lAnims[6] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft7.png"));
+			lAnims[7] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_MoveLeft8.png"));
+			lAnims[8] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_IdleLeft1.png"));
+			lAnims[9] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_IdleLeft2.png"));
+			lAnims[10] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_JumpLeft1.png"));
+			lAnims[11] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/LeftFacing/Militia_JumpLeft2.png"));
 
 			nAnims[0] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/Militia_Ladder1.png"));
 			nAnims[1] = ImageIO.read(new File("src/org/entities/enemies/militia/Animations/Militia_Ladder2.png"));
@@ -83,13 +86,47 @@ public class Militia extends Enemy
 	@Override
 	public void drawEnemy(Graphics2D g2d)
 	{
-		// TODO Auto-generated method stub
+		if (this.status == STATUS.CLIMBING)img = curAnimation < 2 ? nAnims[0] : nAnims[1];
+		
+		else if (this.facingRight)
+		{
+			if (this.status == STATUS.JUMPING)
+			{
+				if (ySpeed < 0) img = rAnims[10];
+				else img = rAnims[11];
+			}
+			
+			else if (this.status == STATUS.IDLING) img = curAnimation < 4 ? rAnims[8] : rAnims[9];
+			
+			else if (this.status == STATUS.PATHING) img = rAnims[curAnimation];
+		}
+		
+		else
+		{
+			if (this.status == STATUS.JUMPING)
+			{
+				if (ySpeed < 0) img = lAnims[10];
+				else img = lAnims[11];
+			}
+			
+			else if (this.status == STATUS.IDLING) img = curAnimation < 4 ? lAnims[8] : lAnims[9];
+			
+			else if (this.status == STATUS.PATHING) img = lAnims[curAnimation]; 
+		}
+		
+		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
+		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 	}
 
+	/* This is necessary to allow the functional act method to be called
+	 * from the abstract class, which cannot be called directly from the
+	 * runner file as the type of the enemies is the final class in the 
+	 * abstraction branch.
+	 */
 	@Override
 	public void act()
 	{
-		// TODO Auto-generated method stub
+		super.act();
 	}
 
 	//@formatter:off
@@ -98,4 +135,10 @@ public class Militia extends Enemy
 	protected String getClassName() {return "Militia";}
 	protected byte getResistanceByte() {return resistanceByte;}
 	//@formatter:on
+
+	@Override
+	protected int inRange()
+	{
+		return range;
+	}
 }
