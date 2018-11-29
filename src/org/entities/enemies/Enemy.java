@@ -10,18 +10,19 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.DataRetriever;
 import org.entities.Entity;
 import org.world.World;
 
-public abstract class Enemy extends Entity
+public abstract class Enemy extends Entity implements AI
 {
 	protected int lastAttackFrame; //Frame at which the enemy began attacking
 	protected boolean inFlight; //True if the enemy can fly
 	protected static int framesPerAnimationCycle = 4; //Frames that elapse between each change in animation
 
-	//Enum used to store all possible outputs for the enemy's stauts
+	//Enum used to store all possible outputs for the enemy's status
 	protected enum STATUS
 	{
 		IDLING, PATHING, JUMPING, ATTACKING, CLIMBING
@@ -29,7 +30,9 @@ public abstract class Enemy extends Entity
 
 	protected STATUS status; //Variable used for current status
 	protected double pWX, pWY; //Player coords for reference when pathing
-	protected double pXMid = pWX + DataRetriever.getPlayer().getWidth() / 2 + DataRetriever.getPlayer().getXOffset();
+	protected double pXMid = pWX + DataRetriever.getPlayer().getWidth() / 2 + DataRetriever.getPlayer().getXOffset(); // player x midpoint used for tracking
+	private int currentDestination; // location the enemy is headed towards
+	private Rectangle collisionBox; // rectangle the enemy is standing on
 
 	//Returns true if the enemy can fly or is on the ground
 	public boolean onGround()
@@ -47,8 +50,8 @@ public abstract class Enemy extends Entity
 		runCollisionX();
 		runCollisionY();
 
-		if (onGround) ySpeed = DataRetriever.getGravityConstant(); // If on ground, reset falling speed
-		else ySpeed += DataRetriever.getGravityConstant(); // If in air, fall faster
+		if (onGround) this.ySpeed = DataRetriever.getGravityConstant(); // If on ground, reset falling speed
+		else this.ySpeed += DataRetriever.getGravityConstant(); // If in air, fall faster
 	}
 
 	protected void runCollisionX()
@@ -71,30 +74,75 @@ public abstract class Enemy extends Entity
 
 	protected void runCollisionY()
 	{
-		worldY += ySpeed; // Change y vars
+		this.worldY += this.ySpeed; // Change y vars
 		World.setDrawY();
-		onGround = false;
+		this.onGround = false;
 		boolean ceilingContact = false;
 
 		// Just like the x, this checks y collisions and stops the player from getting through hitboxes
-		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
+		this.worldbox.setLocation((int) this.worldX + xOffset, (int) this.worldY + yOffset);
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), this.getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+			while (this.worldbox.intersects(r2d)) // pHurtbox.intersects(r)
 			{
-				worldY = ySpeed < 0 ? worldY + 1 : worldY - 1;
-				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-				if (ySpeed > 0) onGround = true;
+				this.worldY = this.ySpeed < 0 ? this.worldY + 1 : this.worldY - 1;
+				this.worldbox.setLocation((int) this.worldX + xOffset, (int) this.worldY + yOffset);
+				if (this.ySpeed > 0) this.onGround = true;
 				else ceilingContact = true;
 			}
 		}
 
 		World.setDrawY();
-		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
+		this.worldbox.setLocation((int) this.worldX + xOffset, (int) this.worldY + yOffset);
+		if (ceilingContact) this.ySpeed = DataRetriever.getGravityConstant();
 	}
 
+	public int destination(boolean playerY)		// will become more complex once walls are accounted for
+	{
+		if (playerY) currentDestination = (int) pXMid;
+		else if (!playerY)
+			if (worldX == currentDestination)
+				facingRight = !facingRight;
+			else if ((worldX != currentDestination) && facingRight)
+				 currentDestination = (int) currentGround(DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox())).getMaxX()
+									- getWidth()/2;
+			else currentDestination = (int) currentGround(DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox())).getMinX()
+										+ getWidth()/2;
+		return currentDestination;
+	}
+	
+	public Rectangle currentGround(List<Rectangle> currentNode)
+	{
+		for (Rectangle r : currentNode)
+			if (r.contains(worldX, worldY + 10))
+			{
+				collisionBox = r;
+				return collisionBox;
+			}
+		
+		return collisionBox;
+	}
+	
+	public boolean playerInVerticalRange()
+	{
+		if (!(above(DataRetriever.getPlayer().getWorldY()) || below(DataRetriever.getPlayer().getWorldY())))
+		return true;
+		return false;
+	}
+	
+	public boolean above(double y)
+	{
+		if (this.getWorldY() < y) return true;
+		return false;
+	}
+	
+	public boolean below(double y)
+	{
+		if (this.getWorldY() > y) return true;
+		return false;
+	}
+	
 	//Method to power level an enemy up several times
 	public void powerLevel(int levels)
 	{

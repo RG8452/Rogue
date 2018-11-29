@@ -77,13 +77,12 @@ public class Militia extends Human
 		curAnimation = 0; //Set animation values
 		width = 24;
 		height = 54;
-		xOffset = 0;
-		yOffset = 0; //Establish Rectangle info
+		xOffset = 84;
+		yOffset = 6; //Establish Rectangle info
 		worldbox = new Rectangle((int) worldX, (int) worldY, width, height);
 		facingRight = (worldX < DataRetriever.getPlayer().getWorldX()); //Determine orientation
 	}
 
-	@Override
 	public void drawEnemy(Graphics2D g2d)
 	{
 		if (this.status == STATUS.CLIMBING)img = curAnimation < 2 ? nAnims[0] : nAnims[1];
@@ -118,17 +117,6 @@ public class Militia extends Human
 		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 	}
 
-	/* This is necessary to allow the functional act method to be called
-	 * from the abstract class, which cannot be called directly from the
-	 * runner file as the type of the enemies is the final class in the 
-	 * abstraction branch.
-	 */
-	@Override
-	public void act()
-	{
-		super.act();
-	}
-
 	//@formatter:off
 	protected int getBaseDamage() {return baseDamage;}
 	protected int getBaseHealth() {return baseHealth;}
@@ -139,6 +127,6 @@ public class Militia extends Human
 	@Override
 	protected int inRange()
 	{
-		return range;
+		return range + this.xOffset;
 	}
 }

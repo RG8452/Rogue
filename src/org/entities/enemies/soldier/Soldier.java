@@ -9,12 +9,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.DataRetriever;
-import org.entities.enemies.Enemy;
+import org.Startup;
+import org.entities.enemies.Human;
+import org.world.World;
 
-public class Soldier extends Enemy
+public class Soldier extends Human
 {
 	private static int baseDamage = 10, baseHealth = 20;
 	private static byte resistanceByte = 0b00000000;
+	private static int range = 64;
 	private static BufferedImage[] rAnims = new BufferedImage[12]; //0-7 for walk, 8-9 for idle, 10-11 for jump
 	private static BufferedImage[] lAnims = new BufferedImage[12];
 	private static BufferedImage[] nAnims = new BufferedImage[2];
@@ -74,22 +77,44 @@ public class Soldier extends Enemy
 		curAnimation = 0; //Set animation values
 		width = 24;
 		height = 54;
-		xOffset = 0;
-		yOffset = 0; //Establish Rectangle info
+		xOffset = 84;
+		yOffset = 6; //Establish Rectangle info
 		worldbox = new Rectangle((int) worldX, (int) worldY, width, height);
 		facingRight = (worldX < DataRetriever.getPlayer().getWorldX()); //Determine orientation
 	}
 
-	@Override
 	public void drawEnemy(Graphics2D g2d)
 	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void act()
-	{
-		// TODO Auto-generated method stub
+		if (this.status == STATUS.CLIMBING)img = curAnimation < 2 ? nAnims[0] : nAnims[1];
+		
+		else if (this.facingRight)
+		{
+			if (this.status == STATUS.JUMPING)
+			{
+				if (ySpeed < 0) img = rAnims[10];
+				else img = rAnims[11];
+			}
+			
+			else if (this.status == STATUS.IDLING) img = curAnimation < 4 ? rAnims[8] : rAnims[9];
+			
+			else if (this.status == STATUS.PATHING) img = rAnims[curAnimation];
+		}
+		
+		else
+		{
+			if (this.status == STATUS.JUMPING)
+			{
+				if (ySpeed < 0) img = lAnims[10];
+				else img = lAnims[11];
+			}
+			
+			else if (this.status == STATUS.IDLING) img = curAnimation < 4 ? lAnims[8] : lAnims[9];
+			
+			else if (this.status == STATUS.PATHING) img = lAnims[curAnimation]; 
+		}
+		
+		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
+		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
 	}
 
 	//@formatter:off
@@ -98,4 +123,10 @@ public class Soldier extends Enemy
 	protected String getClassName() {return "Soldier";}
 	protected byte getResistanceByte() {return resistanceByte;}
 	//@formatter:on
+	
+	@Override
+	protected int inRange()
+	{
+		return range + this.xOffset;
+	}
 }

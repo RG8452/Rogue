@@ -12,13 +12,12 @@ import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
 import org.world.interactable.Platform;
 
-public abstract class Human extends Enemy
+public abstract class Human extends Enemy implements AI
 {
 	private Rectangle destination; // Helper variable that allows the enemy to track different objects based on the current "PATHING" state
 	protected boolean onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected abstract int inRange(); // Int which determines the range at which an enemy will switch between STATUS.PATHING and STATUS.ATTACKING
 	
-	@Override
 	public void act()
 	{
 		follow();
@@ -60,34 +59,34 @@ public abstract class Human extends Enemy
 		super.runCollision();
 	}
 	// Tracks the Player's left to right motions
-	private void follow()
+	public void follow()
 	{
-		Interactable i = touchingInteractable();
+//		Interactable i = touchingInteractable();
 		
 		destination = DataRetriever.getPlayer().getWorldbox();
 		
 		if (destination.getX() > this.getWorldX())
 		{
 			facingRight = true;
-			if (destination.getX() > this.getWorldX() + inRange())
+			if (destination.getX() > this.getWorldX() + (inRange() + this.getXOffset()))
 			{
 				this.status = STATUS.PATHING;
 			}
-			else
+			else if (destination.getX() <= this.getWorldX() + (inRange() + this.getXOffset()) && destination.equals(DataRetriever.getPlayer().getWorldbox()))
 			{
-				this.status = STATUS.IDLING; //TODO change to STATUS.ATTACKING when attacks are finalized
+				this.status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
 		}
 		else
 		{
 			facingRight = false;
-			if (destination.getX() < this.getWorldX() - inRange())
+			if (destination.getX() < this.getWorldX() - (inRange() - this.getXOffset()))
 			{
 				this.status = STATUS.PATHING;
 			}
-			else
+			else if (destination.getX() >= this.getWorldX() - (inRange() - this.getXOffset()) && destination.equals(DataRetriever.getPlayer().getWorldbox()))
 			{
-				this.status = STATUS.IDLING; //TODO change to STATUS.ATTACKING when attacks are finalized
+				this.status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
 		}
 		
@@ -106,6 +105,9 @@ public abstract class Human extends Enemy
 */
 	}
 	
+/*
+ * Methods to be revisited for up and down movement as well as interactables
+ * 
 	// Finds a place to move downwards to the same floor as the Player
 	private void below()
 	{
@@ -213,7 +215,7 @@ public abstract class Human extends Enemy
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX()), (int) (jadams.getY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
-			if (worldbox.intersects(r2d))
+			if (this.worldbox.intersects(r2d))
 			{
 				if (jadams instanceof Platform) //PLATFORM LOGIC
 				{
@@ -313,14 +315,15 @@ public abstract class Human extends Enemy
 			}
 		}
 	}
+*/
 
 	// Method which returns true if the enemy is in a block
 	private boolean inBlock()
 	{
-		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), this.getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			if (worldbox.intersects(r2d)) return true;
+			if (this.worldbox.intersects(r2d)) return true;
 		}
 		return false;
 	}

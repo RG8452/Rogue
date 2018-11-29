@@ -214,7 +214,7 @@ public class QuadTree
 	{
 		System.out.print("LEVEL: " + level + " OBS: " + objects.size());
 		System.out.print("\tBOUNDS: x - " + (int) bounds.getX() + " y - " + (int) bounds.getY() + " w - " + (int) bounds.getWidth() + " h - " + (int) bounds.getHeight());
-		System.out.print("\tPLYER: x - " + (int) pRect.getX() + " y - " + (int) pRect.getY() + " w - " + (int) pRect.getWidth() + " h - " + (int) pRect.getHeight());
+		System.out.print("\tPLAYER: x - " + (int) pRect.getX() + " y - " + (int) pRect.getY() + " w - " + (int) pRect.getWidth() + " h - " + (int) pRect.getHeight());
 		System.out.print("\tINDICES: " + Arrays.toString(indices) + "\n");
 	}
 }

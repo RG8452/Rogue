@@ -18,7 +18,7 @@ public abstract class Entity
 	protected int maxHealth; //Statistic to store maximum health
 	protected int baseDamage = getBaseDamage(); //Statistic to store the base damage of the entity
 	protected int damage; //Statistic which stores actual damage
-	protected double armor; //Number representing the defense of the enemy
+	protected double armor; //Number representing the defense of the enemy 
 	protected double worldX; //Horizontal positioning of the enemy in the world
 	protected double worldY; //Vertical positioning of the enemy in the world
 	protected double xSpeed; //Speed at which the enemy moves horizontally
