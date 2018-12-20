@@ -29,9 +29,7 @@ public abstract class Enemy extends Entity implements AI
 		IDLING, PATHING, JUMPING, ATTACKING, CLIMBING
 	}
 
-	protected STATUS status; //Variable used for current status
-	protected double pWX, pWY; //Player coords for reference when pathing
-	protected double pXMid = pWX + DataRetriever.getPlayer().getWidth() / 2 + DataRetriever.getPlayer().getXOffset(); // player x midpoint used for tracking
+	protected STATUS status; //Variable used for current status\
 	private int currentDestination; // location the enemy is headed towards
 	private Rectangle collisionBox = new Rectangle(); // rectangle the enemy is standing on
 	
@@ -90,8 +88,9 @@ public abstract class Enemy extends Entity implements AI
 
 	public int destination(boolean playerY)
 	{
-		if (playerY) currentDestination = (int) pXMid;
+		if (playerY) currentDestination = (int) DataRetriever.getPlayer().getWorldbox().getCenterX();
 		else if (!playerY)
+		{
 			if (worldX == currentDestination)// || (approachingWall(facingRight) && justFlipped(approachingWall(facingRight))))
 				facingRight = !facingRight;
 			else if (approachingWall(facingRight))
@@ -104,6 +103,7 @@ public abstract class Enemy extends Entity implements AI
 									- getWidth()/2;
 			else currentDestination = (int) currentGround(DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox())).getMinX()
 									+ getWidth()/2;
+		}
 		return currentDestination;
 	}
 	
@@ -135,20 +135,20 @@ public abstract class Enemy extends Entity implements AI
 
 	public boolean playerInVerticalRange()
 	{
-		if (!(above(DataRetriever.getPlayer().getWorldY()) || below(DataRetriever.getPlayer().getWorldY())))
-		return true;
+		if (!(above(DataRetriever.getPlayer().getWorldbox().getCenterY()) || below(DataRetriever.getPlayer().getWorldbox().getCenterY())))
+			return true;
 		return false;
 	}
 	
 	public boolean above(double y)
 	{
-		if (getWorldY() < y) return true;
+		if (worldbox.getCenterY() < y) return true;
 		return false;
 	}
 	
 	public boolean below(double y)
 	{
-		if (getWorldY() > y) return true;
+		if (worldbox.getCenterY() > y) return true;
 		return false;
 	}
 	
