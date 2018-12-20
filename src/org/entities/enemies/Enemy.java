@@ -90,7 +90,6 @@ public abstract class Enemy extends Entity implements AI
 
 	public int destination(boolean playerY)
 	{
-		System.out.print(facingRight);
 		if (playerY) currentDestination = (int) pXMid;
 		else if (!playerY)
 			if (worldX == currentDestination)// || (approachingWall(facingRight) && justFlipped(approachingWall(facingRight))))
@@ -105,7 +104,6 @@ public abstract class Enemy extends Entity implements AI
 									- getWidth()/2;
 			else currentDestination = (int) currentGround(DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox())).getMinX()
 									+ getWidth()/2;
-		System.out.println(" " + facingRight + " " + currentDestination);
 		return currentDestination;
 	}
 	
@@ -115,7 +113,6 @@ public abstract class Enemy extends Entity implements AI
 		{
 			if (r.contains(worldbox.getCenterX() + getXOffset(), worldbox.getMaxY() + getYOffset()))
 			{
-				System.out.print(" " + r.toString());
 				collisionBox = r;
 				return collisionBox;
 			}
