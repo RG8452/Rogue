@@ -9,9 +9,10 @@ package org;
 import java.awt.Color;
 
 import org.entities.enemies.Enemy;
-import org.entities.enemies.giantbat.GiantBat;
-import org.entities.enemies.militia.Militia;
-import org.entities.enemies.soldier.Soldier;
+import org.entities.enemies.flyingAI.giantbat.GiantBat;
+import org.entities.enemies.humanAI.militia.Militia;
+import org.entities.enemies.humanAI.soldier.Soldier;
+import org.entities.enemies.humanAI.Human;
 import org.entities.players.hero.Hero;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
@@ -33,9 +34,6 @@ public class Runner implements Runnable
 		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY()));
 		World.setDrawX();
 		World.setDrawY();
-		DataRetriever.addEnemy(new GiantBat(300, 200, 1));
-		DataRetriever.addEnemy(new GiantBat(600, 100, 1));
-		DataRetriever.addEnemy(new Militia(6144, 2120, 1));
 		DataRetriever.addEnemy(new Soldier(6080, 2120, 1));
 		Startup.getGUI().swapPanels(new GamePanel()); // Firstly, substitute panels
 		accessPanel = ((GamePanel) Startup.getGUI().getPanel());
@@ -47,6 +45,7 @@ public class Runner implements Runnable
 		}
 		catch (Exception e)
 		{
+			System.out.println(e);
 		}
 	}
 
@@ -101,7 +100,17 @@ public class Runner implements Runnable
 			for (Enemy e : DataRetriever.getAllEnemies())
 			{
 				e.act();
-			}
+/*			}
+				if (e.EnemyType.equals("Human"))
+				{
+					((Human) e).act();
+				}
+				else
+				{
+					e.act();
+				}
+*/			}
+
 		}
 		else
 		{

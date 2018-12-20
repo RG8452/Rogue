@@ -1,4 +1,4 @@
-package org.entities.enemies;
+package org.entities.enemies.humanAI;
 
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -6,103 +6,87 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.DataRetriever;
+import org.entities.enemies.AI;
+import org.entities.enemies.Enemy;
 import org.world.World;
 import org.world.interactable.Interactable;
 import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
 import org.world.interactable.Platform;
 
-public abstract class Human extends Enemy implements AI
+public abstract class Human extends Enemy
 {
-	private Rectangle destination; // Helper variable that allows the enemy to track different objects based on the current "PATHING" state
 	protected boolean onPlatform, inPlatform; // Boolean for direction facing and ground checking
 	protected abstract int inRange(); // Int which determines the range at which an enemy will switch between STATUS.PATHING and STATUS.ATTACKING
 	
 	public void act()
 	{
-		follow();
+		follow(playerInVerticalRange());
 		
 		// TODO Set movement values for all states (i.e. change y for climbing, x for pathing, etc.)
-		if (this.status == STATUS.IDLING)
+		if (status == STATUS.IDLING)
 		{
 			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 		}
 		
-		if (!this.onGround)
+		if (!onGround())
 		{
-			if (this.status == STATUS.CLIMBING)
+			if (status == STATUS.CLIMBING)
 			{
 				if (++elapsedFrames >= 4 * framesPerAnimationCycle) elapsedFrames = 0;
 				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 			}
 			else
 			{
-				this.status = STATUS.JUMPING;
+				status = STATUS.JUMPING;
 			}
 		}
 			
-		if (this.status == STATUS.PATHING)
+		if (status == STATUS.PATHING)
 		{
-			if (facingRight) this.worldX += this.xSpeed;
-			else this.worldX -= this.xSpeed;
+			worldX = facingRight ? worldX + xSpeed : worldX - xSpeed;
 			
 			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 		}
 		
-/*		if (this.status == STATUS.ATTACKING)
+/*		if (status == STATUS.ATTACKING)
 		{
 			
 		}
 */
-		super.runCollision();
+		runCollision();
 	}
 	// Tracks the Player's left to right motions
-	public void follow()
+	public void follow(boolean PlayerY)
 	{
 //		Interactable i = touchingInteractable();
 		
-		destination = DataRetriever.getPlayer().getWorldbox();
-		
-		if (destination.getX() > this.getWorldX())
+		if (destination(PlayerY) >= getWorldX())
 		{
 			facingRight = true;
-			if (destination.getX() > this.getWorldX() + (inRange() + this.getXOffset()))
+			if (destination(PlayerY) > getWorldX() + (inRange() + getXOffset()))
 			{
-				this.status = STATUS.PATHING;
+				status = STATUS.PATHING;
 			}
-			else if (destination.getX() <= this.getWorldX() + (inRange() + this.getXOffset()) && destination.equals(DataRetriever.getPlayer().getWorldbox()))
+			else if (destination(PlayerY) <= getWorldX() + (inRange() + getXOffset()) && PlayerY)
 			{
-				this.status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
+				status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
 		}
 		else
 		{
 			facingRight = false;
-			if (destination.getX() < this.getWorldX() - (inRange() - this.getXOffset()))
+			if (destination(PlayerY) < getWorldX() - (inRange() - getXOffset()))
 			{
-				this.status = STATUS.PATHING;
+				status = STATUS.PATHING;
 			}
-			else if (destination.getX() >= this.getWorldX() - (inRange() - this.getXOffset()) && destination.equals(DataRetriever.getPlayer().getWorldbox()))
+			else if (destination(PlayerY) >= getWorldX() - (inRange() - getXOffset()) && PlayerY)
 			{
-				this.status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
+				status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
 		}
-		
-/*		if (destination.getY() < this.getWorldY())
-		{
-			above();
-		}
-		else if (destination.getY() > this.getWorldY())
-		{
-			below();
-		}
-		else
-		{
-		
-		}
-*/
 	}
 	
 /*
@@ -125,13 +109,13 @@ public abstract class Human extends Enemy implements AI
 			follow();
 		}
 		
-		if (this.getWorldX() > destination.getX() && !this.getWorldbox().intersects(destination))
+		if (getWorldX() > destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
-			this.worldX -= this.xSpeed;
+			worldX -= xSpeed;
 		}
-		else if (this.getWorldX() < destination.getX() && !this.getWorldbox().intersects(destination))
+		else if (getWorldX() < destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
-			this.worldX += this.xSpeed;
+			worldX += xSpeed;
 		}
 	}
 	
@@ -152,13 +136,13 @@ public abstract class Human extends Enemy implements AI
 			follow();
 		}
 		
-		if (this.getWorldX() > destination.getX() && !this.getWorldbox().intersects(destination))
+		if (getWorldX() > destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
-			this.worldX -= this.xSpeed;
+			worldX -= xSpeed;
 		}
-		else if (this.getWorldX() < destination.getX() && !this.getWorldbox().intersects(destination))
+		else if (getWorldX() < destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
-			this.worldX += this.xSpeed;
+			worldX += xSpeed;
 		}
 	}
 	
@@ -166,15 +150,15 @@ public abstract class Human extends Enemy implements AI
 	{
 		ArrayList<Rectangle> Ladders = new ArrayList<Rectangle>();
 		// Sets up a list of all the nearby ladders// Chooses one of the closest two Ladders as a destination for the enemy
-		for (Rectangle i : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), this.getWorldbox()))
+		for (Rectangle i : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			if (i instanceof Ladder)
 			{
 				if (!Ladders.isEmpty())
 				{
-					if (this.getWorldX() - Ladders.get(0).getX() > this.getWorldX() - i.getX())
+					if (getWorldX() - Ladders.get(0).getX() > getWorldX() - i.getX())
 						Ladders.add(0, i);
-					else if (this.getWorldX() - Ladders.get(1).getX() > this.getWorldX() - i.getX())
+					else if (getWorldX() - Ladders.get(1).getX() > getWorldX() - i.getX())
 						Ladders.add(1, i);
 					else 
 						Ladders.add(i);
@@ -188,7 +172,7 @@ public abstract class Human extends Enemy implements AI
 			case "up": 
 				for (Rectangle l : Ladders) // Removes ladders that would move the Enemy downwards from the list
 				{
-					if (l.getY() > this.getWorldY())
+					if (l.getY() > getWorldY())
 					{
 						Ladders.remove(l);
 					}
@@ -197,7 +181,7 @@ public abstract class Human extends Enemy implements AI
 			case "down":
 				for (Rectangle l : Ladders) // Removes ladders that would move the Enemy upwards from the list
 				{
-					if (l.getY() <= this.getWorldY())
+					if (l.getY() <= getWorldY())
 					{
 						Ladders.remove(l);
 					}
@@ -215,7 +199,7 @@ public abstract class Human extends Enemy implements AI
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX()), (int) (jadams.getY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
-			if (this.worldbox.intersects(r2d))
+			if (worldbox.intersects(r2d))
 			{
 				if (jadams instanceof Platform) //PLATFORM LOGIC
 				{
@@ -320,11 +304,23 @@ public abstract class Human extends Enemy implements AI
 	// Method which returns true if the enemy is in a block
 	private boolean inBlock()
 	{
-		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), this.getWorldbox()))
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			if (this.worldbox.intersects(r2d)) return true;
+			if (worldbox.intersects(r2d)) return true;
 		}
 		return false;
 	}
 }
+
+/*
+ * public void act() {
+ * 		if(enemy.isInRange())
+ * 			enemy.attack();
+ * }
+ * 
+ * runner file
+ * for(Enemy e: DataRetriever.getAllEnemies())
+ * 		e.act();
+ * 
+ */

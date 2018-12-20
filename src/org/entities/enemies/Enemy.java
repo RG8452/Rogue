@@ -21,6 +21,7 @@ public abstract class Enemy extends Entity implements AI
 	protected int lastAttackFrame; //Frame at which the enemy began attacking
 	protected boolean inFlight; //True if the enemy can fly
 	protected static int framesPerAnimationCycle = 4; //Frames that elapse between each change in animation
+	public String EnemyType;
 
 	//Enum used to store all possible outputs for the enemy's status
 	protected enum STATUS
@@ -32,26 +33,15 @@ public abstract class Enemy extends Entity implements AI
 	protected double pWX, pWY; //Player coords for reference when pathing
 	protected double pXMid = pWX + DataRetriever.getPlayer().getWidth() / 2 + DataRetriever.getPlayer().getXOffset(); // player x midpoint used for tracking
 	private int currentDestination; // location the enemy is headed towards
-	private Rectangle collisionBox; // rectangle the enemy is standing on
-
-	//Returns true if the enemy can fly or is on the ground
-	public boolean onGround()
-	{
-		if (inFlight) return false; //If the enemy can fly, it doesn't matter
-		else
-		{
-			// Determine if the enemy is on the ground
-			return true;
-		}
-	}
+	private Rectangle collisionBox = new Rectangle(); // rectangle the enemy is standing on
 	
 	public void runCollision()
 	{
 		runCollisionX();
 		runCollisionY();
 
-		if (onGround) this.ySpeed = DataRetriever.getGravityConstant(); // If on ground, reset falling speed
-		else this.ySpeed += DataRetriever.getGravityConstant(); // If in air, fall faster
+		if (onGround) ySpeed = DataRetriever.getGravityConstant(); // If on ground, reset falling speed
+		else ySpeed += DataRetriever.getGravityConstant(); // If in air, fall faster
 	}
 
 	protected void runCollisionX()
@@ -74,56 +64,78 @@ public abstract class Enemy extends Entity implements AI
 
 	protected void runCollisionY()
 	{
-		this.worldY += this.ySpeed; // Change y vars
+		worldY += ySpeed; // Change y vars
 		World.setDrawY();
-		this.onGround = false;
+		onGround = false;
 		boolean ceilingContact = false;
 
 		// Just like the x, this checks y collisions and stops the player from getting through hitboxes
-		this.worldbox.setLocation((int) this.worldX + xOffset, (int) this.worldY + yOffset);
-		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), this.getWorldbox()))
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
 			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			while (this.worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
 			{
-				this.worldY = this.ySpeed < 0 ? this.worldY + 1 : this.worldY - 1;
-				this.worldbox.setLocation((int) this.worldX + xOffset, (int) this.worldY + yOffset);
-				if (this.ySpeed > 0) this.onGround = true;
+				worldY = ySpeed < 0 ? worldY + 1 : worldY - 1;
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+				if (ySpeed > 0) onGround = true;
 				else ceilingContact = true;
 			}
 		}
 
 		World.setDrawY();
-		this.worldbox.setLocation((int) this.worldX + xOffset, (int) this.worldY + yOffset);
-		if (ceilingContact) this.ySpeed = DataRetriever.getGravityConstant();
+		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
 	}
 
-	public int destination(boolean playerY)		// will become more complex once walls are accounted for
+	public int destination(boolean playerY)
 	{
+		System.out.print(facingRight);
 		if (playerY) currentDestination = (int) pXMid;
 		else if (!playerY)
-			if (worldX == currentDestination)
+			if (worldX == currentDestination)// || (approachingWall(facingRight) && justFlipped(approachingWall(facingRight))))
 				facingRight = !facingRight;
-			else if ((worldX != currentDestination) && facingRight)
+			else if (approachingWall(facingRight))
+			{
+				facingRight = !facingRight;
+				worldX = facingRight ? worldX + (xSpeed *2) : worldX - (xSpeed *2);
+			}
+			if ((worldX != currentDestination) && facingRight)
 				 currentDestination = (int) currentGround(DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox())).getMaxX()
 									- getWidth()/2;
 			else currentDestination = (int) currentGround(DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox())).getMinX()
-										+ getWidth()/2;
+									+ getWidth()/2;
+		System.out.println(" " + facingRight + " " + currentDestination);
 		return currentDestination;
 	}
 	
 	public Rectangle currentGround(List<Rectangle> currentNode)
 	{
 		for (Rectangle r : currentNode)
-			if (r.contains(worldX, worldY + 10))
+		{
+			if (r.contains(worldbox.getCenterX() + getXOffset(), worldbox.getMaxY() + getYOffset()))
 			{
+				System.out.print(" " + r.toString());
 				collisionBox = r;
 				return collisionBox;
 			}
+		}
 		
 		return collisionBox;
 	}
 	
+	public boolean approachingWall(boolean facingRight)
+	{
+		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
+		{
+			if (!facingRight && r.contains(worldbox.getMinX() - getXOffset(), worldbox.getCenterY()))
+				return true;
+			else if (facingRight && r.contains(worldbox.getMaxX() + getXOffset(), worldbox.getCenterY()))
+				return true;
+		}
+		return false;
+	}
+
 	public boolean playerInVerticalRange()
 	{
 		if (!(above(DataRetriever.getPlayer().getWorldY()) || below(DataRetriever.getPlayer().getWorldY())))
@@ -133,13 +145,13 @@ public abstract class Enemy extends Entity implements AI
 	
 	public boolean above(double y)
 	{
-		if (this.getWorldY() < y) return true;
+		if (getWorldY() < y) return true;
 		return false;
 	}
 	
 	public boolean below(double y)
 	{
-		if (this.getWorldY() > y) return true;
+		if (getWorldY() > y) return true;
 		return false;
 	}
 	
@@ -183,7 +195,7 @@ public abstract class Enemy extends Entity implements AI
 	//@Override
 	public String toString()
 	{
-		String output = getClassName() + "@" + Integer.toHexString(this.hashCode());
+		String output = getClassName() + "@" + Integer.toHexString(hashCode());
 		output += String.format(" WX:%d WY:%d MH:%d H:%d LVL:%d", (int) worldX, (int) worldY, maxHealth, health, level);
 		return output;
 	}

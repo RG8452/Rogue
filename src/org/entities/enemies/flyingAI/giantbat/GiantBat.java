@@ -1,4 +1,4 @@
-package org.entities.enemies.giantbat;
+package org.entities.enemies.flyingAI.giantbat;
 /*
  * Class file for the Giant Bat enemy
  * Extends Enemy, will have basic pathing and stuff
@@ -15,9 +15,10 @@ import javax.imageio.ImageIO;
 import org.DataRetriever;
 import org.Startup;
 import org.entities.enemies.Enemy;
+import org.entities.enemies.flyingAI.Flying;
 import org.world.World;
 
-public class GiantBat extends Enemy
+public class GiantBat extends Flying
 {
 	private static int baseMHealth = 25, bDamage = 5; //Base stats for leveling up
 	private static byte resistanceByte = 0b00010010; //R: Freeze, Weakness
@@ -28,15 +29,15 @@ public class GiantBat extends Enemy
 	{
 		try //Read in all images for animation
 		{
-			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle1.png"));
-			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle2.png"));
-			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle3.png"));
-			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/RightFacing/GBatRightIdle4.png"));
+			rAnims[0] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/RightFacing/GBatRightIdle1.png"));
+			rAnims[1] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/RightFacing/GBatRightIdle2.png"));
+			rAnims[2] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/RightFacing/GBatRightIdle3.png"));
+			rAnims[3] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/RightFacing/GBatRightIdle4.png"));
 
-			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle1.png"));
-			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle2.png"));
-			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle3.png"));
-			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/giantbat/Animations/LeftFacing/GBatLeftIdle4.png"));
+			lAnims[0] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/LeftFacing/GBatLeftIdle1.png"));
+			lAnims[1] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/LeftFacing/GBatLeftIdle2.png"));
+			lAnims[2] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/LeftFacing/GBatLeftIdle3.png"));
+			lAnims[3] = ImageIO.read(new File("src/org/entities/enemies/flyingAI/giantbat/Animations/LeftFacing/GBatLeftIdle4.png"));
 		}
 		catch (IOException e)
 		{
@@ -81,6 +82,7 @@ public class GiantBat extends Enemy
 		yOffset = 10; //Establish Rectangle info
 		worldbox = new Rectangle((int) worldX, (int) worldY, width, height);
 		facingRight = (worldX < DataRetriever.getPlayer().getWorldX()); //Determine orientation
+		EnemyType = "Flying";
 	}
 
 	//	This is a stupid override that just forces the enemy to follow a pre-laid

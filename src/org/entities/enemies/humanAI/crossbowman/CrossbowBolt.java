@@ -1,4 +1,4 @@
-package org.entities.enemies.crossbowman;
+package org.entities.enemies.humanAI.crossbowman;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -23,8 +23,8 @@ public class CrossbowBolt extends Projectile
 	{
 		try
 		{
-			rBolt = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/RightFacing/Attack/RBolt.png"));
-			lBolt = ImageIO.read(new File("src/org/entities/enemies/crossbowman/Animations/LeftFacing/Attack/LBolt.png"));
+			rBolt = ImageIO.read(new File("src/org/entities/enemies/humanAI/crossbowman/Animations/RightFacing/Attack/RBolt.png"));
+			lBolt = ImageIO.read(new File("src/org/entities/enemies/humanAI/crossbowman/Animations/LeftFacing/Attack/LBolt.png"));
 		}
 		catch (IOException e)
 		{
