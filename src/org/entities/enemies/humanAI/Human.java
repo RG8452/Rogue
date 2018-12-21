@@ -63,14 +63,14 @@ public abstract class Human extends Enemy
 	{
 //		Interactable i = touchingInteractable();
 		
-		if (destination(PlayerY) >= getWorldX())
+		if (destination(PlayerY) >= getWorldbox().getCenterX())
 		{
 			facingRight = true;
-			if (destination(PlayerY) > getWorldX() + (inRange() + getXOffset()))
+			if (destination(PlayerY) > getWorldbox().getCenterX() + (inRange() + getXOffset()))
 			{
 				status = STATUS.PATHING;
 			}
-			else if (destination(PlayerY) <= getWorldX() + (inRange() + getXOffset()) && PlayerY)
+			else if (destination(PlayerY) <= getWorldbox().getCenterX() + (inRange() + getXOffset()) && PlayerY)
 			{
 				status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
@@ -78,11 +78,11 @@ public abstract class Human extends Enemy
 		else
 		{
 			facingRight = false;
-			if (destination(PlayerY) < getWorldX() - (inRange() - getXOffset()))
+			if (destination(PlayerY) < getWorldbox().getCenterX() - (inRange() - getXOffset()))
 			{
 				status = STATUS.PATHING;
 			}
-			else if (destination(PlayerY) >= getWorldX() - (inRange() - getXOffset()) && PlayerY)
+			else if (destination(PlayerY) >= getWorldbox().getCenterX() - (inRange() - getXOffset()) && PlayerY)
 			{
 				status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
@@ -109,11 +109,11 @@ public abstract class Human extends Enemy
 			follow();
 		}
 		
-		if (getWorldX() > destination(PlayerY) && !getWorldbox().intersects(destination))
+		if (getWorldbox().getCenterX() > destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
 			worldX -= xSpeed;
 		}
-		else if (getWorldX() < destination(PlayerY) && !getWorldbox().intersects(destination))
+		else if (getWorldbox().getCenterX() < destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
 			worldX += xSpeed;
 		}
@@ -136,11 +136,11 @@ public abstract class Human extends Enemy
 			follow();
 		}
 		
-		if (getWorldX() > destination(PlayerY) && !getWorldbox().intersects(destination))
+		if (getWorldbox().getCenterX() > destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
 			worldX -= xSpeed;
 		}
-		else if (getWorldX() < destination(PlayerY) && !getWorldbox().intersects(destination))
+		else if (getWorldbox().getCenterX() < destination(PlayerY) && !getWorldbox().intersects(destination))
 		{
 			worldX += xSpeed;
 		}
@@ -156,9 +156,9 @@ public abstract class Human extends Enemy
 			{
 				if (!Ladders.isEmpty())
 				{
-					if (getWorldX() - Ladders.get(0).getX() > getWorldX() - i.getX())
+					if (getWorldbox().getCenterX() - Ladders.get(0).getX() > getWorldbox().getCenterX() - i.getX())
 						Ladders.add(0, i);
-					else if (getWorldX() - Ladders.get(1).getX() > getWorldX() - i.getX())
+					else if (getWorldbox().getCenterX() - Ladders.get(1).getX() > getWorldbox().getCenterX() - i.getX())
 						Ladders.add(1, i);
 					else 
 						Ladders.add(i);

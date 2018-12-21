@@ -127,7 +127,11 @@ public abstract class Enemy extends Entity implements AI
 		{
 			if (!facingRight && r.contains(worldbox.getMinX() - getXOffset(), worldbox.getCenterY()))
 				return true;
+			else if (!facingRight && r.contains(worldbox.getMinX() - 1, worldbox.getCenterY()))
+				return true;
 			else if (facingRight && r.contains(worldbox.getMaxX() + getXOffset(), worldbox.getCenterY()))
+				return true;
+			else if (facingRight && r.contains(worldbox.getMaxX() + 1, worldbox.getCenterY()))
 				return true;
 		}
 		return false;
