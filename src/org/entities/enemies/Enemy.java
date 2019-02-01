@@ -86,12 +86,17 @@ public abstract class Enemy extends Entity implements AI
 		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
 	}
 
+	/* This sets a destination for the AI to move to depending on the player's vertical coordinates.
+	 * If the player is outside the vertical range of the AI it will then continue in the same direction
+	 * along the collision it is currently on until it either encounters an edge or a wall blocking it's
+	 * path. Can be revisited for single block height jumps.
+	 */
 	public int destination(boolean playerY)
 	{
 		if (playerY) currentDestination = (int) DataRetriever.getPlayer().getWorldbox().getCenterX();
 		else if (!playerY)
 		{
-			if (worldX == currentDestination)// || (approachingWall(facingRight) && justFlipped(approachingWall(facingRight))))
+			if (worldX == currentDestination)
 				facingRight = !facingRight;
 			else if (approachingWall(facingRight))
 			{
@@ -107,6 +112,10 @@ public abstract class Enemy extends Entity implements AI
 		return currentDestination;
 	}
 	
+	/* Helper method which determines which vertical collision
+	 * the AI is standing on in the current frame. Used to determine
+	 * where the edge of the "ground" is in destination(boolean) method.
+	 */
 	public Rectangle currentGround(List<Rectangle> currentNode)
 	{
 		for (Rectangle r : currentNode)
@@ -121,6 +130,10 @@ public abstract class Enemy extends Entity implements AI
 		return collisionBox;
 	}
 	
+	/* Used to prevent AI from endlessly colliding with walls and such.
+	 * This is another method that assists with pathing in the
+	 * destination(boolean) method.
+	 */
 	public boolean approachingWall(boolean facingRight)
 	{
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
@@ -137,6 +150,9 @@ public abstract class Enemy extends Entity implements AI
 		return false;
 	}
 
+	/* Determines if the player is within the vertical range of the AI.
+	 * Aid to destination(boolean) method.
+	 */
 	public boolean playerInVerticalRange()
 	{
 		if (!(above(DataRetriever.getPlayer().getWorldbox().getCenterY()) || below(DataRetriever.getPlayer().getWorldbox().getCenterY())))
@@ -144,12 +160,13 @@ public abstract class Enemy extends Entity implements AI
 		return false;
 	}
 	
+	// Determines if the player is above the AI
 	public boolean above(double y)
 	{
 		if (worldbox.getCenterY() < y) return true;
 		return false;
 	}
-	
+	//Same as above but below
 	public boolean below(double y)
 	{
 		if (worldbox.getCenterY() > y) return true;
