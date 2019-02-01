@@ -89,6 +89,7 @@ public class Crossbowman extends Human
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private CrossbowBolt bolt; //Object to represent the bolt a crossbowman fires
 
 	public Crossbowman(double xPos, double yPos, int l)

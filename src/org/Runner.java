@@ -9,10 +9,7 @@ package org;
 import java.awt.Color;
 
 import org.entities.enemies.Enemy;
-import org.entities.enemies.flyingAI.giantbat.GiantBat;
-import org.entities.enemies.humanAI.militia.Militia;
 import org.entities.enemies.humanAI.soldier.Soldier;
-import org.entities.enemies.humanAI.Human;
 import org.entities.players.hero.Hero;
 import org.panels.GamePanel;
 import org.panels.PausePanel;

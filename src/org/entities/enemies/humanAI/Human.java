@@ -3,16 +3,8 @@ package org.entities.enemies.humanAI;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Set;
-
 import org.DataRetriever;
-import org.entities.enemies.AI;
 import org.entities.enemies.Enemy;
-import org.world.World;
-import org.world.interactable.Interactable;
-import org.world.interactable.Ladder;
-import org.world.interactable.ManCannon;
-import org.world.interactable.Platform;
 
 public abstract class Human extends Enemy
 {
@@ -302,6 +294,7 @@ public abstract class Human extends Enemy
 */
 
 	// Method which returns true if the enemy is in a block
+	@SuppressWarnings("unused")
 	private boolean inBlock()
 	{
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
