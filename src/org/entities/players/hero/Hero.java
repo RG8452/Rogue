@@ -172,56 +172,26 @@ public class Hero extends Player
 	{
 		if (status == STATUS.CLIMBING) img = curAnimation < 2 ? nAnims[0] : nAnims[1];
 
-		else if (facingRight)
+		else if(status == STATUS.JUMPING || status == STATUS.IDLING || status == STATUS.MOVING)
 		{
-			if (status == STATUS.JUMPING)
-			{
-				if (ySpeed < 0) img = rAnims[10];
-				else img = rAnims[11];
-			}
-
-			else if (status == STATUS.IDLING)
-			{
-				if (curAnimation < 4) img = rAnims[8];
-				else img = rAnims[9];
-			}
-
-			else if (status == STATUS.MOVING) img = rAnims[curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1) img = rSkillAnims[0][curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL2) img = rSkillAnims[1][curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL3) img = rSkillAnims[2][curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = rSkillAnims[3][curAnimation];
+			BufferedImage[] storage = (facingRight) ? rAnims : lAnims; //Store the appropriate direction array
+			if (status == STATUS.JUMPING) img = (curAnimation < 4) ? storage[10] : storage[11];
+			else if(status == STATUS.IDLING) img = (curAnimation < 4) ? storage[8] : storage[9];
+			else img = storage[curAnimation];
 		}
-
-		else
+		
+		else //status == STATUS.ATTACKING
 		{
-			if (status == STATUS.JUMPING)
-			{
-				if (ySpeed < 0) img = lAnims[10];
-				else img = lAnims[11];
+			BufferedImage[][] storage = (facingRight) ? rSkillAnims : lSkillAnims;
+			switch(skill) {
+				case SKILL1: img = storage[0][curAnimation]; break;
+				case SKILL2: img = storage[1][curAnimation]; break;
+				case SKILL3: img = storage[2][curAnimation]; break;
+				case SKILL4: img = storage[3][curAnimation]; break;
+				default: //skill == SKILL.NONE, do nothing
 			}
-
-			else if (status == STATUS.IDLING)
-			{
-				if (curAnimation < 4) img = lAnims[8];
-				else img = lAnims[9];
-			}
-
-			else if (status == STATUS.MOVING) img = lAnims[curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL1) img = lSkillAnims[0][curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL2) img = lSkillAnims[1][curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL3) img = lSkillAnims[2][curAnimation];
-
-			else if (status == STATUS.ATTACKING && skill == SKILL.SKILL4) img = lSkillAnims[3][curAnimation];
 		}
-
+		
 		if (wave != null)
 		{
 			wave.draw(g2d);
@@ -230,7 +200,7 @@ public class Hero extends Player
 
 		g2d.drawImage(img, (int) (worldX - World.getDrawX()), (int) (worldY - World.getDrawY()), null);
 		if (Startup.getRunner().hitboxesEnabled()) drawHurtbox(g2d);
-		if (Startup.getRunner().hitboxesEnabled() && hitbox != null) hitbox.drawHitbox(g2d);
+		if (hitbox != null && Startup.getRunner().hitboxesEnabled()) hitbox.drawHitbox(g2d);
 	}
 
 	@Override

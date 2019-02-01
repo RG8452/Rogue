@@ -7,7 +7,7 @@ package org;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.entities.enemies.Enemy;
 import org.entities.players.Player;
@@ -16,7 +16,7 @@ import org.world.World;
 public class DataRetriever
 {
 	// All Variables, with self-explanatory names
-	private static final Set<Integer> allKeys = new TreeSet<Integer>();
+	private static final Set<Integer> allKeys = new HashSet<Integer>();
 	private static int frameRate = 60;
 	private static int frame = 0;
 	private static double gravityConstant = 1.125;

@@ -14,7 +14,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.DataRetriever;
 import org.entities.Entity;
@@ -58,7 +58,7 @@ public abstract class Player extends Entity
 	public void act() // Reads through the set of all keys and the player moves accordingly
 	{
 		boolean recognized = false;
-		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
+		Set<Integer> readKeys = (HashSet<Integer>) (DataRetriever.getAllKeys());
 		Interactable i = touchingInteractable();
 
 		//Check if player isn't attacking and if an attack is used
@@ -421,7 +421,7 @@ public abstract class Player extends Entity
 	// Method called in run() if devMode is true; allows the user to fly, while the noclip variable does exactly as it sounds
 	public void devAct(boolean noclip)
 	{
-		Set<Integer> readKeys = (TreeSet<Integer>) (DataRetriever.getAllKeys());
+		Set<Integer> readKeys = (HashSet<Integer>) (DataRetriever.getAllKeys());
 
 		if (readKeys.size() == 0) return;
 		if (readKeys.contains(DataRetriever.getRight()))

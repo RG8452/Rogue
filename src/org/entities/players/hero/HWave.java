@@ -15,15 +15,20 @@ import org.entities.Projectile;
 import org.world.World;
 
 /**
- * RG This class is a small class made for the wave that the hero's 4th attack fires
+ * RG 
+ * This class is a small class made for the wave that the hero's 4th attack fires
+ * It's a simple projectile which will render itself moving in a single direction
+ * It terminates itself via calling parent.destroyWave();
  */
 
 public class HWave extends Projectile
 {
-	private static int width = 45, height = 48, framesPerAnim = 3;
+	private final static byte width = 45, height = 48, framesPerAnim = 3, xOffset = 75, yOffset = 16, speed = 2;
+	private final static Color hwaveColor = new Color(0, 40, 255, 110);
 	private static BufferedImage[] rAnims = new BufferedImage[12];
 	private static BufferedImage[] lAnims = new BufferedImage[12];
 
+	//Statically read images to avoid reading them multiple times
 	static
 	{
 		try
@@ -60,28 +65,32 @@ public class HWave extends Projectile
 		}
 	}
 
+	//Constructor creates a wave at world position (h,k) with a direction and a damage
 	public HWave(int h, int k, boolean faceRight, int d)
 	{
 		worldX = h;
 		worldY = k;
 		damage = d;
 		facingRight = faceRight;
-		hitbox = new Hitbox(h + 76, k + 50, width, height);
+		hitbox = new Hitbox(h + xOffset, k + yOffset, width, height);
 		elapsedFrames = 0;
 		curAnim = 0;
 	}
 
+	//Draws the image on the provided Graphics2D object
 	public void draw(Graphics2D g)
 	{
 		g.drawImage(facingRight ? rAnims[curAnim] : lAnims[curAnim], worldX - (int) World.getDrawX(), worldY - (int) World.getDrawY(), null);
-		g.setColor(new Color(0, 40, 255, 110));
+		g.setColor(hwaveColor);
 		if (Startup.getRunner().hitboxesEnabled()) g.fillRect((int) (hitbox.getX() - World.getDrawX()), (int) (hitbox.getY() - World.getDrawY()), width, height);
 	}
 
+	//Method which moves the wave and does damage if possible. Pierces enemies.
+	//If this object has played through all of its animations, it signals to the
+	//player that it should be nulled out for GC to clean.
 	public void render()
 	{
-		elapsedFrames++;
-		curAnim = elapsedFrames / framesPerAnim;
+		curAnim = ++elapsedFrames / framesPerAnim;
 
 		if (curAnim >= rAnims.length)
 		{
@@ -90,8 +99,8 @@ public class HWave extends Projectile
 		}
 
 		hitbox.render(damage, false);
-		worldX += (facingRight) ? 2 : -2;
-		hitbox.setLocation(worldX + 75, worldY + 16);
+		worldX += (facingRight) ? speed : -speed;
+		hitbox.setLocation(worldX + xOffset, worldY + yOffset);
 	}
 
 	//@formatter:off
