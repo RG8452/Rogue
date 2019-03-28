@@ -106,7 +106,8 @@ public abstract class Player extends Entity
 		{
 			recognized = true; //Recognized input, avoid idling
 			worldX += xSpeed; //Move right & reset position
-			animateWalk();
+			animateWalk(facingRight);
+			facingRight = true;
 		}
 
 		// If left and !right, then must be walking left
@@ -114,7 +115,8 @@ public abstract class Player extends Entity
 		{
 			recognized = true; //Identical to walking right but the other right
 			worldX -= xSpeed;
-			animateWalk();
+			animateWalk(!facingRight);
+			facingRight = false;
 		}
 
 		// If right and left, set the player to idle
@@ -449,9 +451,9 @@ public abstract class Player extends Entity
 	}
 	
 	//Player walk command, primarily for animating
-	private void animateWalk()
+	private void animateWalk(boolean facingDir)
 	{
-		if (facingRight && status == STATUS.MOVING)
+		if (facingDir && status == STATUS.MOVING)
 		{
 			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
 			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
@@ -460,7 +462,6 @@ public abstract class Player extends Entity
 		{
 			elapsedFrames = 0; //Reset animation to walking
 			curAnimation = 0;
-			facingRight = true; //Must be facing right
 			status = STATUS.MOVING;
 		}
 	}
