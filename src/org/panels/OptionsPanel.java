@@ -6,21 +6,19 @@ package org.panels;
  * Has lots of buttons which are just arbitrated to arraylist indices
  */
 
-import org.Startup;
-import org.DataRetriever;
-
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-
-import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
-
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+
+import org.DataRetriever;
+import org.Startup;
 
 public class OptionsPanel extends JPanel
 {
@@ -58,19 +56,21 @@ public class OptionsPanel extends JPanel
 		}); // Adds "Back" button
 
 		// Add a button per control in the game
-		addButton(new Button(50, 350, 250, 40, "Right", Color.gray, Color.white, 5));
-		addButton(new Button(50, 410, 250, 40, "Left", Color.gray, Color.white, 5));
-		addButton(new Button(50, 470, 250, 40, "Up", Color.gray, Color.white, 5));
-		addButton(new Button(50, 530, 250, 40, "Down", Color.gray, Color.white, 5));
-		addButton(new Button(50, 590, 250, 40, "Jump", Color.gray, Color.white, 5));
-		addButton(new Button(50, 650, 250, 40, "Skill One", Color.gray, Color.white, 5));
-		addButton(new Button(50, 710, 250, 40, "Skill Two", Color.gray, Color.white, 5));
-		addButton(new Button(50, 770, 250, 40, "Skill Three", Color.gray, Color.white, 5));
-		addButton(new Button(50, 830, 250, 40, "Skill Four", Color.gray, Color.white, 5));
-		addButton(new Button(50, 890, 250, 40, "Interact", Color.gray, Color.white, 5));
-		addButton(new Button(50, 950, 250, 40, "Pause", Color.gray, Color.white, 5));
+		final int vert = GamePanel.screenY / 24, top = 215;
+		final int dist = vert * 3 / 2;
+		addButton(new Button(50, top, 250, vert, "Right", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + dist, 250, vert, "Left", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 2 * dist, 250, vert, "Up", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 3 * dist, 250, vert, "Down", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 4 * dist, 250, vert, "Jump", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 5 * dist, 250, vert, "Skill One", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 6 * dist, 250, vert, "Skill Two", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 7 * dist, 250, vert, "Skill Three", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 8 * dist, 250, vert, "Skill Four", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 9 * dist, 250, vert, "Interact", Color.gray, Color.white, 5));
+		addButton(new Button(50, top + 10 * dist, 250, vert, "Pause", Color.gray, Color.white, 5));
 
-		addButton(new Button(350, 370, 200, 60, "Reset", Color.red, Color.white, 5)); // Reset button
+		addButton(new Button(350, top + dist, 200, dist, "Reset", Color.red, Color.white, 5)); // Reset button
 	}
 
 	@Override
@@ -81,12 +81,12 @@ public class OptionsPanel extends JPanel
 		// Basic text drawing
 		g.setFont(new Font("SANS_SERIF", Font.PLAIN, 100));
 		g.setColor(Color.white);
-		g.drawString("Options", 50, 150);
+		g.drawString("Options", 50, 100);
 		g.setFont(new Font("SANS_SERIF", Font.PLAIN, 40));
-		g.drawString("Controls (Click and type a new key to change):", 50, 300);
+		g.drawString("Controls (Click and type a new key to change):", 50, 180);
 
 		// Draw every button
-		g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+		g.setFont(new Font("TimesRoman", Font.BOLD, 28));
 		for (Button controls : buttons)
 		{
 			controls.drawButton(g);
@@ -94,6 +94,7 @@ public class OptionsPanel extends JPanel
 		}
 
 		// Draws text on each button
+		g.setColor(Color.blue);
 		buttons.get(1).drawMessage(g, "Right: " + ((DataRetriever.getRight() == -1) ? "?" : KeyEvent.getKeyText(DataRetriever.getRight())));
 		buttons.get(2).drawMessage(g, "Left: " + ((DataRetriever.getLeft() == -1) ? "?" : KeyEvent.getKeyText(DataRetriever.getLeft())));
 		buttons.get(3).drawMessage(g, "Up: " + ((DataRetriever.getUp() == -1) ? "?" : KeyEvent.getKeyText(DataRetriever.getUp())));
@@ -106,7 +107,8 @@ public class OptionsPanel extends JPanel
 		buttons.get(10).drawMessage(g, "Interact: " + ((DataRetriever.getInteract() == -1) ? "?" : KeyEvent.getKeyText(DataRetriever.getInteract())));
 		buttons.get(11).drawMessage(g, "Pause: " + ((DataRetriever.getPause() == -1) ? "?" : KeyEvent.getKeyText(DataRetriever.getPause())));
 
-		g.setFont(new Font("Helvetica", Font.BOLD, 40));
+		g.setFont(new Font("Helvetica", Font.BOLD, 36));
+		g.setColor(Color.white);
 		buttons.get(12).drawMessage(g, "Reset all");
 	}
 

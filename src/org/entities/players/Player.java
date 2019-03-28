@@ -61,19 +61,30 @@ public abstract class Player extends Entity
 		Set<Integer> readKeys = (HashSet<Integer>) (DataRetriever.getAllKeys());
 		Interactable i = touchingInteractable();
 
-		//@formatter:off
-		//Check if player isn't attacking and if an attack is used
-		//Sets status, skill, and animation for the given attack skill
-		if (readKeys.contains(DataRetriever.getSkillOne()) && skill == SKILL.NONE)
-			setAttacking(SKILL.SKILL1);
-		else if (readKeys.contains(DataRetriever.getSkillTwo()) && skill == SKILL.NONE)
-			setAttacking(SKILL.SKILL2);
-		else if (readKeys.contains(DataRetriever.getSkillThree()) && skill == SKILL.NONE)
-			setAttacking(SKILL.SKILL3);
-		else if (readKeys.contains(DataRetriever.getSkillFour()) && skill == SKILL.NONE)
-			setAttacking(SKILL.SKILL4);
-		//@formatter:on
+		// If standing on the ground, the player must be Idling
+		if (readKeys.size() == 0 && onGround && status != STATUS.CLIMBING && status != STATUS.ATTACKING)
+		{
+			animateIdle(); //Idle away
+			runCollisionY(); //Idling, so you really just have to check Y collision			
+			return; // Return because you're done
+		}
 
+		//@formatter:off
+		if(skill == SKILL.NONE)
+		{
+			//Check if player isn't attacking and if an attack is used
+			//Sets status, skill, and animation for the given attack skill
+			if (readKeys.contains(DataRetriever.getSkillOne()))
+				setAttacking(SKILL.SKILL1);
+			else if (readKeys.contains(DataRetriever.getSkillTwo()))
+				setAttacking(SKILL.SKILL2);
+			else if (readKeys.contains(DataRetriever.getSkillThree()))
+				setAttacking(SKILL.SKILL3);
+			else if (readKeys.contains(DataRetriever.getSkillFour()))
+				setAttacking(SKILL.SKILL4);
+		}
+		//@formatter:on
+	
 		if (status == STATUS.ATTACKING) //If the player is attacking
 		{
 			attack(); //Call attack method to get animations & hitboxes
@@ -82,22 +93,11 @@ public abstract class Player extends Entity
 			return; //You're finished
 		}
 
-		// If standing on the ground, the player must be Idling
-		if (readKeys.size() == 0 && onGround && status != STATUS.CLIMBING)
-		{
-			animateIdle(); //Idle away
-			runCollisionY(); //Idling, so you really just have to check Y collision			
-			return; // Return because you're done
-		}
-
 		checkInteractables(i, readKeys); //Check if you're hitting an interactable
 
 		if (status == STATUS.CLIMBING) //If the player is climbing
 		{
 			climb(readKeys, i); //Do the climbing process
-
-			World.setDrawY(); //Assumption: if you are on a ladder and don't jump off, you don't need to check y
-			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 			return;
 		}
 
@@ -385,33 +385,28 @@ public abstract class Player extends Entity
 					if (ySpeed < 0) //If the player is going up
 					{
 						((Platform) jadams).setTransparent(true); //Platform non-solid
-						inPlatform = true; //In but nnot on
+						inPlatform = true; //In but not on
 						onPlatform = false;
 					}
 					else if (!((Platform) jadams).getTransparent()) //If falling and the platform is solid
-					{
 						onPlatform = true; //Must be on platform
-						((Platform) jadams).setTransparent(false);
-					}
 				}
 				fixer.add((Interactable) jadams); //Put into AL for multi-collision handling
 			}
 			else if (jadams instanceof Platform) //If the player isn't hitting a platform
-			{
 				((Platform) jadams).setTransparent(false); //Make it solid
-			}
 		}
+		if(fixer.size() == 1) //Typical case: Only one interactable
+			return fixer.get(0);
 		if (fixer.size() != 0) //Drop the player onto the lowest platform
 		{
 			Interactable lowest = fixer.get(0);
 			for (Interactable j : fixer)
-			{
 				if (j.getY() > lowest.getY()) lowest = j;
-			}
 			return lowest;
 		}
 
-		inPlatform = false;
+		inPlatform = false; //Case where not touching any interactables
 		onPlatform = false;
 		return null;
 	}
@@ -439,7 +434,7 @@ public abstract class Player extends Entity
 		// This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
 		if (status == STATUS.IDLING)
 		{
-			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+			if (++elapsedFrames >= (framesPerAnimationCycle << 3)) elapsedFrames = 0;
 			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
 		}
 		else //If you begin idling, reset status and animation
