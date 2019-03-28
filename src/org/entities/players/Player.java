@@ -61,35 +61,18 @@ public abstract class Player extends Entity
 		Set<Integer> readKeys = (HashSet<Integer>) (DataRetriever.getAllKeys());
 		Interactable i = touchingInteractable();
 
+		//@formatter:off
 		//Check if player isn't attacking and if an attack is used
+		//Sets status, skill, and animation for the given attack skill
 		if (readKeys.contains(DataRetriever.getSkillOne()) && skill == SKILL.NONE)
-		{
-			status = STATUS.ATTACKING; //You must be attacking
-			skill = SKILL.SKILL1; //Change respective skill
-			elapsedFrames = 0; //Reset animation
-			curAnimation = 0; //Repeat for all attacks
-		}
+			setAttacking(SKILL.SKILL1);
 		else if (readKeys.contains(DataRetriever.getSkillTwo()) && skill == SKILL.NONE)
-		{
-			status = STATUS.ATTACKING;
-			skill = SKILL.SKILL2;
-			elapsedFrames = 0;
-			curAnimation = 0;
-		}
+			setAttacking(SKILL.SKILL2);
 		else if (readKeys.contains(DataRetriever.getSkillThree()) && skill == SKILL.NONE)
-		{
-			status = STATUS.ATTACKING;
-			skill = SKILL.SKILL3;
-			elapsedFrames = 0;
-			curAnimation = 0;
-		}
+			setAttacking(SKILL.SKILL3);
 		else if (readKeys.contains(DataRetriever.getSkillFour()) && skill == SKILL.NONE)
-		{
-			status = STATUS.ATTACKING;
-			skill = SKILL.SKILL4;
-			elapsedFrames = 0;
-			curAnimation = 0;
-		}
+			setAttacking(SKILL.SKILL4);
+		//@formatter:on
 
 		if (status == STATUS.ATTACKING) //If the player is attacking
 		{
@@ -102,20 +85,8 @@ public abstract class Player extends Entity
 		// If standing on the ground, the player must be Idling
 		if (readKeys.size() == 0 && onGround && status != STATUS.CLIMBING)
 		{
-			// This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
-			if (status == STATUS.IDLING)
-			{
-				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else //If you begin idling, reset status and animation
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.IDLING;
-			}
-
-			runCollisionY(); //Idling, so you really just have to check Y collision
+			animateIdle(); //Idle away
+			runCollisionY(); //Idling, so you really just have to check Y collision			
 			return; // Return because you're done
 		}
 
@@ -123,60 +94,7 @@ public abstract class Player extends Entity
 
 		if (status == STATUS.CLIMBING) //If the player is climbing
 		{
-			ySpeed = 0;
-			if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown())) //If moving
-			{
-				if (++elapsedFrames >= 4 * framesPerAnimationCycle) elapsedFrames = 0;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-
-			if (readKeys.contains(DataRetriever.getUp())) //If climbing up
-			{
-				worldY -= xSpeed; //Move Up
-				if (worldY < World.block) worldY += xSpeed; //Prevent climbing out of the world
-				World.setDrawY(); //Reset world view
-				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset); //reset actual hitbox
-				if (worldbox.getY() + height <= i.getY()) //If climbing off the top of the ladder
-				{
-					ySpeed = DataRetriever.getGravityConstant(); //Reset gravity
-					status = STATUS.IDLING; //Back to idling
-					runCollisionY(); //Run collision for blocks, force upwards
-					onGround = true; //Must be on the ground
-					return; //Finished, so return void
-				}
-			}
-			else if (readKeys.contains(DataRetriever.getDown())) //Same as up, but down
-			{
-				worldY += xSpeed;
-				World.setDrawY();
-				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-				if (worldbox.getY() + height > i.getY() + i.getHeight() - 5) //If at the bottom of the ladder
-				{
-					worldY -= 5; //Push up
-					ySpeed = DataRetriever.getGravityConstant();
-					status = STATUS.IDLING;
-					runCollisionY(); //Fall to ground
-					onGround = true;
-					return;
-				}
-			}
-			//If the player hits jump and a direction off of the ladder
-			if (readKeys.contains(DataRetriever.getJump()) && (readKeys.contains(DataRetriever.getRight()) || readKeys.contains(DataRetriever.getLeft())))
-			{
-				if (inBlock()) return; //Immediately check if the player is in the block; if so, don't jump
-				else
-				{
-					status = STATUS.JUMPING; //Set to jumping
-					elapsedFrames = 0; //Reset animation
-					curAnimation = 0;
-					ySpeed -= jumpDelta * .75; //Give yourself some upwards velocity
-					worldX = readKeys.contains(DataRetriever.getRight()) ? worldX + xSpeed * 3.5 : worldX - xSpeed * 3.5; //Launch off
-					World.setDrawX(); //Reset the world view, player position, and hurtbox
-					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-					runCollision(); //Run your collision
-					return; //All done
-				}
-			}
+			climb(readKeys, i); //Do the climbing process
 
 			World.setDrawY(); //Assumption: if you are on a ladder and don't jump off, you don't need to check y
 			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
@@ -188,19 +106,7 @@ public abstract class Player extends Entity
 		{
 			recognized = true; //Recognized input, avoid idling
 			worldX += xSpeed; //Move right & reset position
-
-			if (facingRight && status == STATUS.MOVING)
-			{
-				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else
-			{
-				elapsedFrames = 0; //Reset animation to walking
-				curAnimation = 0;
-				facingRight = true; //Must be facing right
-				status = STATUS.MOVING;
-			}
+			animateWalk();
 		}
 
 		// If left and !right, then must be walking left
@@ -208,65 +114,29 @@ public abstract class Player extends Entity
 		{
 			recognized = true; //Identical to walking right but the other right
 			worldX -= xSpeed;
-
-			if (!facingRight && status == STATUS.MOVING)
-			{
-				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else
-			{
-				elapsedFrames = 0; //Reset animation
-				curAnimation = 0;
-				facingRight = false;
-				status = STATUS.MOVING;
-			}
+			animateWalk();
 		}
 
 		// If right and left, set the player to idle
 		else if (readKeys.contains(DataRetriever.getRight()) && readKeys.contains(DataRetriever.getLeft()))
 		{
 			recognized = true;
-			if (status == STATUS.IDLING)
-			{
-				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.IDLING;
-			}
+			animateIdle();
 		}
 
-		// If the player jumps, add a ton to their y velocity
-		if (readKeys.contains(DataRetriever.getJump()) && status != STATUS.CLIMBING && onGround)
+		// If the player jumps, give them upward velocity and set status
+		if (readKeys.contains(DataRetriever.getJump()) && onGround)
 		{
 			recognized = true; //Found a recognized key
 			ySpeed -= jumpDelta; //Push the player up
 			onPlatform = false; //They player cannot be on or in a platform anymore
 			inPlatform = false;
+			status = STATUS.JUMPING;
 		}
-
-		// If not touching the ground, status must be in mid-air so no animation is chosen
-		if (!onGround && status != STATUS.CLIMBING) status = STATUS.JUMPING;
 
 		if (onGround && !recognized && status != STATUS.CLIMBING) //If you haven't figured out what's happening, assume idle
-		{
-			if (status == STATUS.IDLING)
-			{
-				if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
-				curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
-			}
-			else
-			{
-				elapsedFrames = 0;
-				curAnimation = 0;
-				status = STATUS.IDLING;
-			}
-		}
-
+			animateIdle();
+		
 		if (!onPlatform) runCollision(); //Run final collisions
 		else runCollisionX();
 	}
@@ -281,9 +151,10 @@ public abstract class Player extends Entity
 				if (onPlatform && !((Platform) i).getTransparent()) //If you're on a platform and it is solid
 				{
 					Rectangle2D i2d = (Rectangle2D) (new Rectangle((int) (i.getX()), (int) (i.getY()) + 2, (int) i.getWidth(), (int) i.getHeight() - 2));
-					while (worldbox.intersects(i2d)) //Raise the player to the top of the platform
+					if(worldbox.intersects(i2d))
 					{
-						worldY--;
+						int yDiff = (int) (worldbox.getY() + worldbox.getHeight() - i2d.getY());
+						worldY -= yDiff;
 						worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 					}
 					ySpeed = 0;
@@ -293,8 +164,7 @@ public abstract class Player extends Entity
 				if (readKeys.contains(DataRetriever.getDown()) && readKeys.contains(DataRetriever.getJump()) && onPlatform)
 				{
 					worldY += 3; //Move down and reset positioning
-					World.setDrawY();
-					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+					worldbox.setLocation(worldbox.x, worldbox.y + 3);
 					if (!inBlock()) //If the player doesn't drop through into a block
 					{
 						onPlatform = false; //No longer on but in a platform
@@ -306,9 +176,9 @@ public abstract class Player extends Entity
 					else //If dropping into a block i.e. only halfway on platform
 					{
 						worldY -= 3; //Bump back up onto platform
-						World.setDrawY();
-						worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+						worldbox.setLocation(worldbox.x, worldbox.y - 3);
 					}
+					World.setDrawY();
 				}
 			}
 
@@ -322,15 +192,10 @@ public abstract class Player extends Entity
 					curAnimation = 0;
 				}
 			}
-			else if (i instanceof ManCannon && onGround) //If on ground and you bump a mancannon
+			else if (i instanceof ManCannon) //If you bump a mancannon
 			{
-				ySpeed -= ((ManCannon) i).getUpDelta(); //Subtract some velocity
+				ySpeed = -((ManCannon) i).getUpDelta(); //Subtract some velocity
 				onGround = false;
-			}
-			else if (i instanceof ManCannon && !onGround) //If mancannon but not onground
-			{
-				ySpeed = 0; //Reset speed (to counter plummeting)
-				ySpeed -= ((ManCannon) i).getUpDelta();
 			}
 		}
 	}
@@ -377,15 +242,20 @@ public abstract class Player extends Entity
 	protected void runCollisionX()
 	{
 		// Reset Hurtbox and then check for collisions with any nearby rect; if colliding, force out of the block
-		World.setDrawX();
 		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+			//If you're intersecting a given block
+			if(worldbox.intersects(r))
 			{
-				worldX = facingRight ? worldX - 1 : worldX + 1;
-				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+				int xDiff;
+				if(facingRight) //Find diff between player right and block left
+					xDiff = worldbox.x + worldbox.width - r.x;
+				else //Find diff between player left and block right
+					xDiff = worldbox.x - (r.x + r.width);
+				worldX -= xDiff;
+				worldbox.setLocation((int) worldX + xOffset, worldbox.y);
+				break;
 			}
 		}
 
@@ -395,27 +265,34 @@ public abstract class Player extends Entity
 	protected void runCollisionY()
 	{
 		worldY += ySpeed; // Change y vars
-		World.setDrawY();
 		onGround = false;
-		boolean ceilingContact = false;
 
 		// Just like the x, this checks y collisions and stops the player from getting through hitboxes
 		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+			if(worldbox.intersects(r))
 			{
-				worldY = ySpeed < 0 ? worldY + 1 : worldY - 1;
-				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-				if (ySpeed > 0) onGround = true;
-				else ceilingContact = true;
+				if(ySpeed >= 0.0)
+				{
+					onGround = true;
+					int yDiff = worldbox.y + worldbox.height - r.y;
+					worldY -= yDiff;
+					worldbox.setLocation(worldbox.x, worldbox.y -= yDiff);
+					ySpeed = 0.0;
+				}
+				else
+				{
+					int yDiff = r.y + r.height - worldbox.y;
+					worldY += yDiff;
+					worldbox.setLocation(worldbox.x, worldbox.y += yDiff);
+					ySpeed = DataRetriever.getGravityConstant();
+				}
+				break;
 			}
 		}
 
 		World.setDrawY();
-		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
 	}
 
 	// Method called in run() if devMode is true; allows the user to fly, while the noclip variable does exactly as it sounds
@@ -441,12 +318,16 @@ public abstract class Player extends Entity
 		{
 			for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{
-				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-				;
-				while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+				if(worldbox.intersects(r))
 				{
-					worldX = facingRight ? worldX - 1 : worldX + 1;
-					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+					int xDiff;
+					if(facingRight) //Find diff between player right and block left
+						xDiff = worldbox.x + worldbox.width - r.x;
+					else //Find diff between player left and block right
+						xDiff = worldbox.x - (r.x + r.width);
+					worldX -= xDiff;
+					worldbox.setLocation((int) worldX + xOffset, worldbox.y);
+					break;
 				}
 			}
 		}
@@ -462,11 +343,24 @@ public abstract class Player extends Entity
 		{
 			for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 			{
-				Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-				while (worldbox.intersects(r2d)) // pHurtbox.intersects(r)
+				if(worldbox.intersects(r))
 				{
-					worldY = readKeys.contains(DataRetriever.getDown()) ? worldY - 1 : worldY + 1;
-					worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+					if(ySpeed > 0)
+					{
+						onGround = true;
+						int yDiff = worldbox.y + worldbox.height - r.y;
+						worldY -= yDiff;
+						worldbox.setLocation(worldbox.x, worldbox.y -= yDiff);
+						ySpeed = 0;
+					}
+					else
+					{
+						int yDiff = r.y + r.height - worldbox.y;
+						worldY += yDiff;
+						worldbox.setLocation(worldbox.x, worldbox.y += yDiff);
+						ySpeed = 0;
+					}
+					break;
 				}
 			}
 		}
@@ -482,8 +376,7 @@ public abstract class Player extends Entity
 
 		for (Rectangle jadams : DataRetriever.getWorld().getInterTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (jadams.getX()), (int) (jadams.getY()), (int) jadams.getWidth(), (int) jadams.getHeight()));
-			if (worldbox.intersects(r2d))
+			if (worldbox.intersects(jadams))
 			{
 				if (jadams instanceof Platform) //PLATFORM LOGIC
 				{
@@ -525,13 +418,116 @@ public abstract class Player extends Entity
 	private boolean inBlock()
 	{
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
-		{
-			Rectangle2D r2d = (Rectangle2D) (new Rectangle((int) (r.getX()), (int) (r.getY()), (int) r.getWidth(), (int) r.getHeight()));
-			if (worldbox.intersects(r2d)) return true;
-		}
+			if (worldbox.intersects(r)) return true;
 		return false;
 	}
+	
+	//Method to set the player's status to attacking, with skill status skill
+	private void setAttacking(SKILL attack)
+	{
+		elapsedFrames = 0; //Reset anim
+		curAnimation = 0;
+		skill = attack; //Set attack
+		status = STATUS.ATTACKING; //Set status
+	}
 
+	//Player idles
+	private void animateIdle()
+	{
+		// This pattern is followed by most key checks: If already doing something, advance animation; else, begin animation
+		if (status == STATUS.IDLING)
+		{
+			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+		}
+		else //If you begin idling, reset status and animation
+		{
+			elapsedFrames = 0;
+			curAnimation = 0;
+			status = STATUS.IDLING;
+		}
+	}
+	
+	//Player walk command, primarily for animating
+	private void animateWalk()
+	{
+		if (facingRight && status == STATUS.MOVING)
+		{
+			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
+			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+		}
+		else
+		{
+			elapsedFrames = 0; //Reset animation to walking
+			curAnimation = 0;
+			facingRight = true; //Must be facing right
+			status = STATUS.MOVING;
+		}
+	}
+	
+	//Climbing subsection
+	private void climb(Set<Integer> readKeys, Interactable i)
+	{
+		//Reset velocity to ensure it's zero
+		ySpeed = 0.0;
+		
+		//Animate; both up and down use the same keys
+		if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown())) //If moving
+		{
+			if (++elapsedFrames >= 4 * framesPerAnimationCycle) elapsedFrames = 0;
+			curAnimation = (int) (elapsedFrames / framesPerAnimationCycle);
+		}
+
+		if (readKeys.contains(DataRetriever.getUp())) //If climbing up
+		{
+			worldY -= xSpeed; //Move Up
+			if (worldY < World.block) worldY += xSpeed; //Prevent climbing out of the world
+			World.setDrawY(); //Reset world view
+			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset); //reset actual hitbox
+			if (worldbox.getY() + height <= i.getY()) //If climbing off the top of the ladder
+			{
+				ySpeed = DataRetriever.getGravityConstant(); //Reset gravity
+				status = STATUS.IDLING; //Back to idling
+				runCollisionY(); //Run collision for blocks, force upwards
+				onGround = true; //Must be on the ground
+				return; //Finished, so return void
+			}
+		}
+		else if (readKeys.contains(DataRetriever.getDown())) //Same as up, but down
+		{
+			worldY += xSpeed;
+			World.setDrawY();
+			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+			if (worldbox.getY() + height > i.getY() + i.getHeight() - 5) //If at the bottom of the ladder
+			{
+				worldY -= 5; //Push up
+				ySpeed = DataRetriever.getGravityConstant();
+				status = STATUS.IDLING;
+				runCollisionY(); //Fall to ground
+				onGround = true;
+				return;
+			}
+		}
+		
+		//If the player hits jump and a direction off of the ladder
+		if (readKeys.contains(DataRetriever.getJump()) && (readKeys.contains(DataRetriever.getRight()) || readKeys.contains(DataRetriever.getLeft())))
+		{
+			//Immediately check if the player is in the block; if so, don't jump
+			if(!inBlock())
+			{
+				status = STATUS.JUMPING; //Set to jumping
+				elapsedFrames = 0; //Reset animation
+				curAnimation = 0;
+				ySpeed -= jumpDelta * .75; //Give yourself some upwards velocity
+				worldX = readKeys.contains(DataRetriever.getRight()) ? worldX + xSpeed * 3.5 : worldX - xSpeed * 3.5; //Launch off
+				World.setDrawX(); //Reset the world view, player position, and hurtbox
+				worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
+				runCollisionY(); //Run your collision
+				return; //All done
+			}
+		}
+	}
+	
 	// Method to be overridden that draws each player by importing that file
 	public abstract void drawPlayer(Graphics2D g2d);
 
