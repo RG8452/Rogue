@@ -43,6 +43,7 @@ public class CaveCity extends World
 		interCollision = new QuadTree(0, fullMap);
 		spawnX = 6208;
 		spawnY = 2120;
+		filePath = "src/org/world/cavecity/CaveCity.txt";
 
 		//OUTER WALLS
 		QTAdd(0, 0, worldWidth, block);

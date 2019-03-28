@@ -24,8 +24,9 @@ public abstract class World
 {
 	protected Rectangle fullMap; // Rectangle for the full map, used for making the QTree
 	protected BufferedImage[] images; // images to be drawn
-	protected static QuadTree worldCollision; // QTree for collision
-	protected static QuadTree interCollision;
+	protected QuadTree worldCollision; // QTree for collision
+	protected QuadTree interCollision;
+	protected String filePath;
 	public static int block = 32; // Number of pixels in a block
 	protected static double drawX, drawY, spawnX, spawnY; // Corner where screen drawing begins & player spawn
 
@@ -83,10 +84,11 @@ public abstract class World
 	public Rectangle getFullMap() {return fullMap;}
 	public int getWidth() {return (int) fullMap.getWidth();}
 	public int getHeight() {return (int) fullMap.getHeight();}
+	protected String getFilePath() {return filePath;}
 	
-	public static void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x, y, w, h));}
-	public static void QTAddB(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(block * x, block * y, block * w, block * h));}
-	public static void ITAdd(Interactable i) {interCollision.insert(i);}
+	public void QTAdd(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(x, y, w, h));}
+	public void QTAddB(int x, int y, int w, int h) {worldCollision.insert(new Rectangle(block * x, block * y, block * w, block * h));}
+	public void ITAdd(Interactable i) {interCollision.insert(i);}
 	public static void setDrawX(double dX) {drawX = dX;}
 	public static void setDrawY(double dY) {drawY = dY;}
 	public static double getDrawX() {return drawX;}

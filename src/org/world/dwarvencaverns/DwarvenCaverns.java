@@ -42,6 +42,7 @@ public class DwarvenCaverns extends World
 		interCollision = new QuadTree(0, fullMap);
 		spawnX = 5824;
 		spawnY = 1056;
+		filePath = "src/org/world/dwarvencaverns/DwarvenCaverns.txt";
 
 		// OUTER WALLS
 		QTAdd(0, 0, worldWidth, block);

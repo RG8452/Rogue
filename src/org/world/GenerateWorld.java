@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import org.DataRetriever;
 import org.world.interactable.Ladder;
 import org.world.interactable.ManCannon;
 import org.world.interactable.Platform;
@@ -22,16 +23,16 @@ public class GenerateWorld
 				switch (collisionType)
 				{
 					case 'B':
-						World.QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+						DataRetriever.getWorld().QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
 						break;
 					case 'P':
-						World.ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
+						DataRetriever.getWorld().ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
 						break;
 					case 'M':
-						World.ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+						DataRetriever.getWorld().ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
 						break;
 					case 'L':
-						World.ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+						DataRetriever.getWorld().ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
 						break;
 					default:
 						System.out.println("Unrecognized Command : " + collisionType + sc.nextLine());
