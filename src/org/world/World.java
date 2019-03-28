@@ -13,12 +13,20 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import org.DataRetriever;
 import org.Startup;
 import org.panels.GamePanel;
 import org.world.interactable.Interactable;
+import org.world.interactable.Ladder;
+import org.world.interactable.ManCannon;
+import org.world.interactable.Platform;
 
 public abstract class World
 {
@@ -113,5 +121,36 @@ public abstract class World
 		if (sY / 2 > pWY) drawY = 0; // Same as X methods but for the Y values
 		else if (DataRetriever.getWorld().getFullMap().getHeight() - pWY < sY / 2) drawY = (int) (DataRetriever.getWorld().getFullMap().getHeight() - sY);
 		else drawY = (int) (pWY - sY / 2);
+	}
+	
+	public static void readMap(File currentWorld) throws FileNotFoundException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(currentWorld));
+		Scanner sc= new Scanner(reader);
+		while(sc.hasNext())
+		{
+			char collisionType = sc.next().charAt(0);
+				switch (collisionType)
+				{
+					case 'B':
+						DataRetriever.getWorld().QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+						break;
+					case 'P':
+						DataRetriever.getWorld().ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
+						break;
+					case 'M':
+						DataRetriever.getWorld().ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+						break;
+					case 'L':
+						DataRetriever.getWorld().ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+						break;
+					case '/':
+						sc.nextLine();
+						break;
+					default:
+						System.out.println("Unrecognized Command : " + collisionType + sc.nextLine());
+				}
+		}
+		sc.close();
 	}
 }
