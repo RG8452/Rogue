@@ -38,7 +38,8 @@ public class MainMenu extends JPanel
 		this.setBackground(Color.BLACK);
 
 		buttons = new ArrayList<Button>(); // Instantiate list of buttons
-		addButton(new Button(hScreenX - 200, hScreenY - 100, 400, 200, "Play", Color.blue, Color.yellow)); // Add play button
+		int fracHeight = (int) (screenY * 0.1);
+		addButton(new Button(hScreenX - 200, hScreenY - fracHeight, 400, fracHeight << 1, "Play", Color.blue, Color.yellow)); // Add play button
 		addButton(new Button(screenX - 200, 100, 100, 100, "Options", Color.gray, Color.white, 7) {
 			@Override
 			public void drawButton(Graphics g) // Overridden drawButton which draws the button with a gear on it
@@ -51,10 +52,10 @@ public class MainMenu extends JPanel
 				g.setColor(Color.gray); // Fill in button background
 				g.fillRect(tX, tY, tW, tH);
 
-				ArrayList<Integer> xList = new ArrayList<Integer>(); // ArrayLists to store poitns
-				ArrayList<Integer> yList = new ArrayList<Integer>();
+				int[] xPoints = new int[32]; //Arrays to store list of points
+				int[] yPoints = new int[32];
 
-				int x1, x2, x3, x4, y1, y2, y3, y4;
+				int x1, x2, x3, x4, y1, y2, y3, y4, pos = 0;
 
 				for (int rotate = 0; rotate < 8; rotate++) // Rotates around a circle and makes 4 point spokes
 				{
@@ -63,28 +64,21 @@ public class MainMenu extends JPanel
 					x2 = (int) (25 * Math.cos(Math.toRadians(rotate * 45 - 5)) + tX + (int) (tW / 2));
 					x3 = (int) (25 * Math.cos(Math.toRadians(rotate * 45 + 5)) + tX + (int) (tW / 2));
 					x4 = (int) (20 * Math.cos(Math.toRadians(rotate * 45 + 10)) + tX + (int) (tW / 2));
-					xList.add(x1);
-					xList.add(x2);
-					xList.add(x3);
-					xList.add(x4);
+					xPoints[pos] = x1;
+					xPoints[pos + 1] = x2;
+					xPoints[pos + 2] = x3;
+					xPoints[pos + 3] = x4;
+					
 
 					y1 = (int) (20 * Math.sin(Math.toRadians(rotate * 45 - 10)) + tY + (int) (tH / 2));
 					y2 = (int) (25 * Math.sin(Math.toRadians(rotate * 45 - 5)) + tY + (int) (tH / 2));
 					y3 = (int) (25 * Math.sin(Math.toRadians(rotate * 45 + 5)) + tY + (int) (tH / 2));
 					y4 = (int) (20 * Math.sin(Math.toRadians(rotate * 45 + 10)) + tY + (int) (tH / 2));
-					yList.add(y1);
-					yList.add(y2);
-					yList.add(y3);
-					yList.add(y4);
-				}
-
-				// Array of points for gear, converted from previous arrayLists
-				int[] xPoints = new int[xList.size()];
-				int[] yPoints = new int[yList.size()];
-				for (int meow = 0; meow < xList.size(); meow++)
-				{
-					xPoints[meow] = xList.get(meow);
-					yPoints[meow] = yList.get(meow);
+					yPoints[pos] = y1;
+					yPoints[pos + 1] = y2;
+					yPoints[pos + 2] = y3;
+					yPoints[pos + 3] = y4;
+					pos += 4;
 				}
 
 				g.setColor(Color.black);
@@ -110,7 +104,8 @@ public class MainMenu extends JPanel
 
 		g.setFont(new Font("TimesRoman", Font.BOLD, 50)); // set new font
 		g.setColor(Color.green); // Draws the "Main Menu" text
-		g.drawString("Main Menu", hScreenX - (int) (g.getFontMetrics().stringWidth("Main Menu") / 2), 300);
+		g.drawString("Main Menu", hScreenX - (int) (g.getFontMetrics().stringWidth("Main Menu") / 2),
+					 (int) (screenY * 0.25f));
 
 		// Loops through all available buttons and draws the button as well as its border
 		for (Button butter : buttons)
