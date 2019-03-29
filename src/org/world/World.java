@@ -5,8 +5,6 @@ package org.world;
  * The individual Worlds will extend this class and implement its fields and stuff
  * Every world will consist of one huge png for the image drawn
  * The worlds also will contain a final QuadTree of Rectangles that will be used for collision 
- *
- * TODO: Add some form of variable to determine stage chronology
  */
 
 import java.awt.Color;
@@ -130,26 +128,26 @@ public abstract class World
 		while(sc.hasNext())
 		{
 			char collisionType = sc.next().charAt(0);
-				switch (collisionType)
-				{
-					case 'B':
-						DataRetriever.getWorld().QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
-						break;
-					case 'P':
-						DataRetriever.getWorld().ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
-						break;
-					case 'M':
-						DataRetriever.getWorld().ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
-						break;
-					case 'L':
-						DataRetriever.getWorld().ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
-						break;
-					case '/':
-						sc.nextLine();
-						break;
-					default:
-						System.out.println("Unrecognized Command : " + collisionType + sc.nextLine());
-				}
+			switch (collisionType)
+			{
+				case 'B':
+					DataRetriever.getWorld().QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+					break;
+				case 'P':
+					DataRetriever.getWorld().ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
+					break;
+				case 'M':
+					DataRetriever.getWorld().ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+					break;
+				case 'L':
+					DataRetriever.getWorld().ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+					break;
+				case '/':
+					sc.nextLine();
+					break;
+				default:
+					System.out.println("Unrecognized Command : " + collisionType + sc.nextLine());
+			}
 		}
 		sc.close();
 	}
