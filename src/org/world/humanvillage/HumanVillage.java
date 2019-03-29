@@ -23,7 +23,7 @@ public class HumanVillage extends World
 		{
 			images[0] = ImageIO.read(new File("src/org/world/humanvillage/Map/HVBackground.png"));
 			images[1] = ImageIO.read(new File("src/org/world/humanvillage/Map/HVMidground.png"));
-			images[2] = ImageIO.read(new File("src/org/world/humanvillage"));
+			images[2] = ImageIO.read(new File("src/org/world/humanvillage/Map/HVForeground.png"));
 		}
 		catch (IOException e)
 		{

@@ -14,12 +14,12 @@ import org.entities.players.hero.Hero;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
 import org.world.World;
-import org.world.cavecity.CaveCity;
+import org.world.humanvillage.HumanVillage;
 
 public class Runner implements Runnable
 {
 	private static int pauseFrame; // Frame in which the pause key is first pressed to force a delay
-	private boolean paused, stopped, devMode, noclip, stats = true, hitboxes = true, worldboxes, grid; // Game status
+	private boolean paused, stopped, devMode = true, noclip, stats = true, hitboxes = true, worldboxes = true, grid; // Game status
 	public static GamePanel tempPanel; // Temporary panel used when swapping stuff
 	private static int frameDelay = (int) (1000 / DataRetriever.getFrameRate()); // This retrieves, in milliseconds, the time to wait between frames
 	public static GamePanel accessPanel;
@@ -27,7 +27,7 @@ public class Runner implements Runnable
 	@Override
 	public void run() // Overridden "Run" for the Thread to execute
 	{
-		DataRetriever.setWorld(new CaveCity());
+		DataRetriever.setWorld(new HumanVillage());
 		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY()));
 		World.setDrawX();
 		World.setDrawY();

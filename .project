@@ -18,7 +18,7 @@
 		<link>
 			<name>src/org/world/cavecity/CaveCity.txt</name>
 			<type>1</type>
-			<location>C:/Users/keonw/gameSpace/Rogue/src/org/world/cavecity/CaveCity.txt</location>
+			<locationURI>PARENT_LOC/CaveCity.txt</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
