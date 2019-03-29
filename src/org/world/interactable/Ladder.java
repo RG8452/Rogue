@@ -30,27 +30,28 @@ public class Ladder extends Interactable
 		img = null;
 		this.setRect(wX + block / 4, wY - 3, block / 2, height * block + 3);
 
-		if (type.equals("dc"))
+		try
 		{
-			try
-			{
-				img = ImageIO.read(new File("src/org/world/dwarvencaverns/Interactables/Ladder.png"));
-			}
-			catch (IOException e)
-			{
-				System.out.println("IMAGE READING ERROR (DwarvenCaverns Ladder): " + e);
+			switch(type) {
+				case "dc":
+					img = ImageIO.read(new File("src/org/world/dwarvencaverns/Interactables/Ladder.png"));
+					break;
+				case "cc":
+					img = ImageIO.read(new File("src/org/world/cavecity/Interactables/Ladder.png"));
+					break;
+				case "hl":
+					img = ImageIO.read(new File("src/org/world/humanvillage/Interactables/HumanLadder.png"));
+					break;
+				case "al":
+					img = ImageIO.read(new File("src/org/world/humanvillage/Interactables/AngelLadder.png"));
+					break;
+				default:
+					System.out.println("ERROR: COULD NOT RECOGNIZE LADDER TYPE " + type);
 			}
 		}
-		else if (type.equals("cc"))
+		catch (IOException e)
 		{
-			try
-			{
-				img = ImageIO.read(new File("src/org/world/cavecity/Interactables/Ladder.png"));
-			}
-			catch (IOException e)
-			{
-				System.out.println("IMAGE READING ERROR (CaveCity Ladder): " + e);
-			}
+			System.out.println("IMAGE READING ERROR, LADDER OF TYPE " + type + ": " + e);
 		}
 	}
 

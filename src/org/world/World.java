@@ -12,7 +12,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -54,6 +53,7 @@ public abstract class World
 		if (Startup.getRunner().worldboxesEnabled()) drawHitboxes(g2d);
 	}
 
+	//Draws a worldbox for all visible collision rectanbles
 	public void drawHitboxes(Graphics2D g2d)
 	{
 		double tX, tY;
@@ -103,6 +103,7 @@ public abstract class World
 	public double getSpawnY() {return spawnY;}
 	//@formatter:on
 
+	//Sets the point on the image to draw from, x coord
 	public static void setDrawX()
 	{
 		int sX = GamePanel.screenX;
@@ -112,6 +113,7 @@ public abstract class World
 		else drawX = (int) (pWX - sX / 2); // Otherwise, center the player
 	}
 
+	//Sets the point on the image to draw from, y coord
 	public static void setDrawY()
 	{
 		int sY = GamePanel.screenY;
@@ -121,26 +123,40 @@ public abstract class World
 		else drawY = (int) (pWY - sY / 2);
 	}
 	
-	public static void readMap(File currentWorld) throws FileNotFoundException
+	//Reads in the world from the data contained within filePath according to convention
+	//The first character specifies what type of object the line contains, then all the
+	//rest of the numbers are the parameters with which to construct that object
+	public void readMap()
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(currentWorld));
-		Scanner sc= new Scanner(reader);
+		worldCollision = new QuadTree(0, fullMap);
+		interCollision = new QuadTree(0, fullMap);
+		BufferedReader reader = null;
+		try
+		{
+			reader = new BufferedReader(new FileReader(filePath));
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("ERROR READING WORLD: " + e);
+			return; //Fatal error if file not found
+		}
+		Scanner sc = new Scanner(reader);
 		while(sc.hasNext())
 		{
 			char collisionType = sc.next().charAt(0);
 			switch (collisionType)
 			{
 				case 'B':
-					DataRetriever.getWorld().QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+					QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
 					break;
 				case 'P':
-					DataRetriever.getWorld().ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
+					ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
 					break;
 				case 'M':
-					DataRetriever.getWorld().ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+					ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
 					break;
 				case 'L':
-					DataRetriever.getWorld().ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+					ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
 					break;
 				case '/':
 					sc.nextLine();
