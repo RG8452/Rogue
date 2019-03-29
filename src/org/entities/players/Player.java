@@ -336,8 +336,18 @@ public abstract class Player extends Entity
 
 		World.setDrawX();
 
-		if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getJump())) worldY -= flySpeed;
-		else if (readKeys.contains(DataRetriever.getDown())) worldY += flySpeed;
+		//Set ySpeed for purposes of checking collisions
+		if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getJump())) 
+		{
+			worldY -= flySpeed;
+			ySpeed = -flySpeed;
+		}
+		else if (readKeys.contains(DataRetriever.getDown())) 
+		{
+			worldY += flySpeed;
+			ySpeed = flySpeed;
+		}
+		else ySpeed = 0;
 
 		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		World.setDrawY();
@@ -355,7 +365,7 @@ public abstract class Player extends Entity
 						worldbox.setLocation(worldbox.x, worldbox.y -= yDiff);
 						ySpeed = 0;
 					}
-					else
+					else if(ySpeed < 0)
 					{
 						int yDiff = r.y + r.height - worldbox.y;
 						worldY += yDiff;

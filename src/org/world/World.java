@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import org.DataRetriever;
@@ -144,25 +145,32 @@ public abstract class World
 		while(sc.hasNext())
 		{
 			char collisionType = sc.next().charAt(0);
-			switch (collisionType)
+			try
 			{
-				case 'B':
-					QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
-					break;
-				case 'P':
-					ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
-					break;
-				case 'M':
-					ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
-					break;
-				case 'L':
-					ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
-					break;
-				case '/':
-					sc.nextLine();
-					break;
-				default:
-					System.out.println("Unrecognized Command : " + collisionType + sc.nextLine());
+				switch (collisionType)
+				{
+					case 'B':
+						QTAddB(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+						break;
+					case 'P':
+						ITAdd(new Platform(sc.nextInt(), sc.nextInt(), sc.nextInt()));
+						break;
+					case 'M':
+						ITAdd(new ManCannon(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+						break;
+					case 'L':
+						ITAdd(new Ladder(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next()));
+						break;
+					case '/':
+						sc.nextLine();
+						break;
+					default:
+						System.out.println("Unrecognized Command : " + collisionType + sc.nextLine());
+				}
+			}
+			catch (InputMismatchException e)
+			{
+				System.out.println("ImputMismatchException (WorldGen): " + e);
 			}
 		}
 		sc.close();
