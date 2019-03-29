@@ -31,8 +31,8 @@ public class HumanVillage extends World
 		}
 		
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight);
-		spawnX = 0;
-		spawnY = 0;
+		spawnX = 2080;
+		spawnY = 1344;
 		filePath = "src/org/world/humanvillage/HumanVillage.txt";
 		
 		readMap();
