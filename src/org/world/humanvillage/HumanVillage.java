@@ -14,7 +14,7 @@ import org.world.World;
 //Then it declares some non-static vars and reads in the map
 public class HumanVillage extends World
 {
-	private final int worldWidth = 6400, worldHeight = 2400;
+	private final int worldWidth = 5600, worldHeight = 2560;
 	
 	public HumanVillage()
 	{
