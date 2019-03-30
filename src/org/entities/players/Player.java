@@ -102,7 +102,7 @@ public abstract class Player extends Entity
 		}
 
 		// If right and !left, then must be walking right
-		else if (readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()) && !(status == STATUS.CLIMBING))
+		else if (readKeys.contains(DataRetriever.getRight()) && !readKeys.contains(DataRetriever.getLeft()))
 		{
 			recognized = true; //Recognized input, avoid idling
 			worldX += xSpeed; //Move right & reset position
@@ -111,7 +111,7 @@ public abstract class Player extends Entity
 		}
 
 		// If left and !right, then must be walking left
-		else if (readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()) && !(status == STATUS.CLIMBING))
+		else if (readKeys.contains(DataRetriever.getLeft()) && !readKeys.contains(DataRetriever.getRight()))
 		{
 			recognized = true; //Identical to walking right but the other right
 			worldX -= xSpeed;
@@ -187,7 +187,7 @@ public abstract class Player extends Entity
 			if (i instanceof Ladder) //Ladder case
 			{
 				//If the player isn't already climbing and they hit a climb key
-				if (readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown()) && status != STATUS.CLIMBING)
+				if ((readKeys.contains(DataRetriever.getUp()) || readKeys.contains(DataRetriever.getDown())) && status != STATUS.CLIMBING)
 				{
 					status = STATUS.CLIMBING; //Reset animation to climbing, movement handled above
 					elapsedFrames = 0;
@@ -488,7 +488,6 @@ public abstract class Player extends Entity
 		{
 			worldY -= xSpeed; //Move Up
 			if (worldY < World.block) worldY += xSpeed; //Prevent climbing out of the world
-			World.setDrawY(); //Reset world view
 			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset); //reset actual hitbox
 			if (worldbox.getY() + height <= i.getY()) //If climbing off the top of the ladder
 			{
@@ -502,11 +501,12 @@ public abstract class Player extends Entity
 		else if (readKeys.contains(DataRetriever.getDown())) //Same as up, but down
 		{
 			worldY += xSpeed;
-			World.setDrawY();
 			worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
-			if (worldbox.getY() + height > i.getY() + i.getHeight() - 5) //If at the bottom of the ladder
+			boolean bottom = worldbox.getY() + height > i.getY() + i.getHeight() - 5 && inBlock();
+			boolean fall = worldbox.getY() > i.getY() + i.getHeight() - 5;
+			if (bottom || fall) //If at the bottom of the ladder
 			{
-				worldY -= 5; //Push up
+				worldY -= (bottom) ? 5 : 1; //Push up
 				ySpeed = DataRetriever.getGravityConstant();
 				status = STATUS.IDLING;
 				runCollisionY(); //Fall to ground

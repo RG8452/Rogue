@@ -38,8 +38,8 @@ public class DwarvenCaverns extends World
 		}
 
 		fullMap = new Rectangle(0, 0, worldWidth, worldHeight); // Instantiate various objects
-		worldCollision = new QuadTree(0, fullMap);
-		interCollision = new QuadTree(0, fullMap);
+		spawnX = 5824;
+		spawnY = 1056;
 		filePath = "src/org/world/dwarvencaverns/DwarvenCaverns.txt";
 
 		readMap();
