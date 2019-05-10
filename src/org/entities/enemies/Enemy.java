@@ -23,15 +23,17 @@ public abstract class Enemy extends Entity implements AI
 	protected static int framesPerAnimationCycle = 4; //Frames that elapse between each change in animation
 	public String EnemyType;
 
-	//Enum used to store all possible outputs for the enemy's status
+	/**Enum used to store all possible outputs for the enemy's status
+	 */
 	protected enum STATUS
 	{
 		IDLING, PATHING, JUMPING, ATTACKING, CLIMBING
 	}
-
-	protected STATUS status; //Variable used for current status\
-	private int currentDestination; // location the enemy is headed towards
-	private Rectangle collisionBox = new Rectangle(); // rectangle the enemy is standing on
+	
+	/** Variable used for storing current state of the {@code Enemy}.
+	 * Can be any value held in the {@code STATUS} enumerator.
+	 */
+	protected STATUS status;
 	
 	public void runCollision()
 	{
@@ -85,14 +87,11 @@ public abstract class Enemy extends Entity implements AI
 		worldbox.setLocation((int) worldX + xOffset, (int) worldY + yOffset);
 		if (ceilingContact) ySpeed = DataRetriever.getGravityConstant();
 	}
-
-	/* This sets a destination for the AI to move to depending on the player's vertical coordinates.
-	 * If the player is outside the vertical range of the AI it will then continue in the same direction
-	 * along the collision it is currently on until it either encounters an edge or a wall blocking it's
-	 * path. Can be revisited for single block height jumps.
-	 */
+	
 	public int destination(boolean playerY)
 	{
+		int currentDestination = 0;
+		
 		if (playerY) currentDestination = (int) DataRetriever.getPlayer().getWorldbox().getCenterX();
 		else if (!playerY)
 		{
@@ -112,12 +111,10 @@ public abstract class Enemy extends Entity implements AI
 		return currentDestination;
 	}
 	
-	/* Helper method which determines which vertical collision
-	 * the AI is standing on in the current frame. Used to determine
-	 * where the edge of the "ground" is in destination(boolean) method.
-	 */
 	public Rectangle currentGround(List<Rectangle> currentNode)
 	{
+		Rectangle collisionBox = new Rectangle();
+		
 		for (Rectangle r : currentNode)
 		{
 			if (r.contains(worldbox.getCenterX() + getXOffset(), worldbox.getMaxY() + getYOffset()))
@@ -130,10 +127,6 @@ public abstract class Enemy extends Entity implements AI
 		return collisionBox;
 	}
 	
-	/* Used to prevent AI from endlessly colliding with walls and such.
-	 * This is another method that assists with pathing in the
-	 * destination(boolean) method.
-	 */
 	public boolean approachingWall(boolean facingRight)
 	{
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))

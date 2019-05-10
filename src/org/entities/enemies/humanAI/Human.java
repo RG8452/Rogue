@@ -15,7 +15,6 @@ public abstract class Human extends Enemy
 	{
 		follow(playerInVerticalRange());
 		
-		// TODO Set movement values for all states (i.e. change y for climbing, x for pathing, etc.)
 		if (status == STATUS.IDLING)
 		{
 			if (++elapsedFrames >= 8 * framesPerAnimationCycle) elapsedFrames = 0;
@@ -50,19 +49,18 @@ public abstract class Human extends Enemy
 */
 		runCollision();
 	}
-	// Tracks the Player's left to right motions
 	public void follow(boolean PlayerY)
 	{
-//		Interactable i = touchingInteractable();
-		
 		if (destination(PlayerY) >= getWorldbox().getCenterX())
 		{
 			facingRight = true;
-			if (destination(PlayerY) > getWorldbox().getCenterX() + (inRange() + getXOffset()))
+			// If the player is too far away to hit, move closer
+			if (destination(PlayerY) > getWorldbox().getCenterX() + (inRange() - getXOffset()))
 			{
 				status = STATUS.PATHING;
 			}
-			else if (destination(PlayerY) <= getWorldbox().getCenterX() + (inRange() + getXOffset()) && PlayerY)
+			// If the player is in attack range, change to attacking
+			else if (destination(PlayerY) <= getWorldbox().getCenterX() + (inRange() - getXOffset()) && PlayerY)
 			{
 				status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
 			}
@@ -70,10 +68,12 @@ public abstract class Human extends Enemy
 		else
 		{
 			facingRight = false;
+			// If the player is too far away to hit, move closer
 			if (destination(PlayerY) < getWorldbox().getCenterX() - (inRange() - getXOffset()))
 			{
 				status = STATUS.PATHING;
 			}
+			// If the player is in attack range, change to attacking
 			else if (destination(PlayerY) >= getWorldbox().getCenterX() - (inRange() - getXOffset()) && PlayerY)
 			{
 				status = STATUS.IDLING; //This will change to STATUS.ATTACKING when attacks are finalized
@@ -81,9 +81,8 @@ public abstract class Human extends Enemy
 		}
 	}
 	
-/*
- * Methods to be revisited for up and down movement as well as interactables
- * 
+/* Methods to be revisited for up and down movement as well as interactables
+
 	// Finds a place to move downwards to the same floor as the Player
 	private void below()
 	{
@@ -294,8 +293,7 @@ public abstract class Human extends Enemy
 */
 
 	// Method which returns true if the enemy is in a block
-	@SuppressWarnings("unused")
-	private boolean inBlock()
+/*	private boolean inBlock()
 	{
 		for (Rectangle r : DataRetriever.getWorld().getCollisionTree().retrieve(new ArrayList<Rectangle>(), getWorldbox()))
 		{
@@ -304,16 +302,5 @@ public abstract class Human extends Enemy
 		}
 		return false;
 	}
+*/
 }
-
-/*
- * public void act() {
- * 		if(enemy.isInRange())
- * 			enemy.attack();
- * }
- * 
- * runner file
- * for(Enemy e: DataRetriever.getAllEnemies())
- * 		e.act();
- * 
- */

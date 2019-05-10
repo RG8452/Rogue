@@ -14,6 +14,7 @@ import org.entities.players.hero.Hero;
 import org.panels.GamePanel;
 import org.panels.PausePanel;
 import org.world.World;
+import org.world.cavecity.CaveCity;
 import org.world.humanvillage.HumanVillage;
 
 public class Runner implements Runnable
@@ -27,7 +28,7 @@ public class Runner implements Runnable
 	@Override
 	public void run() // Overridden "Run" for the Thread to execute
 	{
-		DataRetriever.setWorld(new HumanVillage());
+		DataRetriever.setWorld(new CaveCity());
 		DataRetriever.setPlayer(new Hero(DataRetriever.getWorld().getSpawnX(), DataRetriever.getWorld().getSpawnY()));
 		World.setDrawX();
 		World.setDrawY();
